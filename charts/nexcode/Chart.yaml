@@ -1,5 +1,5 @@
 apiVersion: v2
-name: nexus-nexcode
+name: nexcode
 description: NexCODE - AI coding assistant with code-server IDE
 type: application
 version: 0.1.0

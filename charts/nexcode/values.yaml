@@ -42,10 +42,10 @@ probes:
   failureThreshold: 6
 # Plain, non-secret settings: [{name: FOO, value: "bar"}]
 env:
+  - name: NODE_EXTRA_CA_CERTS
+    value: /etc/ezua-domain-ca-certs/ezua-domain-ca-cert.crt
   - name: IDE_HOST
     value: localhost:8080
-  - name: NODE_TLS_REJECT_UNAUTHORIZED
-    value: "0"
   - name: NEXCODE_CHAT_URL
     value: https://nemotron.project-demos.serving.demo.lon-pcai.twlon.com
   - name: NEXCODE_EMBED_URL
@@ -59,10 +59,10 @@ env:
 # Secrets are created outside the chart (EzAppConfig values are stored in plain text).
 # Every key of each listed Secret becomes an environment variable.
 existingSecrets:
-  - nexus-nexcode-secrets
+  - nexcode-secrets
 persistence:
   enabled: true
-  existingClaim: nexus-nexcode-workspace
+  existingClaim: nexcode-workspace
   storageClass: nexus-nfs-retain
   accessModes:
     - ReadWriteOnce
@@ -74,7 +74,7 @@ extraVolumes:
     emptyDir: {}
   - name: ide-start
     configMap:
-      name: 'nexus-nexcode-ide-start'
+      name: 'nexcode-ide-start'
 extraVolumeMounts:
   - name: shared-data
     mountPath: /usr/src/app/nexcode-data/shared
@@ -105,13 +105,13 @@ extraContainers:
         containerPort: 9100
         protocol: TCP
     env:
+      - name: NODE_EXTRA_CA_CERTS
+        value: /etc/ezua-domain-ca-certs/ezua-domain-ca-cert.crt
       - name: NEXCODE_BRIDGE_TOKEN
         valueFrom:
           secretKeyRef:
-            name: nexus-nexcode-secrets
+            name: nexcode-secrets
             key: NEXCODE_BRIDGE_TOKEN
-      - name: NODE_TLS_REJECT_UNAUTHORIZED
-        value: "0"
       - name: LANG
         value: en_GB.UTF-8
       - name: LC_ALL
