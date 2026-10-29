@@ -3,6 +3,7 @@
 ezua:
   domainName: "${DOMAIN_NAME}"
   virtualService:
+    enabled: true # false only while migrating (install first, move the host later)
     endpoint: "nexcode.${DOMAIN_NAME}"
     istioGateway: "istio-system/ezaf-gateway"
   # PCAI's own SSO (oauth2-proxy, realm UA). Nexus apps sign in through nexus-gateway instead,
