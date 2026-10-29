@@ -6,20 +6,20 @@ ezua:
     enabled: true # false only while migrating (install first, move the host later)
     endpoint: "nexcode.${DOMAIN_NAME}"
     istioGateway: "istio-system/ezaf-gateway"
-  # PCAI's own SSO (oauth2-proxy, realm UA). Nexus apps sign in through nexus-gateway instead,
+  # PCAI's own SSO (oauth2-proxy, realm UA). Nexus apps sign in through the Nexus gateway instead,
   # so this stays off unless the app must be gated by PCAI sign-in.
   authorizationPolicy:
     enabled: false
     namespace: "istio-system"
     providerName: "oauth2-proxy"
 # ── Nexus SSO ───────────────────────────────────────────────────────────────────────────
-# When enabled, the VirtualService sends this host to nexus-gateway (oauth2-proxy + nginx),
+# When enabled, the VirtualService sends this host to the Nexus gateway (oauth2-proxy + nginx),
 # which signs users in with Nexus Keycloak and forwards to this app's Service with the
 # identity headers. The gateway's host → Service map must list this release.
 nexusSso:
   enabled: false
   gateway:
-    service: nexus-gateway
+    service: gateway
     port: 8080
 # ── Workload ────────────────────────────────────────────────────────────────────────────
 image:
@@ -174,7 +174,7 @@ resources:
 # Ingress allow-list for this app's pods (Calico enforces it on lonpcai).
 networkPolicy:
   enabled: true
-  # Any pod in the release namespace (the Nexus apps and nexus-gateway).
+  # Any pod in the release namespace (the Nexus apps and the Nexus gateway).
   allowSameNamespace: true
   # The platform ingress gateway, for direct VirtualService routing.
   allowIngressGateway: true

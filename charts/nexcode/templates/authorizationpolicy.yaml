@@ -1,5 +1,5 @@
 {{- if .Values.ezua.authorizationPolicy.enabled }}
-# PCAI SSO (realm UA). Off by default: Nexus apps use nexus-gateway (nexusSso).
+# PCAI SSO (realm UA). Off by default: Nexus apps use the Nexus gateway (nexusSso).
 apiVersion: security.istio.io/v1beta1
 kind: AuthorizationPolicy
 metadata:

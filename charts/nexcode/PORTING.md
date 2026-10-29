@@ -47,7 +47,7 @@ releases' pods in the shared `nexus` namespace.
   ok    no Secrets in the chart
   ok    no secret-looking literals in values.env
   ok    VirtualService nexcode.${DOMAIN_NAME} -> nexcode.nexus.svc.cluster.local
-  ok    with nexusSso.enabled the host goes to nexus-gateway.nexus.svc.cluster.local
+  ok    with nexusSso.enabled the host goes to gateway.nexus.svc.cluster.local
   ok    AuthorizationPolicy renders when enabled (off by default)
 ```
 
