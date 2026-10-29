@@ -1,0 +1,65 @@
+# Start script for the code-server sidecar, taken unchanged from the live deployment (2026-10-29).
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-ide-start
+  labels:
+    {{- include "app.labels" . | nindent 4 }}
+data:
+  start-ide.sh: |
+    # 1. Ensure extensions directory exists
+    mkdir -p /home/coder/.local/share/code-server/extensions
+    
+    # Delete any .obsolete cache file to ensure custom extensions load cleanly
+    rm -f /home/coder/.local/share/code-server/extensions/.obsolete
+    
+    # 2. Copy default extensions if they don't exist (no-clobber)
+    cp -rnp /home/coder/.local/share/code-server-backup/extensions/. /home/coder/.local/share/code-server/extensions/ 2>/dev/null || true
+    
+    # 3. Force copy/update core nexcode extensions
+    cp -rp /home/coder/.local/share/code-server-backup/extensions/nexcode.* /home/coder/.local/share/code-server/extensions/ 2>/dev/null || true
+    
+    # Register custom extensions in extensions.json
+    node -e "
+      const fs = require('fs');
+      const file = '/home/coder/.local/share/code-server/extensions/extensions.json';
+      let data = [];
+      if (fs.existsSync(file)) {
+        try { data = JSON.parse(fs.readFileSync(file, 'utf8')); } catch(e) {}
+      }
+      const ext = (id, folder) => ({
+        identifier: { id },
+        version: '1.0.0',
+        location: { '\$mid': 1, path: '/home/coder/.local/share/code-server/extensions/' + folder, scheme: 'file' },
+        relativeLocation: folder,
+        metadata: { installedTimestamp: Date.now(), source: 'custom' }
+      });
+      let updated = false;
+      // Clean up old incorrect registrations if present
+      const originalLength = data.length;
+      data = data.filter(e => e.identifier.id !== 'nexcode.nexcode-bridge-1.0.0' && e.identifier.id !== 'nexcode.nexcode-theme-1.0.0');
+      if (data.length !== originalLength) {
+        updated = true;
+      }
+      if (!data.some(e => e.identifier.id === 'nexcode.nexcode-bridge')) {
+        data.push(ext('nexcode.nexcode-bridge', 'nexcode.nexcode-bridge-1.0.0'));
+        updated = true;
+      }
+      if (!data.some(e => e.identifier.id === 'nexcode.nexcode-theme')) {
+        data.push(ext('nexcode.nexcode-theme', 'nexcode.nexcode-theme-1.0.0'));
+        updated = true;
+      }
+      if (updated) {
+        fs.writeFileSync(file, JSON.stringify(data, null, 2));
+      }
+    " 2>/dev/null || true
+    
+    # 4. Copy default settings if not exists
+    if [ ! -f "/home/coder/.local/share/code-server/User/settings.json" ]; then
+      mkdir -p /home/coder/.local/share/code-server/User
+      cp -p /home/coder/.local/share/code-server-backup/User/settings.json /home/coder/.local/share/code-server/User/settings.json
+    fi
+    
+    # 5. Run code-server
+    exec code-server --auth none --bind-addr "0.0.0.0:8080" --disable-telemetry --disable-workspace-trust --disable-getting-started-override --locale en-GB
+    

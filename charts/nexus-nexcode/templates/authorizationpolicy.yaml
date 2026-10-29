@@ -1,0 +1,22 @@
+{{- if .Values.ezua.authorizationPolicy.enabled }}
+# PCAI SSO (realm UA). Off by default: Nexus apps use nexus-gateway (nexusSso).
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: {{ .Release.Name }}-auth-policy
+  namespace: {{ .Values.ezua.authorizationPolicy.namespace }}
+  labels:
+    {{- include "app.labels" . | nindent 4 }}
+spec:
+  action: CUSTOM
+  provider:
+    name: {{ .Values.ezua.authorizationPolicy.providerName }}
+  rules:
+    - to:
+        - operation:
+            hosts:
+              - {{ .Values.ezua.virtualService.endpoint }}
+  selector:
+    matchLabels:
+      istio: ingressgateway
+{{- end }}

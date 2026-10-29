@@ -1,0 +1,27 @@
+# Import Framework endpoint: https://docs.ezmeral.hpe.com/unified-analytics/15/ManageClusters/importing-applications.html
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: {{ include "app.fullname" . }}
+  labels:
+    {{- include "app.labels" . | nindent 4 }}
+spec:
+  gateways:
+    - {{ .Values.ezua.virtualService.istioGateway }}
+  hosts:
+    - {{ .Values.ezua.virtualService.endpoint | required "\nValid .Values.ezua.virtualService.endpoint is required !" }}
+  http:
+    - match:
+        - uri:
+            prefix: /
+      route:
+        - destination:
+            {{- if .Values.nexusSso.enabled }}
+            host: {{ .Values.nexusSso.gateway.service }}.{{ .Release.Namespace }}.svc.cluster.local
+            port:
+              number: {{ .Values.nexusSso.gateway.port }}
+            {{- else }}
+            host: {{ include "app.fullname" . }}.{{ .Release.Namespace }}.svc.cluster.local
+            port:
+              number: {{ .Values.service.port }}
+            {{- end }}

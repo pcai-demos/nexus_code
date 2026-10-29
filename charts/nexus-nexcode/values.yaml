@@ -1,0 +1,188 @@
+# ── PCAI Import Framework ───────────────────────────────────────────────────────────────
+# Keep this block first and keep ${DOMAIN_NAME} verbatim: PCAI substitutes it on import.
+ezua:
+  domainName: "${DOMAIN_NAME}"
+  virtualService:
+    endpoint: "nexcode.${DOMAIN_NAME}"
+    istioGateway: "istio-system/ezaf-gateway"
+  # PCAI's own SSO (oauth2-proxy, realm UA). Nexus apps sign in through nexus-gateway instead,
+  # so this stays off unless the app must be gated by PCAI sign-in.
+  authorizationPolicy:
+    enabled: false
+    namespace: "istio-system"
+    providerName: "oauth2-proxy"
+# ── Nexus SSO ───────────────────────────────────────────────────────────────────────────
+# When enabled, the VirtualService sends this host to nexus-gateway (oauth2-proxy + nginx),
+# which signs users in with Nexus Keycloak and forwards to this app's Service with the
+# identity headers. The gateway's host → Service map must list this release.
+nexusSso:
+  enabled: false
+  gateway:
+    service: nexus-gateway
+    port: 8080
+# ── Workload ────────────────────────────────────────────────────────────────────────────
+image:
+  repository: registry.demo.lon-pcai.twlon.com/dev/nexcode
+  # Pinned tag. Never "latest": PCAI re-imports and rollbacks must be reproducible.
+  tag: "tilt-0d62d9641ebbbd56"
+  pullPolicy: IfNotPresent
+imagePullSecrets: []
+replicaCount: 1
+service:
+  type: ClusterIP
+  port: 3000
+  targetPort: 3000
+probes:
+  # Must answer 2xx or 3xx without signing in.
+  path: "/"
+  initialDelaySeconds: 10
+  periodSeconds: 20
+  timeoutSeconds: 5
+  failureThreshold: 6
+# Plain, non-secret settings: [{name: FOO, value: "bar"}]
+env:
+  - name: IDE_HOST
+    value: localhost:8080
+  - name: NODE_TLS_REJECT_UNAUTHORIZED
+    value: "0"
+  - name: NEXCODE_CHAT_URL
+    value: https://nemotron.project-demos.serving.demo.lon-pcai.twlon.com
+  - name: NEXCODE_EMBED_URL
+    value: https://embed.project-demos.serving.demo.lon-pcai.twlon.com
+  - name: NEXCODE_LITELLM_URL
+    value: https://litellm.demo.lon-pcai.twlon.com
+  - name: NEXCODE_RERANK_URL
+    value: https://rerank.project-demos.serving.demo.lon-pcai.twlon.com
+  - name: NEXCODE_WEAVIATE_URL
+    value: http://weaviate.hpe-weaviate.svc.cluster.local:80
+# Secrets are created outside the chart (EzAppConfig values are stored in plain text).
+# Every key of each listed Secret becomes an environment variable.
+existingSecrets:
+  - nexus-nexcode-secrets
+persistence:
+  enabled: true
+  existingClaim: nexus-nexcode-workspace
+  storageClass: nexus-nfs-retain
+  accessModes:
+    - ReadWriteOnce
+  size: 5Gi
+  mountPath: /usr/src/app/nexcode-data/workspace
+  subPath: code-workspace
+extraVolumes:
+  - name: shared-data
+    emptyDir: {}
+  - name: ide-start
+    configMap:
+      name: 'nexus-nexcode-ide-start'
+extraVolumeMounts:
+  - name: shared-data
+    mountPath: /usr/src/app/nexcode-data/shared
+  - name: data
+    mountPath: /usr/src/app/nexcode-data/state
+    subPath: app-state
+  - name: data
+    mountPath: /usr/src/app/public/extracted_images
+    subPath: app-images
+# Sidecars (full container specs; templated, so "{{ .Values... }}" works). Give each its own
+# securityContext, probes and resources; mount the main volume by name "data".
+extraContainers:
+  - name: nexcode-ide
+    image: '{{ .Values.ide.image.repository }}:{{ .Values.ide.image.tag }}'
+    imagePullPolicy: IfNotPresent
+    securityContext:
+      runAsUser: 1000
+      runAsGroup: 1000
+      allowPrivilegeEscalation: false
+    command:
+      - bash
+      - /opt/nexcode/start-ide.sh
+    ports:
+      - name: ide
+        containerPort: 8080
+        protocol: TCP
+      - name: bridge
+        containerPort: 9100
+        protocol: TCP
+    env:
+      - name: NEXCODE_BRIDGE_TOKEN
+        valueFrom:
+          secretKeyRef:
+            name: nexus-nexcode-secrets
+            key: NEXCODE_BRIDGE_TOKEN
+      - name: NODE_TLS_REJECT_UNAUTHORIZED
+        value: "0"
+      - name: LANG
+        value: en_GB.UTF-8
+      - name: LC_ALL
+        value: en_GB.UTF-8
+      - name: NODE_OPTIONS
+        value: --max-old-space-size=3072
+      - name: VSCODE_NODE_OPTIONS
+        value: --max-old-space-size=3072
+      - name: VSCODE_EXTENSION_HOST_NODE_OPTIONS
+        value: --max-old-space-size=3072
+    volumeMounts:
+      - name: data
+        mountPath: /home/coder/project
+        subPath: code-workspace
+      - name: data
+        mountPath: /home/coder/.local/share/code-server
+        subPath: code-server-data
+      - name: shared-data
+        mountPath: /home/coder/project/.shared
+      - name: ide-start
+        mountPath: /opt/nexcode
+    readinessProbe:
+      httpGet:
+        path: /
+        port: ide
+      initialDelaySeconds: 15
+      periodSeconds: 10
+      timeoutSeconds: 5
+    livenessProbe:
+      httpGet:
+        path: /
+        port: ide
+      initialDelaySeconds: 30
+      periodSeconds: 20
+      timeoutSeconds: 5
+      failureThreshold: 6
+    resources:
+      requests:
+        cpu: 200m
+        memory: 512Mi
+      limits:
+        cpu: "2"
+        memory: 4Gi
+serviceAccount:
+  create: true
+  name: ""
+  # Most apps never call the Kubernetes API.
+  automountToken: false
+podSecurityContext:
+  fsGroup: 1000
+securityContext:
+  allowPrivilegeEscalation: false
+resources:
+  requests:
+    cpu: 200m
+    memory: 1Gi
+  limits:
+    cpu: "2"
+    memory: 10Gi
+# Ingress allow-list for this app's pods (Calico enforces it on lonpcai).
+networkPolicy:
+  enabled: true
+  # Any pod in the release namespace (the Nexus apps and nexus-gateway).
+  allowSameNamespace: true
+  # The platform ingress gateway, for direct VirtualService routing.
+  allowIngressGateway: true
+  # Extra NetworkPolicyIngressRule entries, e.g. a caller in another namespace.
+  extraIngress: []
+nodeSelector: {}
+tolerations: []
+affinity: {}
+ide:
+  image:
+    repository: registry.demo.lon-pcai.twlon.com/dev/nexcode-ide
+    tag: tilt-266ccacf21f27e93

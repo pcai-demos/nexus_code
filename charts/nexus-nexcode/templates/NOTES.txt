@@ -1,0 +1,7 @@
+{{ include "app.fullname" . }} is deployed in namespace {{ .Release.Namespace }}.
+
+URL:  https://{{ .Values.ezua.virtualService.endpoint }}
+Sign-in: {{ if .Values.nexusSso.enabled }}Nexus SSO through {{ .Values.nexusSso.gateway.service }}{{ else if .Values.ezua.authorizationPolicy.enabled }}PCAI SSO (oauth2-proxy){{ else }}none at the gateway (the app handles it){{ end }}
+{{- if .Values.persistence.enabled }}
+Data: PVC {{ include "app.claimName" . }} (kept on uninstall)
+{{- end }}
