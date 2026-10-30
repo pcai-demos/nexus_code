@@ -1,0 +1,8 @@
+NEXUS BANK PLC - CLEARING TOTALS
+BUSINESS DATE: 2026-06-24
+SCHEME       COUNT             GROSS            FEES               NET
+AMEX             3          2,343.58-          58.59-         2,284.99-
+MASTERCARD       5      1,234,627.14        3,704.41      1,230,922.73
+VISA             7        251,030.80          501.81        250,528.99
+TOTAL           15      1,483,314.36        4,147.63      1,479,166.73
+READ:     21  DECLINED:      3  OTHER DATE:      3

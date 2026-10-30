@@ -1,0 +1,252 @@
+{
+  "id": "s5",
+  "title": "Comment the clearing batch to the Code Documentation Standard",
+  "summary": "Legacy code documented to the firm's rules, with a tool showing that no line of code changed",
+  "story": "Internal Audit's finding DOC-2026-14 says the clearing batch's comments can't be trusted. Priya Nair brings them up to the Code Documentation Standard with NexCODE: the four layers explain each gap, NexCODE writes the comments, and a tool shows that no line of code changed before the change is recorded.",
+  "language": "COBOL",
+  "minutes": 4,
+  "icon": "RiDoubleQuotesL",
+  "ticket": {
+    "id": "DOC-2026-14",
+    "path": "nexus-payments/backlog/DOC-2026-14.md"
+  },
+  "select": {
+    "reset": true,
+    "runTests": true
+  },
+  "card": {
+    "about": "Documenting legacy code is the first step of modernising it. The clearing batch's comments name a company that no longer exists, describe rounding the code doesn't do, hold a card number and keep dead code. NexCODE assesses each gap against the four layers of rules, then writes the comments to the Code Documentation Standard: the header with the Bank's notices, a purpose comment for every division, section and paragraph, the stale comments put right. A tool shows that no line of code changed and the program still gives the same totals, and the change is recorded with its AI disclosure.",
+    "scenario": "Monday 20 July 2026. Grace Whitfield of Internal Audit raised DOC-2026-14 in June: the clearing batch's comments fail the Code Documentation Standard. The batch's last COBOL maintainer retires at the end of September, and its Java port is in its parallel run. Priya Nair fixes the comments before cut-over, in one comments-only change.",
+    "people": [
+      {
+        "name": "Priya Nair",
+        "role": "Senior engineer, Clearing Engineering",
+        "part": "the presenter plays Priya: assesses the comments, applies NexCODE's, runs the checks, records the change"
+      },
+      {
+        "name": "Grace Whitfield",
+        "role": "Internal Audit",
+        "part": "raised DOC-2026-14"
+      },
+      {
+        "name": "Marcus Thorne",
+        "role": "Chief Architect",
+        "part": "owns the Code Documentation Standard"
+      },
+      {
+        "name": "David Vance",
+        "role": "Head of Payments Engineering",
+        "part": "approves the change"
+      }
+    ],
+    "teams": [
+      "Clearing Engineering, Payments & Settlements Technology",
+      "Internal Audit",
+      "Legal (General Counsel)"
+    ],
+    "artefacts": {
+      "code": [
+        {
+          "path": "nexus-payments/backlog/DOC-2026-14.md",
+          "role": "Internal Audit's finding, in the tracker's shape"
+        },
+        {
+          "path": "nexus-payments/legacy/clearing-batch/CLEARING.cbl",
+          "role": "the clearing batch: the program whose comments change, and whose code must not"
+        },
+        {
+          "path": "nexus-payments/legacy/clearing-batch/clearing_input.dat",
+          "role": "the fixture the program's own check runs on"
+        },
+        {
+          "path": "nexus-payments/legacy/clearing-batch/expected_totals.txt",
+          "role": "the report the program must still print"
+        }
+      ],
+      "documents": [
+        {
+          "source": "FCA_SYSC_June2026.pdf",
+          "role": "SYSC 15A.4.1R: identify and document the people, processes and technology behind each important business service"
+        },
+        {
+          "source": "FCA_SYSC-4_October2026.pdf",
+          "role": "SYSC 4.1.1R: sound administrative procedures, behind the classification and the change records"
+        },
+        {
+          "source": "FCA_PS21-3_OperationalResilience_March2021.pdf",
+          "role": "chapter 5 (pages 30 and 31): mapping the resources behind a service, the individuals it depends on included"
+        },
+        {
+          "source": "PCI-DSS-v4_0_1_June2024.pdf",
+          "role": "3.3.1 and 3.5.1: no readable card number wherever it is stored; 6.2.3: bespoke code reviewed before release; 6.2.4: secure engineering techniques"
+        },
+        {
+          "source": "FCA_AI-Update_April2024.pdf",
+          "role": "page 16: the accountability and governance principle, behind disclosing AI assistance"
+        },
+        {
+          "source": "PSRs_2017_April2026.pdf",
+          "role": "regulation 84: the full amount transferred, behind the money logic's requirement tag"
+        },
+        {
+          "source": "Nexus_LEG-POL-001_Intellectual-Property-and-Notices-Policy_v2.md",
+          "role": "clause 4.2: the Bank's copyright notice and trade mark line in its software, inherited code included"
+        },
+        {
+          "source": "Nexus_TEC-POL-004_Technology-Lifecycle-and-Modernisation-Policy_v2.md",
+          "role": "clause 4.6: knowledge held by few people, so the system's behaviour is documented"
+        },
+        {
+          "source": "Nexus_SEC-POL-001_Information-Security-and-Data-Handling-Policy_v5.md",
+          "role": "clauses 4.2 to 4.4: classification, secrets and card data"
+        },
+        {
+          "source": "Nexus_TEC-POL-005_AI-Assisted-Development-Policy_v2.md",
+          "role": "clauses 4.4 and 4.5: AI-assisted work labelled and recorded"
+        },
+        {
+          "source": "Nexus_TEC-POL-002_Technology-Change-Management-and-Segregation-of-Duties-Policy_v4.md",
+          "role": "clauses 4.5 and 4.8: automated checks and change records"
+        },
+        {
+          "source": "Nexus_FIN-POL-003_Financial-Controls-and-Reconciliation-Policy_v4.md",
+          "role": "clause 4.3: charges calculated exactly under a documented rule"
+        },
+        {
+          "source": "Nexus_DOC_Code-Documentation-Standard_v1.md",
+          "role": "DOC-001 to DOC-008: the header, purpose comments, comments that agree with the code, no card numbers or dead code, AI disclosure, and a documentation-only change proved by a tool"
+        },
+        {
+          "source": "Nexus_MIG_Legacy-Modernisation-Standard_v1.md",
+          "role": "MIG-002: a comment that contradicts the code is fixed in its own change, never the code"
+        },
+        {
+          "source": "Nexus_REV_Code-Review-Standard_v2.md",
+          "role": "REV-005: AI-assisted changes labelled and reviewed by a person"
+        },
+        {
+          "source": "Nexus_PAY_Payments-Engineering-Standard_v3.md",
+          "role": "PAY-012: fees rounded to the penny, half up, the requirement the fee comment names"
+        },
+        {
+          "source": "Nexus_CLR-WIKI-021_Commenting-The-Clearing-Batch.md",
+          "role": "the team's header template, its facts, the twelve units and the comment check"
+        },
+        {
+          "source": "Nexus_CLR-WIKI-019_Running-The-Clearing-Batch-Locally.md",
+          "role": "Q1 how ROUNDED rounds; Q8 trust the code, not its comments; the COBOL check"
+        }
+      ]
+    },
+    "outputs": [
+      "An assessment of the comments: each gap with its rule, policy clause and regulation",
+      "The commented program, shown in the IDE as a diff of comment lines only",
+      "The checks: no line of code changed, the same totals from the same input, the header and every unit documented, verified by tool",
+      "An evidence record of a documentation-only change, with the AI disclosure"
+    ],
+    "value": [
+      "Legacy code documented to the firm's own standard before the people who know it leave",
+      "The Bank's notices, classification and requirements in every program header, as policy requires",
+      "A tool, not a person's eye, shows that a documentation change changed no behaviour",
+      "The use of AI is disclosed in the code and in the record"
+    ],
+    "highlight": {
+      "rule": "DOC-008",
+      "text": "A documentation-only change leaves behaviour unchanged: a tool shows that no line of code changed, and the program's own check still passes on the same inputs.",
+      "source": "Nexus_DOC_Code-Documentation-Standard_v1.md"
+    }
+  },
+  "open": [
+    "nexus-payments/backlog/DOC-2026-14.md",
+    "nexus-payments/legacy/clearing-batch/CLEARING.cbl"
+  ],
+  "steps": [
+    {
+      "id": "assess",
+      "title": "Assess the comments",
+      "mode": "explain",
+      "prompt": "Assess the clearing batch's comments against the Code Documentation Standard for DOC-2026-14: what is missing or wrong, and the rules, policy clauses and regulations behind each gap. Change nothing yet.",
+      "attach": [
+        "nexus-payments/legacy/clearing-batch/CLEARING.cbl"
+      ],
+      "traceRegulators": true,
+      "traceRules": [
+        "DOC-001",
+        "DOC-002",
+        "DOC-003",
+        "DOC-004",
+        "DOC-005",
+        "DOC-006",
+        "DOC-007",
+        "DOC-008"
+      ],
+      "layerTopics": {
+        "regulator": [
+          "identify and document the people, processes, technology, facilities and information necessary to deliver each important business service"
+        ],
+        "corporate": [
+          "knowledge or skills that only one or two people hold: the system's behaviour documented",
+          "notices in the Bank's software: the copyright notice and trade mark line",
+          "classification of information"
+        ],
+        "sdlc": [
+          "the mandatory header comment",
+          "a purpose comment for every division, section and paragraph",
+          "a comment that contradicts the code is a defect",
+          "no card numbers in comments; no commented-out code"
+        ],
+        "team": [
+          "what the old comments get wrong",
+          "trust the code, not its comments",
+          "the facts for the header"
+        ]
+      }
+    },
+    {
+      "id": "comment",
+      "title": "Comment it",
+      "mode": "comments",
+      "prompt": "Bring the clearing batch, nexus-payments/legacy/clearing-batch/CLEARING.cbl, up to the Code Documentation Standard for DOC-2026-14: the mandatory header, a purpose comment for each division, section and paragraph, the stale comments corrected to what the code does, and the commented-out code and the card number removed. Date the history entry 20 July 2026. Change no line of code.",
+      "attach": [
+        "nexus-payments/legacy/clearing-batch/CLEARING.cbl"
+      ],
+      "comments": {
+        "source": "nexus-payments/legacy/clearing-batch/CLEARING.cbl"
+      },
+      "thinking": "off",
+      "history": "off",
+      "after": [
+        "run-tests"
+      ],
+      "repair": {
+        "prompt": "The checks failed after the change. Read the documentation check's findings in the test output and fix the comments only, giving the program back whole again. Change no line of code."
+      },
+      "layerTopics": {
+        "regulator": [
+          "identify and document the people, processes, technology, facilities and information necessary to deliver each important business service"
+        ],
+        "corporate": [
+          "notices in the Bank's software: the copyright notice and trade mark line naming the Bank's current legal entity"
+        ],
+        "sdlc": [
+          "the mandatory header: name, purpose, service, owner, classification, notice, history and requirements",
+          "a purpose comment for every division, section and paragraph",
+          "money logic carries the requirement it implements; AI assistance is disclosed in the header"
+        ],
+        "team": [
+          "the header's fields in order: PROGRAM, PURPOSE, SERVICE, OWNER, CLASSIFICATION, the copyright line and the trade mark line, HISTORY, REQUIREMENTS and AI-ASSISTED",
+          "the facts for the header: who wrote CLEARING and when, the important business service, the owning squad, its classification and the requirement its fee calculation implements"
+        ]
+      }
+    },
+    {
+      "id": "record",
+      "title": "Record the change",
+      "action": "record"
+    }
+  ],
+  "commands": {
+    "tests": "s3-legacy"
+  },
+  "talkTrack": "Documenting legacy code is the first step of modernising it. Select the demo: the program and Internal Audit's finding open, and the checks run once; the program still gives the right totals, but the documentation check fails, as the finding says. Assess: NexCODE reads the program against the four layers and explains each gap, the old company in the copyright line, the comment that says truncated where the code rounds, the card number, the dead code, from the standard to the policy to the regulation. Comment it: NexCODE gives the program back with its comments only; the IDE shows the diff, comment lines alone. If NexCODE's copy changed a line of code, a tool put the program's own line back first, and the chat says which. Apply, then run the checks: a tool shows no line of code changed, the program prints the same totals, and the header and every unit are documented. Record the change: a documentation-only change, verified by tool, with the AI disclosure. Point at the card: DOC-008 is a rule in the Bank's own standard."
+}

@@ -1,0 +1,248 @@
+{
+  "id": "s2",
+  "title": "Review pull request PAY-2318, the refund API",
+  "summary": "Hold the pull request gate with evidence: tool facts and judgement kept apart",
+  "story": "Tom Okafor's pull request PAY-2318 adds the card refund API. Priya Nair reviews it with NexCODE before it can merge: the pre-merge checks run first, the review traces every finding to the standard, the policy and the regulator, and the two Critical findings are fixed before the review is filed.",
+  "language": "TypeScript",
+  "minutes": 4,
+  "icon": "RiGitPullRequestLine",
+  "ticket": {
+    "id": "PAY-2318",
+    "path": "nexus-payments/backlog/PAY-2318.md"
+  },
+  "select": {
+    "reset": true,
+    "runTests": true,
+    "branch": "pr/PAY-2318"
+  },
+  "review": {
+    "base": "main",
+    "branch": "pr/PAY-2318",
+    "changed": [
+      "nexus-payments/services/refund-api/src/refund-service.ts",
+      "nexus-payments/services/refund-api/src/audit-log.ts",
+      "nexus-payments/services/refund-api/package.json"
+    ]
+  },
+  "card": {
+    "about": "A pull request review done the way a regulated payments team has to do it. Six pre-merge checks run first and their findings are verified by tool; NexCODE adds the findings only judgement can make, marked as assessed, and traces each one through the four layers of rules. The findings appear in the chat as a table and in the IDE as review comments on the lines they concern. The two Critical findings are fixed, the tests run, and the evidence record files the review as Changes requested.",
+    "scenario": "Tuesday 12 May 2026. Tom Okafor, six months on the squad, asks for review of PAY-2318, the new refund API: a full card number logged at info level, a live gateway key in the code, money in floating point, SQL built from strings, a retry library nobody approved, no tests, no audit event, retries without an idempotency key, and a 2023 wiki tip the code follows that the standards have since overruled. Priya Nair reviews it with NexCODE.",
+    "people": [
+      {
+        "name": "Priya Nair",
+        "role": "Senior engineer, Clearing Engineering",
+        "part": "the presenter plays Priya: reviews the pull request, applies the fixes for the Critical findings, runs the tests, files the review"
+      },
+      {
+        "name": "Tom Okafor",
+        "role": "Engineer, Clearing Engineering",
+        "part": "the author of PAY-2318"
+      },
+      {
+        "name": "Siobhan Patel",
+        "role": "Principal Security Engineer",
+        "part": "owns the Secure Coding Standard the review applies"
+      },
+      {
+        "name": "David Vance",
+        "role": "Head of Payments Engineering",
+        "part": "release authority for the refund API"
+      }
+    ],
+    "teams": [
+      "Clearing Engineering, Payments & Settlements Technology",
+      "Information Security",
+      "Risk & Compliance",
+      "Internal Audit"
+    ],
+    "artefacts": {
+      "code": [
+        {
+          "path": "nexus-payments/backlog/PAY-2318.md",
+          "role": "the pull request, in the tracker's shape"
+        },
+        {
+          "path": "nexus-payments/services/refund-api/src/refund-service.ts",
+          "role": "the new refund service, with the planted issues"
+        },
+        {
+          "path": "nexus-payments/services/refund-api/src/audit-log.ts",
+          "role": "the audit events: the pull request adds REFUND_REQUESTED"
+        },
+        {
+          "path": "nexus-payments/services/refund-api/package.json",
+          "role": "the manifest: the pull request adds async-retry"
+        },
+        {
+          "path": "nexus-payments/approved-dependencies.json",
+          "role": "the approved packages the dependency check reads (DEP-001)"
+        },
+        {
+          "path": "nexus-payments/services/refund-api/test/audit-log.test.ts",
+          "role": "the existing tests, which must still pass"
+        }
+      ],
+      "documents": [
+        {
+          "source": "PCI-DSS-v4_0_1_June2024.pdf",
+          "role": "3.4.1 and 3.5.1: card numbers masked, and unreadable wherever stored, logs included; 6.2.3 review before release; 6.2.4 injection; 6.3.2 inventory of components"
+        },
+        {
+          "source": "FCA_SYSC-4_October2026.pdf",
+          "role": "SYSC 4.1.1R effective control and safeguard arrangements for information processing systems"
+        },
+        {
+          "source": "PSRs_2017_April2026.pdf",
+          "role": "regulation 98(1) operational and security risks, behind the hard-coded key; regulation 84, the full amount transferred, behind decimal money"
+        },
+        {
+          "source": "PRA_SS2-21_Outsourcing_November2024.pdf",
+          "role": "open source software is a third-party arrangement, assessed before use (paragraphs 2.3 to 2.6)"
+        },
+        {
+          "source": "FCA_SYSC_June2026.pdf",
+          "role": "SYSC 15A operational resilience, behind the idempotency rule"
+        },
+        {
+          "source": "PRA_SS1-21_OperationalResilience_March2022.pdf",
+          "role": "paragraph 6.6: a service with insufficient integrity is outside its impact tolerance, behind the idempotency key; paragraphs 4.5 and 5.5 on third parties"
+        },
+        {
+          "source": "FCA_AI-Update_April2024.pdf",
+          "role": "the regulators' technology-agnostic approach to AI, cited for approach, not as rules"
+        },
+        {
+          "source": "Nexus_SEC-POL-001_Information-Security-and-Data-Handling-Policy_v5.md",
+          "role": "secrets, card data, what logs may hold, minimisation, secure development"
+        },
+        {
+          "source": "Nexus_TPR-POL-002_Third-Party-and-Open-Source-Software-Policy_v3.md",
+          "role": "third-party software approved before use, with an inventory"
+        },
+        {
+          "source": "Nexus_TEC-POL-002_Technology-Change-Management-and-Segregation-of-Duties-Policy_v4.md",
+          "role": "independent review, severity, tool facts kept apart from judgement; team guidance cannot relax a standard"
+        },
+        {
+          "source": "Nexus_TEC-POL-005_AI-Assisted-Development-Policy_v2.md",
+          "role": "a human reviews and approves every AI-assisted change, which is labelled and recorded"
+        },
+        {
+          "source": "Nexus_FIN-POL-003_Financial-Controls-and-Reconciliation-Policy_v4.md",
+          "role": "accurate charges and operational resilience, behind the money and idempotency findings"
+        },
+        {
+          "source": "Nexus_SCS_Secure-Coding-Standard_v4.md",
+          "role": "SCS-010 and SCS-011 secrets, SCS-021 and SCS-022 card numbers in logs, SCS-030 minimal data, SCS-031 parameterised queries"
+        },
+        {
+          "source": "Nexus_REV_Code-Review-Standard_v2.md",
+          "role": "the checklist, the severity scale, tool or reviewer, AI-assisted reviews, the outcome, conflicting guidance"
+        },
+        {
+          "source": "Nexus_DEP_Approved-Dependencies-and-Licences-Standard_v3.md",
+          "role": "DEP-001 approved packages only, kept as data in the repository"
+        },
+        {
+          "source": "Nexus_INT_Payments-Integration-Standard_v2.md",
+          "role": "INT-001 idempotency keys on money-moving calls, reused on every retry"
+        },
+        {
+          "source": "Nexus_PAY_Payments-Engineering-Standard_v3.md",
+          "role": "PAY-012 decimal money; PAY-030 audit events for money movement"
+        },
+        {
+          "source": "Nexus_TST_Testing-and-Definition-of-Done-Standard_v3.md",
+          "role": "TST-001 tests with every change"
+        },
+        {
+          "source": "Nexus_CLR-WIKI-014_Why-We-Log-The-Last-Four-Only.md",
+          "role": "the team's rule: the last four digits only, masked before logging, debug included"
+        },
+        {
+          "source": "Nexus_CLR-WIKI-006_Debugging-Tip-Dump-The-Full-Request-Payload.md",
+          "role": "the stale 2023 tip the code follows, which the standard has overruled"
+        },
+        {
+          "source": "Nexus_ADR-007_Retries-and-Idempotency-Keys.md",
+          "role": "the team's decision after 23 refunds were paid twice: one key per refund, reused on retry"
+        },
+        {
+          "source": "Nexus_CLR-DIGEST-2026-04_Review-Comment-Digest.md",
+          "role": "the squad's April review findings, a week before this pull request"
+        }
+      ]
+    },
+    "outputs": [
+      "A review table: each finding's severity, location and rule chain, marked verified by tool or assessed by the reviewer",
+      "The findings as review comments on their lines in the IDE",
+      "The two Critical findings fixed in the IDE, with the existing tests passing",
+      "An evidence record filing the review as Changes requested, with the tool output, the fixes and the AI disclosure"
+    ],
+    "value": [
+      "The pull request gate is where governance happens; the review it leaves can be attached to the change record",
+      "Tool facts and model judgement are kept apart, so a reviewer knows what is proven and what to check",
+      "A team note that contradicts a standard is caught and the standard applied",
+      "The use of AI on the review is itself recorded and disclosed"
+    ]
+  },
+  "open": [
+    "nexus-payments/backlog/PAY-2318.md"
+  ],
+  "steps": [
+    {
+      "id": "review",
+      "title": "Review",
+      "mode": "review",
+      "prompt": "Review pull request PAY-2318 against our standards.",
+      "attach": [
+        "nexus-payments/services/refund-api/src/refund-service.ts",
+        "nexus-payments/services/refund-api/src/audit-log.ts",
+        "nexus-payments/services/refund-api/src/logger.ts",
+        "nexus-payments/services/refund-api/src/db.ts",
+        "nexus-payments/services/refund-api/package.json",
+        "nexus-payments/approved-dependencies.json",
+        "nexus-payments/backlog/PAY-2318.md"
+      ],
+      "retrievalHints": [
+        "management of operational and security risks",
+        "effective control and safeguard arrangements for information processing systems",
+        "card numbers in audit logs, exception, or troubleshooting logs",
+        "an idempotency key reused on every retry of a refund",
+        "an audit event for every action that moves money",
+        "dump the full request payload when debugging"
+      ]
+    },
+    {
+      "id": "fix",
+      "title": "Fix the Critical findings",
+      "mode": "change",
+      "prompt": "Fix the two Critical findings, T1 and T2, and change nothing else.",
+      "attach": [
+        "nexus-payments/services/refund-api/src/refund-service.ts",
+        "nexus-payments/services/refund-api/src/logger.ts",
+        "nexus-payments/services/refund-api/test/audit-log.test.ts"
+      ],
+      "retrievalHints": [
+        "secrets read at run time from the secrets vault, never written into code",
+        "a card number in a log cut to the last four digits, masked before it reaches a logger",
+        "a committed secret is revoked and replaced"
+      ],
+      "after": [
+        "run-tests"
+      ],
+      "repair": {
+        "prompt": "The tests failed after the change. Read the test output, find the cause and fix it."
+      }
+    },
+    {
+      "id": "record",
+      "title": "File the review",
+      "action": "record"
+    }
+  ],
+  "commands": {
+    "tests": "s2-tests"
+  },
+  "talkTrack": "The pull request gate is where governance happens in practice. Select the demo: the pull request opens as diffs against main and the tests run once. Review: the six pre-merge checks run first and their findings are verified by tool; NexCODE explains each one and adds what only judgement finds: no audit event on a refund, retries without an idempotency key, and a 2023 wiki tip the code follows that the standard has since overruled. The findings show as a table in the chat and as review comments on their lines in the IDE. Fix: the two Critical findings, the live key and the card number in the log, are fixed in the IDE, applied, and the tests run. File the review: the evidence record shows Changes requested, the tool output, the fixes and the AI disclosure, and the key goes for rotation under SCS-011."
+}

@@ -1,0 +1,183 @@
+{
+  "id": "s1",
+  "title": "Settlement mismatch incident",
+  "summary": "Find and fix a bug with the team's memory and the rule chain",
+  "ticket": {
+    "id": "INC-2026-0419",
+    "path": "nexus-payments/backlog/INC-2026-0419.md"
+  },
+  "story": "The nightly settlement reconciliation for 18 April 2026 failed its integrity check: the scheme fee totals differ from the card schemes' own settlement totals by a few pence, and the settlement file is held for manual review.",
+  "language": "Python and SQL",
+  "minutes": 4,
+  "icon": "RiBugLine",
+  "select": {
+    "reset": true,
+    "runTests": true
+  },
+  "card": {
+    "about": "A bug fix done the way a regulated payments team has to do it. The chat explains the problem, the rules it touches and the recommendation in plain language; the code stays in the IDE. The presenter reviews the proposed change as a diff, applies it and runs the tests until they pass, and the system writes an evidence record that names the rules cited, the test run and the model that wrote the change.",
+    "scenario": "Priya Nair picks up INC-2026-0419 first thing. Finance Operations has held the 18 April settlement file because the scheme fee totals are a few pence short of what Visa and Mastercard settled. The reconciliation job accumulates fees in binary floating point and truncates to pence; the team's own 2024 penny-drift post-mortem and the Payments Engineering Standard both say money is exact decimal, rounded once per transaction. The fix is small; what matters is that it traces to the standard and the regulation and leaves a record an auditor can read.",
+    "people": [
+      {
+        "name": "Priya Nair",
+        "role": "Senior engineer, Clearing Engineering",
+        "part": "the presenter plays Priya: diagnoses, applies the fix, runs the tests, records the change"
+      },
+      {
+        "name": "David Vance",
+        "role": "Head of Payments Engineering",
+        "part": "owns the incident and approves the change"
+      },
+      {
+        "name": "Sarah Jenkins",
+        "role": "Director of Risk and Compliance",
+        "part": "reads the evidence record"
+      },
+      {
+        "name": "Grace Whitfield",
+        "role": "Internal Audit",
+        "part": "later asks which rules the fix traced to"
+      }
+    ],
+    "teams": [
+      "Clearing Engineering, Payments & Settlements Technology",
+      "Finance Operations",
+      "Risk & Compliance",
+      "Internal Audit"
+    ],
+    "artefacts": {
+      "code": [
+        {
+          "path": "nexus-payments/backlog/INC-2026-0419.md",
+          "role": "the incident ticket, in the tracker's shape"
+        },
+        {
+          "path": "nexus-payments/services/settlement/settlement_reconciler.py",
+          "role": "the nightly reconciliation job with the planted fault"
+        },
+        {
+          "path": "nexus-payments/services/settlement/reconciliation.sql",
+          "role": "the reconciliation query"
+        },
+        {
+          "path": "nexus-payments/services/settlement/test_settlement_reconciler.py",
+          "role": "the failing unit test over an SQLite fixture"
+        },
+        {
+          "path": "nexus-payments/services/settlement/fixtures/settlement_fixture.sql",
+          "role": "the settlement fixture: transactions, fees and scheme totals"
+        }
+      ],
+      "documents": [
+        {
+          "source": "FCA_SYSC-4_October2026.pdf",
+          "role": "SYSC 4.1.1R robust governance arrangements and internal control mechanisms, including sound administrative and accounting procedures; SYSC 4.1.2R proportionality"
+        },
+        {
+          "source": "FCA_SYSC_June2026.pdf",
+          "role": "SYSC 15A operational resilience"
+        },
+        {
+          "source": "FCA_PS21-3_OperationalResilience_March2021.pdf",
+          "role": "important business services and impact tolerances"
+        },
+        {
+          "source": "PRA_SS1-21_OperationalResilience_March2022.pdf",
+          "role": "the PRA's expectations of operational resilience"
+        },
+        {
+          "source": "PSRs_2017_April2026.pdf",
+          "role": "execution of payment transactions and charges"
+        },
+        {
+          "source": "Nexus_FIN-POL-003_Financial-Controls-and-Reconciliation-Policy_v4.md",
+          "role": "the corporate rule above the standards: governance and internal control, accurate charges, daily reconciliation, breaks resolved before release, testing of changes and evidence (clauses 4.1 to 4.10)"
+        },
+        {
+          "source": "Nexus_PAY_Payments-Engineering-Standard_v3.md",
+          "role": "the requirements the faulty code breaks (PAY-012, PAY-013), the integrity check that caught it (PAY-014, PAY-015) and the change and audit rules for the fix (PAY-020, PAY-030)"
+        },
+        {
+          "source": "Nexus_TST_Testing-and-Definition-of-Done-Standard_v3.md",
+          "role": "what the fix must ship with: reconciliation tests whose figures come from the fixture (TST-004), a regression test that failed first (TST-006) and the evidence (TST-008)"
+        },
+        {
+          "source": "Nexus_PM-2024-011_Penny-Drift-Post-Mortem.md",
+          "role": "the team's own memory: the same bug in the 2024 refund fee batch, a first fix that was also wrong, and the lessons (L1 to L4)"
+        },
+        {
+          "source": "Nexus_ADR-004_Monetary-Amounts-Use-Decimal.md",
+          "role": "the team's decision: money is Decimal with a scale of two, rounded half up once per transaction (D1, D3)"
+        }
+      ]
+    },
+    "outputs": [
+      "A corrected reconciler that uses exact decimal arithmetic, with the existing tests passing",
+      "The test run captured with its command, exit code and output, shown in the IDE",
+      "An evidence record under compliance/records naming the rules cited, the tests, the model and the files changed, approval pending"
+    ],
+    "value": [
+      "The fix is traceable to the standard and the regulation, not only to a developer's judgement",
+      "The team's own history is applied instead of relearnt, once the team layer is in the store",
+      "The use of AI on the change is itself recorded: model, thinking mode, tokens, time and sources",
+      "Reset and repeat: the demo runs from the same seed every time"
+    ]
+  },
+  "open": [
+    "nexus-payments/backlog/INC-2026-0419.md",
+    "nexus-payments/services/settlement/settlement_reconciler.py",
+    "nexus-payments/services/settlement/test_settlement_reconciler.py"
+  ],
+  "steps": [
+    {
+      "id": "diagnose",
+      "title": "Diagnose",
+      "mode": "explain",
+      "prompt": "Diagnose INC-2026-0419 using the failing test and our standards.",
+      "attach": [
+        "nexus-payments/backlog/INC-2026-0419.md",
+        "nexus-payments/services/settlement/settlement_reconciler.py",
+        "nexus-payments/services/settlement/reconciliation.sql",
+        "nexus-payments/services/settlement/test_settlement_reconciler.py"
+      ],
+      "retrievalHints": [
+        "robust governance arrangements, internal control mechanisms and sound administrative and accounting procedures",
+        "operational resilience of important business services",
+        "execution of payment transactions and charges",
+        "monetary amounts held in decimal and rounded half up once per transaction"
+      ]
+    },
+    {
+      "id": "fix",
+      "title": "Fix and test",
+      "mode": "change",
+      "prompt": "Fix it so the failing tests pass, and keep the existing tests as they are.",
+      "attach": [
+        "nexus-payments/services/settlement/settlement_reconciler.py",
+        "nexus-payments/services/settlement/reconciliation.sql",
+        "nexus-payments/services/settlement/test_settlement_reconciler.py"
+      ],
+      "retrievalHints": [
+        "robust governance arrangements, internal control mechanisms and sound administrative and accounting procedures",
+        "operational resilience of important business services",
+        "testing of changes to systems",
+        "monetary amounts held in decimal and rounded half up once per transaction"
+      ],
+      "after": [
+        "run-tests"
+      ],
+      "repair": {
+        "prompt": "The tests failed after the change. Read the test output, find the cause and fix it."
+      }
+    },
+    {
+      "id": "record",
+      "title": "Record the change",
+      "action": "record"
+    }
+  ],
+  "commands": {
+    "tests": "s1-tests"
+  },
+  "talkTrack": "Every team has incidents. What matters here is that the fix traces to the standard and the regulation, and that the team's past lesson is used rather than relearnt. Select the demo: the ticket and the code open in the IDE and the tests run once, failing as the ticket reports. Diagnose: the chat explains the cause and the rules behind it, layer by layer, in plain language, and the IDE highlights the faulty lines. Fix: the IDE shows the proposed change as a diff; apply it and run the tests until they pass. Record: the evidence record lists the rules, the test run and the model that wrote the change."
+}

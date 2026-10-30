@@ -1,0 +1,11 @@
+{
+  "srcTreeHash": "98c7ec4c48c78709dae2ee82b66ba573",
+  "srcTreeFiles": 264,
+  "builtAt": "2026-10-14T10:10:58.174Z",
+  "gitSha": "9c9c405",
+  "gitDirty": "dirty",
+  "node": "v20.20.2",
+  "docling": "2.117.0",
+  "pypdfium2": "5.12.1",
+  "mode": "production"
+}

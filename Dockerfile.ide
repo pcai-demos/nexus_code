@@ -1,0 +1,156 @@
+# Pinned 2026-10-09 (the owner's D3): `latest` moved to 4.141.0 on 2026-10-08 and every repository change rebuilds
+# this image, so an unpinned base can change the IDE under the demo. 4.141.0 = digest sha256:72ab24b5680e… on Docker Hub.
+FROM codercom/code-server:4.141.0
+
+USER root
+
+# Generate en_GB locale to avoid setlocale warnings and support British regional formats
+RUN apt-get update && apt-get install -y locales && \
+    sed -i '/en_GB.UTF-8/s/^# //g' /etc/locale.gen && \
+    locale-gen en_GB.UTF-8
+
+# Set default locale variables
+ENV LANG=en_GB.UTF-8
+ENV LC_ALL=en_GB.UTF-8
+
+# Configure architecture-independent environment variables for runtimes
+# JAVA_HOME is set dynamically at build time via dpkg --print-architecture
+ENV GOROOT=/usr/lib/go-1.24
+ENV GOPATH=/home/coder/go
+ENV CARGO_HOME=/home/coder/.cargo
+ENV RUSTUP_HOME=/home/coder/.rustup
+
+# Install the user's requested interpreter and compiler suites:
+# - python, Node.js (JS/TS), Java, Go, C/C++ (build-essential), Rust, Fortran, Cobol, Pascal, Ripgrep
+RUN apt-get install -y \
+    python3 \
+    python3-pip \
+    python3-venv \
+    nodejs \
+    npm \
+    default-jdk \
+    golang-go \
+    build-essential \
+    rustc \
+    cargo \
+    gfortran \
+    gnucobol \
+    ruby \
+    perl \
+    fp-compiler \
+    ripgrep && \
+    rm -rf /var/lib/apt/lists/*
+
+# Detect architecture and set JAVA_HOME + PATH dynamically
+RUN ARCH=$(dpkg --print-architecture) && \
+    JAVA_HOME="/usr/lib/jvm/java-21-openjdk-${ARCH}" && \
+    echo "export JAVA_HOME=${JAVA_HOME}" >> /etc/profile.d/nexcode-env.sh && \
+    echo "export PATH=\$PATH:${JAVA_HOME}/bin:\$GOROOT/bin:\$GOPATH/bin:\$CARGO_HOME/bin" >> /etc/profile.d/nexcode-env.sh
+
+# Install TypeScript execution support globally
+RUN npm install -g typescript ts-node
+
+# Symlink python -> python3 (Debian ships python3 only)
+RUN ln -sf /usr/bin/python3 /usr/local/bin/python
+
+# Create a symlink to ripgrep in the location expected by VS Code extensions (like Roo Code)
+# because code-server bundles it under a non-standard @vscode/ripgrep-universal folder
+RUN mkdir -p /usr/lib/code-server/lib/vscode/node_modules/@vscode/ripgrep/bin && \
+    RG_PATH=$(find /usr/lib/code-server/lib/vscode/node_modules/@vscode/ripgrep-universal/bin -name rg 2>/dev/null | head -n 1) && \
+    if [ -n "$RG_PATH" ]; then \
+        ln -sf "$RG_PATH" /usr/lib/code-server/lib/vscode/node_modules/@vscode/ripgrep/bin/rg; \
+    fi
+
+# Download JUnit 5 Console Standalone jar for standalone test executions
+RUN mkdir -p /usr/share/java && \
+    curl -L -o /usr/share/java/junit-platform-console-standalone.jar https://repo1.maven.org/maven2/org/junit/platform/junit-platform-console-standalone/1.10.2/junit-platform-console-standalone-1.10.2.jar
+
+# ─── Bake extensions into the image ─────────────────────────────────────────
+USER coder
+# Install marketplace extensions via code-server CLI
+RUN code-server --install-extension formulahendry.code-runner && \
+    code-server --install-extension rooveterinaryinc.roo-cline && \
+    code-server --install-extension bitlang.cobol || true
+
+USER root
+# Copy NexCODE theme and bridge extensions from source
+COPY code-server-theme /tmp/nexcode-theme
+RUN mkdir -p /home/coder/.local/share/code-server/extensions/nexcode.nexcode-theme-1.0.0 && \
+    cp -r /tmp/nexcode-theme/. /home/coder/.local/share/code-server/extensions/nexcode.nexcode-theme-1.0.0/ && \
+    rm -rf /tmp/nexcode-theme
+
+COPY code-server-ext/nexcode-bridge /tmp/nexcode-bridge
+RUN mkdir -p /home/coder/.local/share/code-server/extensions/nexcode.nexcode-bridge-1.0.0 && \
+    cp -r /tmp/nexcode-bridge/. /home/coder/.local/share/code-server/extensions/nexcode.nexcode-bridge-1.0.0/ && \
+    rm -rf /tmp/nexcode-bridge
+
+# ─── Bake default VS Code settings ──────────────────────────────────────────
+RUN mkdir -p /home/coder/.local/share/code-server/User && \
+    cat > /home/coder/.local/share/code-server/User/settings.json << 'SETTINGS'
+{
+  "extensions.experimental.maxOldSpaceSize": 3072,
+  "files.associations": {
+    "*.cob": "cobol",
+    "*.cbl": "cobol",
+    "*.pas": "pascal",
+    "*.f90": "fortran"
+  },
+  "workbench.colorTheme": "NexCODE Dark",
+  "editor.fontFamily": "'Poppins', 'Fira Code', 'Cascadia Code', monospace",
+  "editor.fontSize": 14,
+  "editor.lineHeight": 1.6,
+  "editor.minimap.enabled": false,
+  "editor.bracketPairColorization.enabled": true,
+  "editor.guides.bracketPairs": true,
+  "editor.smoothScrolling": true,
+  "editor.cursorBlinking": "smooth",
+  "editor.cursorSmoothCaretAnimation": "on",
+  "workbench.iconTheme": null,
+  "window.menuBarVisibility": "compact",
+  "terminal.integrated.fontFamily": "'Fira Code', monospace",
+  "terminal.integrated.fontSize": 13,
+  "workbench.startupEditor": "none",
+  "security.workspace.trust.enabled": false,
+  "keyboard.dispatch": "keyCode",
+  "code-runner.runInTerminal": true,
+  "code-runner.saveFileBeforeRun": true,
+  "code-runner.clearPreviousOutput": true,
+  "code-runner.showExecutionMessage": false,
+  "code-runner.executorMap": {
+    "cobol": "cd $dir && cobc -x $fileName -o $fileNameWithoutExt && ./$fileNameWithoutExt",
+    "pascal": "cd $dir && fpc $fileName -o$fileNameWithoutExt && ./$fileNameWithoutExt",
+    "fortran": "cd $dir && gfortran $fileName -o $fileNameWithoutExt && ./$fileNameWithoutExt",
+    "java": "cd $dir && javac -cp .:/usr/share/java/junit-platform-console-standalone.jar $fileName && (grep -q \"@Test\" $fileName && java -jar /usr/share/java/junit-platform-console-standalone.jar -cp . --select-class $fileNameWithoutExt || java -cp . $fileNameWithoutExt)"
+  }
+}
+SETTINGS
+
+# ─── Configure user environment ─────────────────────────────────────────────
+# Append environment variables to user bashrc for interactive terminals
+RUN ARCH=$(dpkg --print-architecture) && \
+    echo 'export LANG=en_GB.UTF-8' >> /home/coder/.bashrc && \
+    echo 'export LC_ALL=en_GB.UTF-8' >> /home/coder/.bashrc && \
+    echo "export JAVA_HOME=/usr/lib/jvm/java-21-openjdk-${ARCH}" >> /home/coder/.bashrc && \
+    echo 'export GOROOT=/usr/lib/go-1.24' >> /home/coder/.bashrc && \
+    echo 'export GOPATH=/home/coder/go' >> /home/coder/.bashrc && \
+    echo 'export CARGO_HOME=/home/coder/.cargo' >> /home/coder/.bashrc && \
+    echo 'export RUSTUP_HOME=/home/coder/.rustup' >> /home/coder/.bashrc && \
+    echo 'export PATH=$PATH:$JAVA_HOME/bin:$GOROOT/bin:$GOPATH/bin:$CARGO_HOME/bin' >> /home/coder/.bashrc && \
+    echo 'export CLASSPATH=".:/usr/share/java/junit-platform-console-standalone.jar"' >> /home/coder/.bashrc && \
+    chown -R coder:coder /home/coder/.local /home/coder/.bashrc
+
+# Patch server-main.js to force max-old-space-size for all spawned child processes
+RUN node -e " \
+  const fs = require('fs'); \
+  const file = '/usr/lib/code-server/lib/vscode/out/server-main.js'; \
+  let content = fs.readFileSync(file, 'utf8'); \
+  content = content.replace('this.child=Z9(this.modulePath,t,e);', 'e.execArgv.push(\"--max-old-space-size=3072\");this.child=Z9(this.modulePath,t,e);'); \
+  content = content.replace('s.execArgv.unshift(\"--dns-result-order=ipv4first\");', 's.execArgv.unshift(\"--dns-result-order=ipv4first\",\"--max-old-space-size=3072\");'); \
+  fs.writeFileSync(file, content); \
+"
+
+USER coder
+
+# Create a backup of the default code-server configuration and extensions
+# Force rebuild test
+RUN cp -rp /home/coder/.local/share/code-server /home/coder/.local/share/code-server-backup

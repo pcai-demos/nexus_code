@@ -1,0 +1,197 @@
+[
+  {
+    "runIdx": 1,
+    "collection": "RAGEval_x6_365128993_r1",
+    "started": "2026-08-13T12:04:12.759Z",
+    "finished": "2026-08-13T12:08:44.005Z",
+    "done": true,
+    "startedIdle": true,
+    "contamination": [],
+    "usable": true,
+    "peakResident": 3,
+    "queryLoad": {
+      "issued": 32,
+      "failed": 0,
+      "backend": "ollama"
+    },
+    "status": "completed",
+    "error": null,
+    "chunksInCollection": 80,
+    "chunksIndexedReported": 80,
+    "filesCompleted": 2,
+    "t0Residency": {
+      "ok": true,
+      "models": [
+        {
+          "name": "dengcao/Qwen3-Reranker-8B:Q3_K_M",
+          "sizeVram": 10904844369,
+          "expiresAt": "2026-08-13T12:20:24.155119606Z"
+        },
+        {
+          "name": "qwen3-embedding:8b",
+          "sizeVram": 9323403017,
+          "expiresAt": "2026-08-13T12:20:23.037275282Z"
+        },
+        {
+          "name": "qwen3-vl:30b",
+          "sizeVram": 34221053704,
+          "expiresAt": "2026-08-13T12:20:18.903303482Z"
+        }
+      ]
+    },
+    "traces": [
+      {
+        "fileName": "Barratt_Homes-SaxonFields.pdf",
+        "pageCount": 2,
+        "picturesCaptured": 2,
+        "vlmCaptionsGenerated": 1,
+        "captionShortfall": 1,
+        "usedDocling": true,
+        "reasonIfFallback": null
+      },
+      {
+        "fileName": "Ikea-wardrobe_build.pdf",
+        "pageCount": 40,
+        "picturesCaptured": 40,
+        "vlmCaptionsGenerated": 36,
+        "captionShortfall": 4,
+        "usedDocling": true,
+        "reasonIfFallback": null
+      }
+    ],
+    "events": [],
+    "evictions": 0,
+    "expiries": 0,
+    "unexplained": 0
+  },
+  {
+    "runIdx": 2,
+    "collection": "RAGEval_x6_365128993_r2",
+    "started": "2026-08-13T12:15:27.539Z",
+    "finished": "2026-08-13T12:19:42.723Z",
+    "done": true,
+    "startedIdle": true,
+    "contamination": [],
+    "usable": true,
+    "peakResident": 3,
+    "queryLoad": {
+      "issued": 30,
+      "failed": 0,
+      "backend": "ollama"
+    },
+    "status": "completed",
+    "error": null,
+    "chunksInCollection": 80,
+    "chunksIndexedReported": 80,
+    "filesCompleted": 2,
+    "t0Residency": {
+      "ok": true,
+      "models": [
+        {
+          "name": "dengcao/Qwen3-Reranker-8B:Q3_K_M",
+          "sizeVram": 10904844369,
+          "expiresAt": "2026-08-13T12:38:29.146785353Z"
+        },
+        {
+          "name": "qwen3-embedding:8b",
+          "sizeVram": 9323403017,
+          "expiresAt": "2026-08-13T12:38:27.918222169Z"
+        },
+        {
+          "name": "qwen3-vl:30b",
+          "sizeVram": 34221053704,
+          "expiresAt": "2026-08-13T12:38:23.521760173Z"
+        }
+      ]
+    },
+    "traces": [
+      {
+        "fileName": "Barratt_Homes-SaxonFields.pdf",
+        "pageCount": 2,
+        "picturesCaptured": 2,
+        "vlmCaptionsGenerated": 1,
+        "captionShortfall": 1,
+        "usedDocling": true,
+        "reasonIfFallback": null
+      },
+      {
+        "fileName": "Ikea-wardrobe_build.pdf",
+        "pageCount": 40,
+        "picturesCaptured": 40,
+        "vlmCaptionsGenerated": 36,
+        "captionShortfall": 4,
+        "usedDocling": true,
+        "reasonIfFallback": null
+      }
+    ],
+    "events": [],
+    "evictions": 0,
+    "expiries": 0,
+    "unexplained": 0
+  },
+  {
+    "runIdx": 3,
+    "collection": "RAGEval_x6_365128993_r3",
+    "started": "2026-08-13T12:26:26.267Z",
+    "finished": "2026-08-13T12:31:03.467Z",
+    "done": true,
+    "startedIdle": true,
+    "contamination": [],
+    "usable": true,
+    "peakResident": 3,
+    "queryLoad": {
+      "issued": 33,
+      "failed": 0,
+      "backend": "ollama"
+    },
+    "status": "completed",
+    "error": null,
+    "chunksInCollection": 79,
+    "chunksIndexedReported": 79,
+    "filesCompleted": 2,
+    "t0Residency": {
+      "ok": true,
+      "models": [
+        {
+          "name": "dengcao/Qwen3-Reranker-8B:Q3_K_M",
+          "sizeVram": 10904844369,
+          "expiresAt": "2026-08-13T12:49:28.504596037Z"
+        },
+        {
+          "name": "qwen3-embedding:8b",
+          "sizeVram": 9323403017,
+          "expiresAt": "2026-08-13T12:49:27.281737331Z"
+        },
+        {
+          "name": "qwen3-vl:30b",
+          "sizeVram": 34221053704,
+          "expiresAt": "2026-08-13T12:49:22.874834959Z"
+        }
+      ]
+    },
+    "traces": [
+      {
+        "fileName": "Barratt_Homes-SaxonFields.pdf",
+        "pageCount": 2,
+        "picturesCaptured": 2,
+        "vlmCaptionsGenerated": 1,
+        "captionShortfall": 1,
+        "usedDocling": true,
+        "reasonIfFallback": null
+      },
+      {
+        "fileName": "Ikea-wardrobe_build.pdf",
+        "pageCount": 40,
+        "picturesCaptured": 40,
+        "vlmCaptionsGenerated": 35,
+        "captionShortfall": 5,
+        "usedDocling": true,
+        "reasonIfFallback": null
+      }
+    ],
+    "events": [],
+    "evictions": 0,
+    "expiries": 0,
+    "unexplained": 0
+  }
+]

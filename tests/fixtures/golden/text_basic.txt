@@ -1,0 +1,11 @@
+Reconciliation Overview for the QUARTZLINE ledger service.
+
+The QUARTZLINE service performs settlement reconciliation on a nightly cadence.
+Reconciliation runs compare the ledger against the clearing file and raise a
+break when a difference is detected. Reconciliation is considered complete only
+when every break has been assigned an owner.
+
+Exception handling for the service is documented separately. An exception is
+raised when the clearing file is absent, malformed, or arrives after the cutoff.
+The term BASALTNINE appears exactly once in this document and is used as a
+retrieval anchor.

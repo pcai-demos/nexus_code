@@ -1,0 +1,1645 @@
+{
+  "schema": "nexcode.evidence/0.6",
+  "id": "4c67b759",
+  "example": {
+    "of": "f226e248",
+    "note": "An example: a real evidence record of an S3 run on 12 October 2026, shipped with NexCODE so the closer can open a record before any demo has run since the environment was reset."
+  },
+  "createdAt": "2026-10-12T08:58:42.405Z",
+  "builtBy": "NexCODE, from its run log (no model wrote this record)",
+  "firm": "Nexus Bank plc, Payments & Settlements Technology division",
+  "scenario": {
+    "id": "s3",
+    "title": "Modernise the clearing batch: COBOL to Java 21",
+    "ticket": "MOD-2026-07"
+  },
+  "turns": [
+    {
+      "turnId": "ct-mv50oj7e-76d3fd",
+      "at": "2026-10-12T08:58:27.341Z",
+      "step": "migrate",
+      "prompt": "Migrate nexus-payments/legacy/clearing-batch/CLEARING.cbl to Java 21 under MOD-2026-07. Keep its behaviour identical: the same input must give the same report, byte for byte. Write nexus-payments/services/clearing/src/main/java/com/nexusbank/clearing/ClearingBatch.java, taking the input file and the report file as its two arguments, and a JUnit 5 characterisation test, nexus-payments/services/clearing/src/test/java/com/nexusbank/clearing/ClearingBatchCharacterisationTest.java. The tests run from the repository root, nexus-payments/: the test runs ClearingBatch on legacy/clearing-batch/clearing_input.dat, writes its report to a JUnit @TempDir and compares it with legacy/clearing-batch/expected_totals.txt by Reports.assertSameBytes(expected, actual). Use the Bank's COBOL compatibility library in libs/cobol-compat (package com.nexusbank.cobol), as MIG-004 requires, and do not write your own versions of it: FixedRecord.text and FixedRecord.decimal for each input field, CobolMath.rounded for COMPUTE ... ROUNDED, Picture.edit for every edited picture, Picture.text for every text item moved into a report line, LineSequential to read the input and write the report, and Reports.assertSameBytes to compare the two reports in the test. Pass each PICTURE exactly as the COBOL source writes it, with its column from the layouts.",
+      "model": "qwen3.8:27b",
+      "endpointHost": "ollama.demo.lon-pcai.twlon.com",
+      "thinking": {
+        "mode": "on",
+        "form": "openai-compatible",
+        "reasoningChars": 49492
+      },
+      "tokens": {
+        "prompt": 12819,
+        "completion": 18998,
+        "providerReported": true
+      },
+      "timing": {
+        "wallMs": 169297,
+        "retrievalMs": 7663,
+        "modelMs": 151621
+      },
+      "attached": [
+        {
+          "path": "nexus-payments/legacy/clearing-batch/CLEARING.cbl",
+          "source": "workspace",
+          "sha256": "a9ea99e6a9c5711a2f485854bc86d6451fe154a8a94229bf3d5d743e5db526db"
+        },
+        {
+          "path": "nexus-payments/libs/cobol-compat/src/main/java/com/nexusbank/cobol/Pic.java",
+          "source": "workspace",
+          "sha256": "65949857ac349f52c3f1af45d71dbe2a084303552a4b8a2138d7b93652212223"
+        },
+        {
+          "path": "nexus-payments/libs/cobol-compat/src/main/java/com/nexusbank/cobol/FixedRecord.java",
+          "source": "workspace",
+          "sha256": "1ab24b1c2046006f3a679e8ab41a5817e96604d3c1c4e7777d506b070e96d8d6"
+        },
+        {
+          "path": "nexus-payments/libs/cobol-compat/src/main/java/com/nexusbank/cobol/CobolMath.java",
+          "source": "workspace",
+          "sha256": "0f674ca96221d4945182e8a539e71966bfdeec3c3e4830d9720e92229c0c1b48"
+        },
+        {
+          "path": "nexus-payments/libs/cobol-compat/src/main/java/com/nexusbank/cobol/Picture.java",
+          "source": "workspace",
+          "sha256": "a8ff743ce21f08581fe2dfaecb9121198707493b1253c47e9159e7bbef09bb50"
+        },
+        {
+          "path": "nexus-payments/libs/cobol-compat/src/main/java/com/nexusbank/cobol/LineSequential.java",
+          "source": "workspace",
+          "sha256": "0a2c4940e7b39c1db554e89eb62c5734de644122beb45be665d0fd05288794f6"
+        },
+        {
+          "path": "nexus-payments/libs/cobol-compat/src/main/java/com/nexusbank/cobol/Reports.java",
+          "source": "workspace",
+          "sha256": "7347a9b947aa2796299f9c7f6251074467359717e050d9880fd967fff2028611"
+        },
+        {
+          "path": "nexus-payments/backlog/MOD-2026-07.md",
+          "source": "workspace",
+          "sha256": "18bc0681c4a2820771e8e233ad48a115306ad7cb5855cd46c54e12f5d36945ac"
+        }
+      ],
+      "layers": [
+        {
+          "id": "regulator",
+          "documents": 7,
+          "passages": 4,
+          "state": "ok",
+          "searchedOn": "topics",
+          "search": "testing proportionate to whether the operational resources supporting an important business service have materially changed; review its compliance if there is a material change to the firm's business or its important business services; changes to all system components in the production environment are made according to established procedures that include testing"
+        },
+        {
+          "id": "corporate",
+          "documents": 4,
+          "passages": 4,
+          "state": "ok",
+          "searchedOn": "topics",
+          "search": "equivalence proved before go-live; parallel run and approved cut-over; mapping and testing after a replacement; testing of changes to systems that calculate charges"
+        },
+        {
+          "id": "sdlc",
+          "documents": 4,
+          "passages": 4,
+          "state": "ok",
+          "searchedOn": "topics",
+          "search": "a tool, not a person, compares their outputs byte for byte; a migration MUST NOT change behaviour; characterisation tests for migrations; COBOL to Java mapping with the COBOL compatibility library"
+        },
+        {
+          "id": "team",
+          "documents": 4,
+          "passages": 4,
+          "state": "ok",
+          "searchedOn": "topics",
+          "search": "a rewrite is a change to money code; ROUNDED rounds half away from zero; Java 21 by default"
+        }
+      ],
+      "cited": [
+        "SDLC-4",
+        "SDLC-1",
+        "SDLC-2",
+        "SDLC-3",
+        "TEAM-1",
+        "TEAM-2"
+      ],
+      "unverifiedMarkers": [],
+      "fileOperations": [
+        {
+          "path": "nexus-payments/services/clearing/src/main/java/com/nexusbank/clearing/ClearingBatch.java",
+          "applied": true
+        },
+        {
+          "path": "nexus-payments/services/clearing/src/test/java/com/nexusbank/clearing/ClearingBatchCharacterisationTest.java",
+          "applied": true
+        }
+      ],
+      "success": true,
+      "finishReason": "stop"
+    }
+  ],
+  "tests": [
+    {
+      "command": "s3-legacy",
+      "at": "2026-10-12T08:55:33.820Z",
+      "exitCode": 0,
+      "durationMs": 261,
+      "summary": "the COBOL's report matches expected_totals.txt",
+      "excerpt": "$ node -e const fs = require('fs'); fs.rmSync('build', { recursive: true, force: true }); fs.mkdirSync('build/classes', { recursive: true })\n\n$ cobc -x -o build/clearing legacy/clearing-batch/CLEARING.cbl\n\n$ clearing \nWarning: program compiled against libxml 212 using older 209\n$ diff -u legacy/clearing-batch/expected_totals.txt build/clearing_totals_cobol.txt\n\n\nNote: the libxml line is a known packaging warning of the image's GnuCOBOL runtime: it goes to stderr, never into a report (CLR-WIKI-019).\n",
+      "steps": [
+        {
+          "command": "node -e const fs = require('fs'); fs.rmSync('build', { recursive: true, force: true }); fs.mkdirSync('build/classes', { recursive: true })",
+          "role": null,
+          "ran": true,
+          "exitCode": 0
+        },
+        {
+          "command": "cobc -x -o build/clearing legacy/clearing-batch/CLEARING.cbl",
+          "role": null,
+          "ran": true,
+          "exitCode": 0
+        },
+        {
+          "command": "clearing",
+          "role": null,
+          "ran": true,
+          "exitCode": 0
+        },
+        {
+          "command": "diff -u legacy/clearing-batch/expected_totals.txt build/clearing_totals_cobol.txt",
+          "role": "legacy",
+          "ran": true,
+          "exitCode": 0
+        }
+      ]
+    },
+    {
+      "command": "s3-java-tests",
+      "at": "2026-10-12T08:58:38.296Z",
+      "exitCode": 0,
+      "durationMs": 1330,
+      "summary": "byte-identical to the COBOL; 9 passed",
+      "excerpt": "$ node -e const fs = require('fs'); fs.rmSync('build', { recursive: true, force: true }); fs.mkdirSync('build/classes', { recursive: true })\n\n$ cobc -x -o build/clearing legacy/clearing-batch/CLEARING.cbl\n\n$ clearing \nWarning: program compiled against libxml 212 using older 209\n$ diff -u legacy/clearing-batch/expected_totals.txt build/clearing_totals_cobol.txt\n\n$ javac -d build/classes -cp /usr/share/java/junit-platform-console-standalone.jar libs/cobol-compat/src/main/java/com/nexusbank/cobol/Pic.java libs/cobol-compat/src/main/java/com/nexusbank/cobol/FixedRecord.java libs/cobol-compat/src/main/java/com/nexusbank/cobol/CobolMath.java libs/cobol-compat/src/main/java/com/nexusbank/cobol/Picture.java libs/cobol-compat/src/main/java/com/nexusbank/cobol/LineSequential.java libs/cobol-compat/src/main/java/com/nexusbank/cobol/Reports.java libs/cobol-compat/src/test/java/com/nexusbank/cobol/CobolCompatTest.java services/clearing/src/main/java/com/nexusbank/clearing/ClearingBatch.java services/clearing/src/test/java/com/nexusbank/clearing/ClearingBatchCharacterisationTest.java\n\n$ java -cp build/classes com.nexusbank.clearing.ClearingBatch legacy/clearing-batch/clearing_input.dat build/clearing_totals_java.txt\n\n$ diff -u build/clearing_totals_cobol.txt build/clearing_totals_java.txt\n\n$ java -jar /usr/share/java/junit-platform-console-standalone.jar execute --class-path build/classes --scan-class-path --disable-banner --disable-ansi-colors --details=tree --fail-if-no-tests\n╷\n├─ JUnit Jupiter ✔\n│  ├─ ClearingBatchCharacterisationTest ✔\n│  │  └─ reportMatchesCobolOutput() ✔\n│  └─ CobolCompatTest ✔\n│     ├─ reportsCompareByteForByteAndNameTheLinesThatDiffer(Path) ✔\n│     ├─ picturesGiveWidthAndScale() ✔\n│     ├─ textMovesPadOrCut() ✔\n│     ├─ fieldsByColumnAndPicture() ✔\n│     ├─ roundedIsHalfAwayFromZero() ✔\n│     ├─ editedPicturesAsGnuCobolPrintsThem() ✔\n│     ├─ lineSequentialDropsTrailingSpaces(Path) ✔\n│     └─ negativeZeroShowsNoSign() ✔\n├─ JUnit Vintage ✔\n└─ JUnit Platform Suite ✔\n\nTest run finished after 110 ms\n[         5 containers found      ]\n[         0 containers skipped    ]\n[         5 containers started    ]\n[         0 containers aborted    ]\n[         5 containers successful ]\n[         0 containers failed     ]\n[         9 tests found           ]\n[         0 tests skipped         ]\n[         9 tests started         ]\n[         0 tests aborted         ]\n[         9 tests successful      ]\n[         0 tests failed          ]\n\n\nNote: the libxml line is a known packaging warning of the image's GnuCOBOL runtime: it goes to stderr, never into a report (CLR-WIKI-019).\n",
+      "steps": [
+        {
+          "command": "node -e const fs = require('fs'); fs.rmSync('build', { recursive: true, force: true }); fs.mkdirSync('build/classes', { recursive: true })",
+          "role": null,
+          "ran": true,
+          "exitCode": 0
+        },
+        {
+          "command": "cobc -x -o build/clearing legacy/clearing-batch/CLEARING.cbl",
+          "role": null,
+          "ran": true,
+          "exitCode": 0
+        },
+        {
+          "command": "clearing",
+          "role": null,
+          "ran": true,
+          "exitCode": 0
+        },
+        {
+          "command": "diff -u legacy/clearing-batch/expected_totals.txt build/clearing_totals_cobol.txt",
+          "role": "legacy",
+          "ran": true,
+          "exitCode": 0
+        },
+        {
+          "command": "javac -d build/classes -cp /usr/share/java/junit-platform-console-standalone.jar libs/cobol-compat/src/main/java/com/nexusbank/cobol/Pic.java libs/cobol-compat/src/main/java/com/nexusbank/cobol/FixedRecord.java libs/cobol-compat/src/main/java/com/nexusbank/cobol/CobolMath.java libs/cobol-compat/src/main/java/com/nexusbank/cobol/Picture.java libs/cobol-compat/src/main/java/com/nexusbank/cobol/LineSequential.java libs/cobol-compat/src/main/java/com/nexusbank/cobol/Reports.java libs/cobol-compat/src/test/java/com/nexusbank/cobol/CobolCompatTest.java services/clearing/src/main/java/com/nexusbank/clearing/ClearingBatch.java services/clearing/src/test/java/com/nexusbank/clearing/ClearingBatchCharacterisationTest.java",
+          "role": null,
+          "ran": true,
+          "exitCode": 0
+        },
+        {
+          "command": "java -cp build/classes com.nexusbank.clearing.ClearingBatch legacy/clearing-batch/clearing_input.dat build/clearing_totals_java.txt",
+          "role": null,
+          "ran": true,
+          "exitCode": 0
+        },
+        {
+          "command": "diff -u build/clearing_totals_cobol.txt build/clearing_totals_java.txt",
+          "role": "equivalence",
+          "ran": true,
+          "exitCode": 0
+        },
+        {
+          "command": "java -jar /usr/share/java/junit-platform-console-standalone.jar execute --class-path build/classes --scan-class-path --disable-banner --disable-ansi-colors --details=tree --fail-if-no-tests",
+          "role": "characterisation",
+          "ran": true,
+          "exitCode": 0
+        }
+      ]
+    }
+  ],
+  "changes": {
+    "available": true,
+    "gitDiffStat": "",
+    "gitStatus": "?? services/clearing/\n",
+    "files": [
+      {
+        "path": "nexus-payments/services/clearing/src/main/java/com/nexusbank/clearing/ClearingBatch.java",
+        "status": "added",
+        "added": 181,
+        "removed": 0,
+        "hunks": [
+          {
+            "oldStart": 0,
+            "oldLines": 0,
+            "newStart": 1,
+            "newLines": 181,
+            "lines": [
+              {
+                "type": "+",
+                "text": "package com.nexusbank.clearing;",
+                "oldNo": null,
+                "newNo": 1
+              },
+              {
+                "type": "+",
+                "text": "",
+                "oldNo": null,
+                "newNo": 2
+              },
+              {
+                "type": "+",
+                "text": "import com.nexusbank.cobol.CobolMath;",
+                "oldNo": null,
+                "newNo": 3
+              },
+              {
+                "type": "+",
+                "text": "import com.nexusbank.cobol.FixedRecord;",
+                "oldNo": null,
+                "newNo": 4
+              },
+              {
+                "type": "+",
+                "text": "import com.nexusbank.cobol.LineSequential;",
+                "oldNo": null,
+                "newNo": 5
+              },
+              {
+                "type": "+",
+                "text": "import com.nexusbank.cobol.Picture;",
+                "oldNo": null,
+                "newNo": 6
+              },
+              {
+                "type": "+",
+                "text": "",
+                "oldNo": null,
+                "newNo": 7
+              },
+              {
+                "type": "+",
+                "text": "import java.math.BigDecimal;",
+                "oldNo": null,
+                "newNo": 8
+              },
+              {
+                "type": "+",
+                "text": "import java.nio.file.Path;",
+                "oldNo": null,
+                "newNo": 9
+              },
+              {
+                "type": "+",
+                "text": "import java.util.ArrayList;",
+                "oldNo": null,
+                "newNo": 10
+              },
+              {
+                "type": "+",
+                "text": "import java.util.List;",
+                "oldNo": null,
+                "newNo": 11
+              },
+              {
+                "type": "+",
+                "text": "",
+                "oldNo": null,
+                "newNo": 12
+              },
+              {
+                "type": "+",
+                "text": "/**",
+                "oldNo": null,
+                "newNo": 13
+              },
+              {
+                "type": "+",
+                "text": " * Nightly clearing totals by scheme (MOD-2026-07).",
+                "oldNo": null,
+                "newNo": 14
+              },
+              {
+                "type": "+",
+                "text": " * Ported from legacy/clearing-batch/CLEARING.cbl with no change in behaviour (MIG-002).",
+                "oldNo": null,
+                "newNo": 15
+              },
+              {
+                "type": "+",
+                "text": " */",
+                "oldNo": null,
+                "newNo": 16
+              },
+              {
+                "type": "+",
+                "text": "public class ClearingBatch {",
+                "oldNo": null,
+                "newNo": 17
+              },
+              {
+                "type": "+",
+                "text": "",
+                "oldNo": null,
+                "newNo": 18
+              },
+              {
+                "type": "+",
+                "text": "    public static void main(String[] args) throws Exception {",
+                "oldNo": null,
+                "newNo": 19
+              },
+              {
+                "type": "+",
+                "text": "        Path inputFile = Path.of(args[0]);",
+                "oldNo": null,
+                "newNo": 20
+              },
+              {
+                "type": "+",
+                "text": "        Path reportFile = Path.of(args[1]);",
+                "oldNo": null,
+                "newNo": 21
+              },
+              {
+                "type": "+",
+                "text": "",
+                "oldNo": null,
+                "newNo": 22
+              },
+              {
+                "type": "+",
+                "text": "        List<String> lines = LineSequential.read(inputFile);",
+                "oldNo": null,
+                "newNo": 23
+              },
+              {
+                "type": "+",
+                "text": "        int lineIdx = 0;",
+                "oldNo": null,
+                "newNo": 24
+              },
+              {
+                "type": "+",
+                "text": "",
+                "oldNo": null,
+                "newNo": 25
+              },
+              {
+                "type": "+",
+                "text": "        // ── Working storage ──────────────────────────────────────────────",
+                "oldNo": null,
+                "newNo": 26
+              },
+              {
+                "type": "+",
+                "text": "        boolean eof = false;",
+                "oldNo": null,
+                "newNo": 27
+              },
+              {
+                "type": "+",
+                "text": "        String wsRunDate = \"00000000\";           // PIC 9(8) VALUE 0",
+                "oldNo": null,
+                "newNo": 28
+              },
+              {
+                "type": "+",
+                "text": "        String wsCurScheme = \"          \";        // PIC X(10) VALUE SPACES",
+                "oldNo": null,
+                "newNo": 29
+              },
+              {
+                "type": "+",
+                "text": "        BigDecimal wsFee = BigDecimal.ZERO;      // PIC S9(9)V99",
+                "oldNo": null,
+                "newNo": 30
+              },
+              {
+                "type": "+",
+                "text": "",
+                "oldNo": null,
+                "newNo": 31
+              },
+              {
+                "type": "+",
+                "text": "        int wsSCount = 0;                        // PIC 9(5)",
+                "oldNo": null,
+                "newNo": 32
+              },
+              {
+                "type": "+",
+                "text": "        BigDecimal wsSGross = BigDecimal.ZERO;   // PIC S9(11)V99",
+                "oldNo": null,
+                "newNo": 33
+              },
+              {
+                "type": "+",
+                "text": "        BigDecimal wsSFees = BigDecimal.ZERO;    // PIC S9(11)V99",
+                "oldNo": null,
+                "newNo": 34
+              },
+              {
+                "type": "+",
+                "text": "        BigDecimal wsSNet = BigDecimal.ZERO;     // PIC S9(11)V99",
+                "oldNo": null,
+                "newNo": 35
+              },
+              {
+                "type": "+",
+                "text": "",
+                "oldNo": null,
+                "newNo": 36
+              },
+              {
+                "type": "+",
+                "text": "        int wsGCount = 0;                        // PIC 9(5) VALUE 0",
+                "oldNo": null,
+                "newNo": 37
+              },
+              {
+                "type": "+",
+                "text": "        BigDecimal wsGGross = BigDecimal.ZERO;   // PIC S9(11)V99 VALUE 0",
+                "oldNo": null,
+                "newNo": 38
+              },
+              {
+                "type": "+",
+                "text": "        BigDecimal wsGFees = BigDecimal.ZERO;    // PIC S9(11)V99 VALUE 0",
+                "oldNo": null,
+                "newNo": 39
+              },
+              {
+                "type": "+",
+                "text": "        BigDecimal wsGNet = BigDecimal.ZERO;     // PIC S9(11)V99 VALUE 0",
+                "oldNo": null,
+                "newNo": 40
+              },
+              {
+                "type": "+",
+                "text": "",
+                "oldNo": null,
+                "newNo": 41
+              },
+              {
+                "type": "+",
+                "text": "        int wsRead = 0;                          // PIC 9(5) VALUE 0",
+                "oldNo": null,
+                "newNo": 42
+              },
+              {
+                "type": "+",
+                "text": "        int wsDeclined = 0;                      // PIC 9(5) VALUE 0",
+                "oldNo": null,
+                "newNo": 43
+              },
+              {
+                "type": "+",
+                "text": "        int wsOtherDate = 0;                     // PIC 9(5) VALUE 0",
+                "oldNo": null,
+                "newNo": 44
+              },
+              {
+                "type": "+",
+                "text": "",
+                "oldNo": null,
+                "newNo": 45
+              },
+              {
+                "type": "+",
+                "text": "        // ── Current input record (IN-REC, 49 chars) ─────────────────────",
+                "oldNo": null,
+                "newNo": 46
+              },
+              {
+                "type": "+",
+                "text": "        String inType = \" \";",
+                "oldNo": null,
+                "newNo": 47
+              },
+              {
+                "type": "+",
+                "text": "        String inBusDate = \"00000000\";",
+                "oldNo": null,
+                "newNo": 48
+              },
+              {
+                "type": "+",
+                "text": "        String inScheme = \"          \";",
+                "oldNo": null,
+                "newNo": 49
+              },
+              {
+                "type": "+",
+                "text": "        String inTxnId = \"            \";",
+                "oldNo": null,
+                "newNo": 50
+              },
+              {
+                "type": "+",
+                "text": "        String inStatus = \" \";",
+                "oldNo": null,
+                "newNo": 51
+              },
+              {
+                "type": "+",
+                "text": "        BigDecimal inAmount = BigDecimal.ZERO;",
+                "oldNo": null,
+                "newNo": 52
+              },
+              {
+                "type": "+",
+                "text": "        BigDecimal inFeeRate = BigDecimal.ZERO;",
+                "oldNo": null,
+                "newNo": 53
+              },
+              {
+                "type": "+",
+                "text": "",
+                "oldNo": null,
+                "newNo": 54
+              },
+              {
+                "type": "+",
+                "text": "        List<String> report = new ArrayList<>();",
+                "oldNo": null,
+                "newNo": 55
+              },
+              {
+                "type": "+",
+                "text": "",
+                "oldNo": null,
+                "newNo": 56
+              },
+              {
+                "type": "+",
+                "text": "        // ── READ-REC (first) ─────────────────────────────────────────────",
+                "oldNo": null,
+                "newNo": 57
+              },
+              {
+                "type": "+",
+                "text": "        if (lineIdx < lines.size()) {",
+                "oldNo": null,
+                "newNo": 58
+              },
+              {
+                "type": "+",
+                "text": "            String line = lines.get(lineIdx++);",
+                "oldNo": null,
+                "newNo": 59
+              },
+              {
+                "type": "+",
+                "text": "            inType = FixedRecord.text(line, 1, \"X\");",
+                "oldNo": null,
+                "newNo": 60
+              },
+              {
+                "type": "+",
+                "text": "            inBusDate = FixedRecord.text(line, 2, \"9(8)\");",
+                "oldNo": null,
+                "newNo": 61
+              },
+              {
+                "type": "+",
+                "text": "            inScheme = FixedRecord.text(line, 10, \"X(10)\");",
+                "oldNo": null,
+                "newNo": 62
+              },
+              {
+                "type": "+",
+                "text": "            inTxnId = FixedRecord.text(line, 20, \"X(12)\");",
+                "oldNo": null,
+                "newNo": 63
+              },
+              {
+                "type": "+",
+                "text": "            inStatus = FixedRecord.text(line, 32, \"X\");",
+                "oldNo": null,
+                "newNo": 64
+              },
+              {
+                "type": "+",
+                "text": "            inAmount = FixedRecord.decimal(line, 33, \"S9(9)V99 SIGN LEADING SEPARATE\");",
+                "oldNo": null,
+                "newNo": 65
+              },
+              {
+                "type": "+",
+                "text": "            inFeeRate = FixedRecord.decimal(line, 45, \"9V9(4)\");",
+                "oldNo": null,
+                "newNo": 66
+              },
+              {
+                "type": "+",
+                "text": "        } else {",
+                "oldNo": null,
+                "newNo": 67
+              },
+              {
+                "type": "+",
+                "text": "            eof = true;",
+                "oldNo": null,
+                "newNo": 68
+              },
+              {
+                "type": "+",
+                "text": "        }",
+                "oldNo": null,
+                "newNo": 69
+              },
+              {
+                "type": "+",
+                "text": "",
+                "oldNo": null,
+                "newNo": 70
+              },
+              {
+                "type": "+",
+                "text": "        // ── IF IN-TYPE = \"H\" ─────────────────────────────────────────────",
+                "oldNo": null,
+                "newNo": 71
+              },
+              {
+                "type": "+",
+                "text": "        if (inType.equals(\"H\")) {",
+                "oldNo": null,
+                "newNo": 72
+              },
+              {
+                "type": "+",
+                "text": "            wsRunDate = inBusDate;",
+                "oldNo": null,
+                "newNo": 73
+              },
+              {
+                "type": "+",
+                "text": "            // READ-REC (second)",
+                "oldNo": null,
+                "newNo": 74
+              },
+              {
+                "type": "+",
+                "text": "            if (lineIdx < lines.size()) {",
+                "oldNo": null,
+                "newNo": 75
+              },
+              {
+                "type": "+",
+                "text": "                String line = lines.get(lineIdx++);",
+                "oldNo": null,
+                "newNo": 76
+              },
+              {
+                "type": "+",
+                "text": "                inType = FixedRecord.text(line, 1, \"X\");",
+                "oldNo": null,
+                "newNo": 77
+              },
+              {
+                "type": "+",
+                "text": "                inBusDate = FixedRecord.text(line, 2, \"9(8)\");",
+                "oldNo": null,
+                "newNo": 78
+              },
+              {
+                "type": "+",
+                "text": "                inScheme = FixedRecord.text(line, 10, \"X(10)\");",
+                "oldNo": null,
+                "newNo": 79
+              },
+              {
+                "type": "+",
+                "text": "                inTxnId = FixedRecord.text(line, 20, \"X(12)\");",
+                "oldNo": null,
+                "newNo": 80
+              },
+              {
+                "type": "+",
+                "text": "                inStatus = FixedRecord.text(line, 32, \"X\");",
+                "oldNo": null,
+                "newNo": 81
+              },
+              {
+                "type": "+",
+                "text": "                inAmount = FixedRecord.decimal(line, 33, \"S9(9)V99 SIGN LEADING SEPARATE\");",
+                "oldNo": null,
+                "newNo": 82
+              },
+              {
+                "type": "+",
+                "text": "                inFeeRate = FixedRecord.decimal(line, 45, \"9V9(4)\");",
+                "oldNo": null,
+                "newNo": 83
+              },
+              {
+                "type": "+",
+                "text": "            } else {",
+                "oldNo": null,
+                "newNo": 84
+              },
+              {
+                "type": "+",
+                "text": "                eof = true;",
+                "oldNo": null,
+                "newNo": 85
+              },
+              {
+                "type": "+",
+                "text": "            }",
+                "oldNo": null,
+                "newNo": 86
+              },
+              {
+                "type": "+",
+                "text": "        }",
+                "oldNo": null,
+                "newNo": 87
+              },
+              {
+                "type": "+",
+                "text": "",
+                "oldNo": null,
+                "newNo": 88
+              },
+              {
+                "type": "+",
+                "text": "        // ── WRITE RPT-TITLE ──────────────────────────────────────────────",
+                "oldNo": null,
+                "newNo": 89
+              },
+              {
+                "type": "+",
+                "text": "        report.add(\"NEXUS BANK PLC - CLEARING TOTALS\");",
+                "oldNo": null,
+                "newNo": 90
+              },
+              {
+                "type": "+",
+                "text": "",
+                "oldNo": null,
+                "newNo": 91
+              },
+              {
+                "type": "+",
+                "text": "        // ── MOVE WS-RUN-DATE TO WS-DATE-PARTS; WRITE RPT-DATE-LINE ──────",
+                "oldNo": null,
+                "newNo": 92
+              },
+              {
+                "type": "+",
+                "text": "        // WD-YYYY = cols 1-4, WD-MM = cols 5-6, WD-DD = cols 7-8 of the 8-digit date",
+                "oldNo": null,
+                "newNo": 93
+              },
+              {
+                "type": "+",
+                "text": "        report.add(\"BUSINESS DATE: \"",
+                "oldNo": null,
+                "newNo": 94
+              },
+              {
+                "type": "+",
+                "text": "                + wsRunDate.substring(0, 4) + \"-\"",
+                "oldNo": null,
+                "newNo": 95
+              },
+              {
+                "type": "+",
+                "text": "                + wsRunDate.substring(4, 6) + \"-\"",
+                "oldNo": null,
+                "newNo": 96
+              },
+              {
+                "type": "+",
+                "text": "                + wsRunDate.substring(6, 8));",
+                "oldNo": null,
+                "newNo": 97
+              },
+              {
+                "type": "+",
+                "text": "",
+                "oldNo": null,
+                "newNo": 98
+              },
+              {
+                "type": "+",
+                "text": "        // ── WRITE RPT-HEADINGS ───────────────────────────────────────────",
+                "oldNo": null,
+                "newNo": 99
+              },
+              {
+                "type": "+",
+                "text": "        report.add(\"SCHEME       COUNT             GROSS            FEES               NET\");",
+                "oldNo": null,
+                "newNo": 100
+              },
+              {
+                "type": "+",
+                "text": "",
+                "oldNo": null,
+                "newNo": 101
+              },
+              {
+                "type": "+",
+                "text": "        // ── PERFORM UNTIL WS-EOF = \"Y\" ───────────────────────────────────",
+                "oldNo": null,
+                "newNo": 102
+              },
+              {
+                "type": "+",
+                "text": "        while (!eof) {",
+                "oldNo": null,
+                "newNo": 103
+              },
+              {
+                "type": "+",
+                "text": "            // PROCESS-REC",
+                "oldNo": null,
+                "newNo": 104
+              },
+              {
+                "type": "+",
+                "text": "            wsRead++;",
+                "oldNo": null,
+                "newNo": 105
+              },
+              {
+                "type": "+",
+                "text": "            if (!inBusDate.equals(wsRunDate)) {",
+                "oldNo": null,
+                "newNo": 106
+              },
+              {
+                "type": "+",
+                "text": "                wsOtherDate++;",
+                "oldNo": null,
+                "newNo": 107
+              },
+              {
+                "type": "+",
+                "text": "            } else if (inStatus.equals(\"D\")) {",
+                "oldNo": null,
+                "newNo": 108
+              },
+              {
+                "type": "+",
+                "text": "                wsDeclined++;",
+                "oldNo": null,
+                "newNo": 109
+              },
+              {
+                "type": "+",
+                "text": "            } else {",
+                "oldNo": null,
+                "newNo": 110
+              },
+              {
+                "type": "+",
+                "text": "                if (!inScheme.equals(wsCurScheme)) {",
+                "oldNo": null,
+                "newNo": 111
+              },
+              {
+                "type": "+",
+                "text": "                    if (!wsCurScheme.equals(\"          \")) {",
+                "oldNo": null,
+                "newNo": 112
+              },
+              {
+                "type": "+",
+                "text": "                        // WRITE-SCHEME",
+                "oldNo": null,
+                "newNo": 113
+              },
+              {
+                "type": "+",
+                "text": "                        report.add(detailLine(wsCurScheme, wsSCount, wsSGross, wsSFees, wsSNet));",
+                "oldNo": null,
+                "newNo": 114
+              },
+              {
+                "type": "+",
+                "text": "                        wsGCount += wsSCount;",
+                "oldNo": null,
+                "newNo": 115
+              },
+              {
+                "type": "+",
+                "text": "                        wsGGross = wsGGross.add(wsSGross);",
+                "oldNo": null,
+                "newNo": 116
+              },
+              {
+                "type": "+",
+                "text": "                        wsGFees = wsGFees.add(wsSFees);",
+                "oldNo": null,
+                "newNo": 117
+              },
+              {
+                "type": "+",
+                "text": "                        wsGNet = wsGNet.add(wsSNet);",
+                "oldNo": null,
+                "newNo": 118
+              },
+              {
+                "type": "+",
+                "text": "                    }",
+                "oldNo": null,
+                "newNo": 119
+              },
+              {
+                "type": "+",
+                "text": "                    wsCurScheme = inScheme;",
+                "oldNo": null,
+                "newNo": 120
+              },
+              {
+                "type": "+",
+                "text": "                    // INITIALIZE WS-SCHEME-TOTALS",
+                "oldNo": null,
+                "newNo": 121
+              },
+              {
+                "type": "+",
+                "text": "                    wsSCount = 0;",
+                "oldNo": null,
+                "newNo": 122
+              },
+              {
+                "type": "+",
+                "text": "                    wsSGross = BigDecimal.ZERO;",
+                "oldNo": null,
+                "newNo": 123
+              },
+              {
+                "type": "+",
+                "text": "                    wsSFees = BigDecimal.ZERO;",
+                "oldNo": null,
+                "newNo": 124
+              },
+              {
+                "type": "+",
+                "text": "                    wsSNet = BigDecimal.ZERO;",
+                "oldNo": null,
+                "newNo": 125
+              },
+              {
+                "type": "+",
+                "text": "                }",
+                "oldNo": null,
+                "newNo": 126
+              },
+              {
+                "type": "+",
+                "text": "                // COMPUTE WS-FEE ROUNDED = IN-AMOUNT * IN-FEE-RATE",
+                "oldNo": null,
+                "newNo": 127
+              },
+              {
+                "type": "+",
+                "text": "                wsFee = CobolMath.rounded(inAmount.multiply(inFeeRate), \"S9(9)V99\");",
+                "oldNo": null,
+                "newNo": 128
+              },
+              {
+                "type": "+",
+                "text": "                wsSCount++;",
+                "oldNo": null,
+                "newNo": 129
+              },
+              {
+                "type": "+",
+                "text": "                wsSGross = wsSGross.add(inAmount);",
+                "oldNo": null,
+                "newNo": 130
+              },
+              {
+                "type": "+",
+                "text": "                wsSFees = wsSFees.add(wsFee);",
+                "oldNo": null,
+                "newNo": 131
+              },
+              {
+                "type": "+",
+                "text": "                wsSNet = wsSGross.subtract(wsSFees);",
+                "oldNo": null,
+                "newNo": 132
+              },
+              {
+                "type": "+",
+                "text": "            }",
+                "oldNo": null,
+                "newNo": 133
+              },
+              {
+                "type": "+",
+                "text": "",
+                "oldNo": null,
+                "newNo": 134
+              },
+              {
+                "type": "+",
+                "text": "            // READ-REC",
+                "oldNo": null,
+                "newNo": 135
+              },
+              {
+                "type": "+",
+                "text": "            if (lineIdx < lines.size()) {",
+                "oldNo": null,
+                "newNo": 136
+              },
+              {
+                "type": "+",
+                "text": "                String line = lines.get(lineIdx++);",
+                "oldNo": null,
+                "newNo": 137
+              },
+              {
+                "type": "+",
+                "text": "                inType = FixedRecord.text(line, 1, \"X\");",
+                "oldNo": null,
+                "newNo": 138
+              },
+              {
+                "type": "+",
+                "text": "                inBusDate = FixedRecord.text(line, 2, \"9(8)\");",
+                "oldNo": null,
+                "newNo": 139
+              },
+              {
+                "type": "+",
+                "text": "                inScheme = FixedRecord.text(line, 10, \"X(10)\");",
+                "oldNo": null,
+                "newNo": 140
+              },
+              {
+                "type": "+",
+                "text": "                inTxnId = FixedRecord.text(line, 20, \"X(12)\");",
+                "oldNo": null,
+                "newNo": 141
+              },
+              {
+                "type": "+",
+                "text": "                inStatus = FixedRecord.text(line, 32, \"X\");",
+                "oldNo": null,
+                "newNo": 142
+              },
+              {
+                "type": "+",
+                "text": "                inAmount = FixedRecord.decimal(line, 33, \"S9(9)V99 SIGN LEADING SEPARATE\");",
+                "oldNo": null,
+                "newNo": 143
+              },
+              {
+                "type": "+",
+                "text": "                inFeeRate = FixedRecord.decimal(line, 45, \"9V9(4)\");",
+                "oldNo": null,
+                "newNo": 144
+              },
+              {
+                "type": "+",
+                "text": "            } else {",
+                "oldNo": null,
+                "newNo": 145
+              },
+              {
+                "type": "+",
+                "text": "                eof = true;",
+                "oldNo": null,
+                "newNo": 146
+              },
+              {
+                "type": "+",
+                "text": "            }",
+                "oldNo": null,
+                "newNo": 147
+              },
+              {
+                "type": "+",
+                "text": "        }",
+                "oldNo": null,
+                "newNo": 148
+              },
+              {
+                "type": "+",
+                "text": "",
+                "oldNo": null,
+                "newNo": 149
+              },
+              {
+                "type": "+",
+                "text": "        // ── IF WS-CUR-SCHEME NOT = SPACES → WRITE-SCHEME ────────────────",
+                "oldNo": null,
+                "newNo": 150
+              },
+              {
+                "type": "+",
+                "text": "        if (!wsCurScheme.equals(\"          \")) {",
+                "oldNo": null,
+                "newNo": 151
+              },
+              {
+                "type": "+",
+                "text": "            report.add(detailLine(wsCurScheme, wsSCount, wsSGross, wsSFees, wsSNet));",
+                "oldNo": null,
+                "newNo": 152
+              },
+              {
+                "type": "+",
+                "text": "            wsGCount += wsSCount;",
+                "oldNo": null,
+                "newNo": 153
+              },
+              {
+                "type": "+",
+                "text": "            wsGGross = wsGGross.add(wsSGross);",
+                "oldNo": null,
+                "newNo": 154
+              },
+              {
+                "type": "+",
+                "text": "            wsGFees = wsGFees.add(wsSFees);",
+                "oldNo": null,
+                "newNo": 155
+              },
+              {
+                "type": "+",
+                "text": "            wsGNet = wsGNet.add(wsSNet);",
+                "oldNo": null,
+                "newNo": 156
+              },
+              {
+                "type": "+",
+                "text": "        }",
+                "oldNo": null,
+                "newNo": 157
+              },
+              {
+                "type": "+",
+                "text": "",
+                "oldNo": null,
+                "newNo": 158
+              },
+              {
+                "type": "+",
+                "text": "        // ── TOTAL line ───────────────────────────────────────────────────",
+                "oldNo": null,
+                "newNo": 159
+              },
+              {
+                "type": "+",
+                "text": "        report.add(detailLine(\"TOTAL\", wsGCount, wsGGross, wsGFees, wsGNet));",
+                "oldNo": null,
+                "newNo": 160
+              },
+              {
+                "type": "+",
+                "text": "",
+                "oldNo": null,
+                "newNo": 161
+              },
+              {
+                "type": "+",
+                "text": "        // ── COUNT line ───────────────────────────────────────────────────",
+                "oldNo": null,
+                "newNo": 162
+              },
+              {
+                "type": "+",
+                "text": "        report.add(\"READ: \" + Picture.edit(wsRead, \"ZZ,ZZ9\")",
+                "oldNo": null,
+                "newNo": 163
+              },
+              {
+                "type": "+",
+                "text": "                + \"  DECLINED: \" + Picture.edit(wsDeclined, \"ZZ,ZZ9\")",
+                "oldNo": null,
+                "newNo": 164
+              },
+              {
+                "type": "+",
+                "text": "                + \"  OTHER DATE: \" + Picture.edit(wsOtherDate, \"ZZ,ZZ9\"));",
+                "oldNo": null,
+                "newNo": 165
+              },
+              {
+                "type": "+",
+                "text": "",
+                "oldNo": null,
+                "newNo": 166
+              },
+              {
+                "type": "+",
+                "text": "        LineSequential.write(reportFile, report);",
+                "oldNo": null,
+                "newNo": 167
+              },
+              {
+                "type": "+",
+                "text": "    }",
+                "oldNo": null,
+                "newNo": 168
+              },
+              {
+                "type": "+",
+                "text": "",
+                "oldNo": null,
+                "newNo": 169
+              },
+              {
+                "type": "+",
+                "text": "    /**",
+                "oldNo": null,
+                "newNo": 170
+              },
+              {
+                "type": "+",
+                "text": "     * Builds one RPT-DETAIL line (71 chars):",
+                "oldNo": null,
+                "newNo": 171
+              },
+              {
+                "type": "+",
+                "text": "     * RD-SCHEME X(10) | 2sp | RD-COUNT ZZ,ZZ9 | 2sp | RD-GROSS Z,ZZZ,ZZZ,ZZ9.99- | 1sp | RD-FEES ZZZ,ZZZ,ZZ9.99- | 1sp | RD-NET Z,ZZZ,ZZZ,ZZ9.99-",
+                "oldNo": null,
+                "newNo": 172
+              },
+              {
+                "type": "+",
+                "text": "     */",
+                "oldNo": null,
+                "newNo": 173
+              },
+              {
+                "type": "+",
+                "text": "    private static String detailLine(String scheme, int count, BigDecimal gross, BigDecimal fees, BigDecimal net) {",
+                "oldNo": null,
+                "newNo": 174
+              },
+              {
+                "type": "+",
+                "text": "        return Picture.text(scheme, \"X(10)\")",
+                "oldNo": null,
+                "newNo": 175
+              },
+              {
+                "type": "+",
+                "text": "                + \"  \" + Picture.edit(count, \"ZZ,ZZ9\")",
+                "oldNo": null,
+                "newNo": 176
+              },
+              {
+                "type": "+",
+                "text": "                + \"  \" + Picture.edit(gross, \"Z,ZZZ,ZZZ,ZZ9.99-\")",
+                "oldNo": null,
+                "newNo": 177
+              },
+              {
+                "type": "+",
+                "text": "                + \" \" + Picture.edit(fees, \"ZZZ,ZZZ,ZZ9.99-\")",
+                "oldNo": null,
+                "newNo": 178
+              },
+              {
+                "type": "+",
+                "text": "                + \" \" + Picture.edit(net, \"Z,ZZZ,ZZZ,ZZ9.99-\");",
+                "oldNo": null,
+                "newNo": 179
+              },
+              {
+                "type": "+",
+                "text": "    }",
+                "oldNo": null,
+                "newNo": 180
+              },
+              {
+                "type": "+",
+                "text": "}",
+                "oldNo": null,
+                "newNo": 181
+              }
+            ]
+          }
+        ],
+        "tooLarge": false
+      },
+      {
+        "path": "nexus-payments/services/clearing/src/test/java/com/nexusbank/clearing/ClearingBatchCharacterisationTest.java",
+        "status": "added",
+        "added": 33,
+        "removed": 0,
+        "hunks": [
+          {
+            "oldStart": 0,
+            "oldLines": 0,
+            "newStart": 1,
+            "newLines": 33,
+            "lines": [
+              {
+                "type": "+",
+                "text": "package com.nexusbank.clearing;",
+                "oldNo": null,
+                "newNo": 1
+              },
+              {
+                "type": "+",
+                "text": "",
+                "oldNo": null,
+                "newNo": 2
+              },
+              {
+                "type": "+",
+                "text": "import com.nexusbank.cobol.Reports;",
+                "oldNo": null,
+                "newNo": 3
+              },
+              {
+                "type": "+",
+                "text": "import org.junit.jupiter.api.Test;",
+                "oldNo": null,
+                "newNo": 4
+              },
+              {
+                "type": "+",
+                "text": "import org.junit.jupiter.api.io.TempDir;",
+                "oldNo": null,
+                "newNo": 5
+              },
+              {
+                "type": "+",
+                "text": "",
+                "oldNo": null,
+                "newNo": 6
+              },
+              {
+                "type": "+",
+                "text": "import java.nio.file.Path;",
+                "oldNo": null,
+                "newNo": 7
+              },
+              {
+                "type": "+",
+                "text": "",
+                "oldNo": null,
+                "newNo": 8
+              },
+              {
+                "type": "+",
+                "text": "/**",
+                "oldNo": null,
+                "newNo": 9
+              },
+              {
+                "type": "+",
+                "text": " * Characterisation test (TST-010): the Java port on the same fixture must give",
+                "oldNo": null,
+                "newNo": 10
+              },
+              {
+                "type": "+",
+                "text": " * a report identical byte-for-byte to the COBOL program's own output (MIG-001).",
+                "oldNo": null,
+                "newNo": 11
+              },
+              {
+                "type": "+",
+                "text": " *",
+                "oldNo": null,
+                "newNo": 12
+              },
+              {
+                "type": "+",
+                "text": " * Run from the repository root: nexus-payments/",
+                "oldNo": null,
+                "newNo": 13
+              },
+              {
+                "type": "+",
+                "text": " */",
+                "oldNo": null,
+                "newNo": 14
+              },
+              {
+                "type": "+",
+                "text": "class ClearingBatchCharacterisationTest {",
+                "oldNo": null,
+                "newNo": 15
+              },
+              {
+                "type": "+",
+                "text": "",
+                "oldNo": null,
+                "newNo": 16
+              },
+              {
+                "type": "+",
+                "text": "    @TempDir",
+                "oldNo": null,
+                "newNo": 17
+              },
+              {
+                "type": "+",
+                "text": "    Path tempDir;",
+                "oldNo": null,
+                "newNo": 18
+              },
+              {
+                "type": "+",
+                "text": "",
+                "oldNo": null,
+                "newNo": 19
+              },
+              {
+                "type": "+",
+                "text": "    @Test",
+                "oldNo": null,
+                "newNo": 20
+              },
+              {
+                "type": "+",
+                "text": "    void reportMatchesCobolOutput() throws Exception {",
+                "oldNo": null,
+                "newNo": 21
+              },
+              {
+                "type": "+",
+                "text": "        // Fixture and expected report are the COBOL program's own input and output",
+                "oldNo": null,
+                "newNo": 22
+              },
+              {
+                "type": "+",
+                "text": "        // (MOD-2026-07 fixture, business day 2026-06-24).",
+                "oldNo": null,
+                "newNo": 23
+              },
+              {
+                "type": "+",
+                "text": "        Path input = Path.of(\"legacy/clearing-batch/clearing_input.dat\");",
+                "oldNo": null,
+                "newNo": 24
+              },
+              {
+                "type": "+",
+                "text": "        Path expected = Path.of(\"legacy/clearing-batch/expected_totals.txt\");",
+                "oldNo": null,
+                "newNo": 25
+              },
+              {
+                "type": "+",
+                "text": "        Path actual = tempDir.resolve(\"clearing_report.txt\");",
+                "oldNo": null,
+                "newNo": 26
+              },
+              {
+                "type": "+",
+                "text": "",
+                "oldNo": null,
+                "newNo": 27
+              },
+              {
+                "type": "+",
+                "text": "        ClearingBatch.main(new String[]{input.toString(), actual.toString()});",
+                "oldNo": null,
+                "newNo": 28
+              },
+              {
+                "type": "+",
+                "text": "",
+                "oldNo": null,
+                "newNo": 29
+              },
+              {
+                "type": "+",
+                "text": "        // Byte-for-byte comparison by a tool, not a person (MIG-001).",
+                "oldNo": null,
+                "newNo": 30
+              },
+              {
+                "type": "+",
+                "text": "        Reports.assertSameBytes(expected, actual);",
+                "oldNo": null,
+                "newNo": 31
+              },
+              {
+                "type": "+",
+                "text": "    }",
+                "oldNo": null,
+                "newNo": 32
+              },
+              {
+                "type": "+",
+                "text": "}",
+                "oldNo": null,
+                "newNo": 33
+              }
+            ]
+          }
+        ],
+        "tooLarge": false
+      }
+    ]
+  },
+  "rules": [
+    {
+      "marker": "SDLC-4",
+      "layer": "sdlc",
+      "source": "Nexus_MIG_Legacy-Modernisation-Standard_v1.md",
+      "page": 1,
+      "sectionPath": "3. Proving equivalence",
+      "turnId": "ct-mv50oj7e-76d3fd",
+      "text": "**MIG-002 Behaviour first.** A migration MUST NOT change behaviour. The new program does what the old one does, including its rounding, its filters and its report format, even where that looks wrong. A defect found on the way, such as a comment that contradicts the code, MUST be raised as its own ticket and fixed, if at all, in a separate change, never in passing. Where a comment and the code disagree, the code is the behaviour to keep.\nTraces to: TEC-POL-004 clause 4.3; TEC-POL-002 clause 4.1.",
+      "via": "search",
+      "tracedFrom": []
+    },
+    {
+      "marker": "SDLC-1",
+      "layer": "sdlc",
+      "source": "Nexus_MIG_Legacy-Modernisation-Standard_v1.md",
+      "page": 1,
+      "sectionPath": "4. Mapping the code",
+      "turnId": "ct-mv50oj7e-76d3fd",
+      "text": "## 4. Mapping the code\n**MIG-004 COBOL to Java mapping.** A Java port MUST use the COBOL compatibility library (`com.nexusbank.cobol`) for fields by PICTURE as the COBOL writes it (`FixedRecord`); `ROUNDED`, half away from zero, and truncation (`CobolMath`); edited pictures, with zero suppression, separators and a trailing minus (`Picture.edit`); and line-sequential files without trailing spaces (`LineSequential`). Never hand-write them. Money is `BigDecimal`, never `float` or `double`.\nTraces to: TEC-POL-004 clause 4.3; FIN-POL-003 clause 4.3.",
+      "via": "search",
+      "tracedFrom": []
+    },
+    {
+      "marker": "SDLC-2",
+      "layer": "sdlc",
+      "source": "Nexus_TST_Testing-and-Definition-of-Done-Standard_v3.md",
+      "page": 1,
+      "sectionPath": "4. Migrations",
+      "turnId": "ct-mv50oj7e-76d3fd",
+      "text": "## 4. Migrations\n**TST-010 Characterisation tests for migrations.** Before a program is migrated or rewritten, for example from COBOL to Java or Rust, or from a Java job to Python, its current behaviour MUST be captured in characterisation tests: the same inputs run through the old and the new program MUST give identical outputs, to the penny. The new program MUST NOT go live until they pass.\nTraces to: FIN-POL-003 clause 4.8 (Testing of changes to systems that calculate charges).",
+      "via": "search",
+      "tracedFrom": []
+    },
+    {
+      "marker": "TEAM-1",
+      "layer": "team",
+      "source": "Nexus_CLR-WIKI-019_Running-The-Clearing-Batch-Locally.md",
+      "page": 1,
+      "sectionPath": "Quirks a port must keep",
+      "turnId": "ct-mv50oj7e-76d3fd",
+      "text": "**CLR-WIKI-019 Q1: ROUNDED rounds half away from zero.** Each fee is `COMPUTE WS-FEE ROUNDED = IN-AMOUNT * IN-FEE-RATE`, rounded on its own, then added up. A half penny goes away from zero: +0.145 is 0.15 and -0.145 is -0.15. That's `CobolMath.rounded(fee, \"S9(9)V99\")`, or `cobol_math::rounded` in Rust. Hand-rolled, it goes wrong: `HALF_EVEN` and `Math.round` both turn the fixture's -0.165 refund fee into -0.16, not -0.17.\nTraces to: MIG-004 and MIG-005 (Legacy Modernisation Standard); PAY-012 (Payments Engineering Standard).",
+      "via": "search",
+      "tracedFrom": []
+    },
+    {
+      "marker": "TEAM-2",
+      "layer": "team",
+      "source": "Nexus_PM-2024-011_Penny-Drift-Post-Mortem.md",
+      "page": 1,
+      "sectionPath": "Lessons",
+      "turnId": "ct-mv50oj7e-76d3fd",
+      "text": "**PM-2024-011 L5: A rewrite is a change to money code.** Before the new version of a job replaces the old one, run both on the same inputs and prove they give the same answers. The Java job had this right for years; nobody checked that the Python one agreed with it.\nTraces to: TST-010 (Testing and Definition of Done Standard).",
+      "via": "search",
+      "tracedFrom": []
+    }
+  ],
+  "review": null,
+  "verification": {
+    "toolVerified": [],
+    "assistantAssessed": [],
+    "equivalence": {
+      "at": "2026-10-12T08:58:38.296Z",
+      "command": "s3-java-tests",
+      "comparedWith": "the COBOL program's report on the same fixture, produced in the same run",
+      "identical": true,
+      "legacyMatchesExpected": true,
+      "characterisationPassed": true,
+      "verifiedBy": "tool"
+    }
+  },
+  "outcome": {
+    "status": "ready for review",
+    "reason": null,
+    "step": null,
+    "lastRun": null
+  },
+  "approval": {
+    "status": "pending",
+    "approver": null
+  },
+  "platform": {
+    "appTreeHash": "a578b3f3b5f6ded34dc0d4699b105d23",
+    "models": [
+      "qwen3.8:27b"
+    ],
+    "store": null
+  }
+}

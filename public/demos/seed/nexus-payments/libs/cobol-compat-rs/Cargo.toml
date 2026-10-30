@@ -1,0 +1,10 @@
+[package]
+name = "cobol-compat"
+version = "1.0.0"
+edition = "2021"
+description = "Nexus Bank's COBOL compatibility library for Rust ports (MIG-005): exact fixed-point values, fields by PICTURE, ROUNDED, edited pictures and line-sequential files. Standard library only."
+publish = false
+
+[lib]
+name = "cobol_compat"
+path = "src/lib.rs"

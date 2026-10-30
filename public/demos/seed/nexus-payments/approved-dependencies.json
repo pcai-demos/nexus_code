@@ -1,0 +1,14 @@
+{
+  "schema": "nexus.approved-dependencies/1",
+  "owner": "Chief Architect",
+  "standard": "STD-DEP Approved Dependencies and Licences Standard (DEP-001)",
+  "updated": "2026-04-20",
+  "packages": [
+    { "name": "typescript", "ecosystem": "npm", "versions": ">=5.4 <8", "licence": "Apache-2.0", "approved": "2024-02-12", "request": "DEPREQ-0007", "conditions": "development and build only" },
+    { "name": "@types/node", "ecosystem": "npm", "versions": ">=20 <23", "licence": "MIT", "approved": "2024-02-12", "request": "DEPREQ-0007", "conditions": "development and build only" },
+    { "name": "decimal.js", "ecosystem": "npm", "versions": "^10.4.0", "licence": "MIT", "approved": "2024-09-02", "request": "DEPREQ-0031", "conditions": "amounts built from strings, never from a number (ADR-004)" },
+    { "name": "zod", "ecosystem": "npm", "versions": "^3.23.0", "licence": "MIT", "approved": "2025-01-20", "request": "DEPREQ-0044", "conditions": "request validation" },
+    { "name": "requests", "ecosystem": "pypi", "versions": ">=2.32,<3", "licence": "Apache-2.0", "approved": "2023-11-06", "request": "DEPREQ-0002", "conditions": "outbound HTTP with explicit timeouts (INT-002)" },
+    { "name": "jackson-databind", "ecosystem": "maven", "versions": "[2.17,3)", "licence": "Apache-2.0", "approved": "2024-05-13", "request": "DEPREQ-0019", "conditions": "no default typing" }
+  ]
+}
