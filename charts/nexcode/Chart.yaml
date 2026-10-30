@@ -1,0 +1,6 @@
+apiVersion: v2
+name: nexcode
+description: NexCODE - AI coding assistant with code-server IDE
+type: application
+version: 0.1.0
+appVersion: "tilt-0d62d9641ebbbd56"
