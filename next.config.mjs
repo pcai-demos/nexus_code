@@ -1,6 +1,4 @@
 // Allow connections to internal LLM endpoints with self-signed certificates
-// (prevents macOS Keychain popup for certificate approval)
-process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
 // IDE host — defaults to localhost:8443 for local dev, overridden in K8s
 const ideHost = process.env.IDE_HOST || "localhost:8443";

@@ -43,8 +43,6 @@ import { planRerankBatches, remainingBudgetMs, summariseRerankStage, RERANK_BATC
 
 export const dynamic = "force-dynamic";
 
-// Disable SSL check for private demos
-process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
 function translateToInternalUrl(urlText) {
   const url = urlText.trim();

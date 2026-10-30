@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
+import { nexusApiUrl } from "../../../nexus-core/server";
 
-// Disable TLS check for internal dev namespace API
-process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
 const mockSites = {
   "SITE_001": { address: "London, United Kingdom", city: "London" },
@@ -21,7 +20,7 @@ export async function GET(request) {
     // 1. Attempt to fetch site details dynamically from the primary Nexus Database API
     try {
       const response = await fetch(
-        `https://nexusapi.demo.lon-pcai.twlon.com/database/tables/sites/select`,
+        `${nexusApiUrl()}/database/tables/sites/select`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

@@ -4,7 +4,6 @@ import { orchestrate } from "@/lib/orchestrator";
 import { resolveCredential } from "@/lib/credentials";
 
 // Allow self-signed certs for internal cluster endpoints
-process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
 // Mirror the orchestrator's internal URL translation for cluster-local routing
 function translateToInternalUrl(urlText) {

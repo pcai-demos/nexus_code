@@ -25,7 +25,7 @@ nexusSso:
 image:
   repository: registry.demo.lon-pcai.twlon.com/nexus/nexcode
   # Pinned tag. Never "latest": PCAI re-imports and rollbacks must be reproducible.
-  tag: "sso-20261030"
+  tag: "api-20261030"
   pullPolicy: IfNotPresent
 imagePullSecrets: []
 replicaCount: 1
@@ -62,6 +62,8 @@ env:
     value: http://sso.nexus.svc.cluster.local:8080/realms/nexus/protocol/openid-connect/certs
   - name: NEXUS_OIDC_AUDIENCE
     value: gateway
+  - name: NEXUS_API_URL
+    value: http://nexusapi.nexus.svc.cluster.local:8000
 # Secrets are created outside the chart (EzAppConfig values are stored in plain text).
 # Every key of each listed Secret becomes an environment variable.
 existingSecrets:

@@ -1,4 +1,3 @@
-process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
 import { NextResponse } from "next/server";
 // T23 (design D7) — the field's value when typed, else the server's credential bound to this endpoint's origin; the response says which.

@@ -71,7 +71,6 @@ import { resolveCredential } from "@/lib/credentials";
 const WORKSPACE_ROOT = path.join(process.cwd(), "nexcode-data", "workspace");
 
 // Allow self-signed certs
-process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
 // Helper: Translate external domains to internal project-demos DNS endpoints
 function translateToInternalUrl(urlText) {

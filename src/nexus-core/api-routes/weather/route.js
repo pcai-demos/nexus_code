@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { nexusApiUrl } from "../../server";
 
 export async function GET(request) {
   try {
@@ -9,11 +10,9 @@ export async function GET(request) {
       return NextResponse.json({ error: "City parameter is required" }, { status: 400 });
     }
 
-    // Bypass SSL certificate validation for self-signed certificates in dev namespace
-    process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
     const response = await fetch(
-      `https://nexusapi.demo.lon-pcai.twlon.com/weather?city=${encodeURIComponent(city)}`
+      `${nexusApiUrl()}/weather?city=${encodeURIComponent(city)}`
     );
 
     if (!response.ok) {

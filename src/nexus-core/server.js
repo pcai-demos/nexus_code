@@ -5,8 +5,8 @@
  * `Authorization: Bearer <access token>`. The token is verified here against Keycloak's JWKS,
  * so a request that bypasses the gateway can't fake a user with headers.
  *
- * Reference data: Supabase REST (PostgREST) views in the `portal` schema. Until those exist,
- * it falls back to nexusapi's select endpoint (transitional; removed when nexusapi retires).
+ * Reference data: Supabase REST (PostgREST) views in the `portal` schema when configured,
+ * otherwise nexusapi's select endpoint on its in-cluster address.
  *
  * Environment (server-side only):
  *   NEXUS_OIDC_ISSUER        https://nexus-sso.<domain>/realms/nexus  (unset: no gateway session)
@@ -15,7 +15,8 @@
  *   NEXUS_SUPABASE_URL       http://supabase-supabase-kong.supabase.svc:8000 (unset: use nexusapi)
  *   NEXUS_SUPABASE_ANON_KEY  Supabase anon key (from a Kubernetes Secret)
  *   NEXUS_PORTAL_SCHEMA      default: portal
- *   NEXUS_API_URL            transitional fallback, default http://api.nexus-common.svc.cluster.local:8000
+ *   NEXUS_API_URL            nexusapi's in-cluster address (required), set by the chart, e.g.
+ *                            http://nexusapi.nexus.svc.cluster.local:8000
  */
 import { createRemoteJWKSet, jwtVerify } from "jose";
 
@@ -26,9 +27,21 @@ const AUDIENCE = process.env.NEXUS_OIDC_AUDIENCE;
 const SUPABASE_URL = process.env.NEXUS_SUPABASE_URL;
 const SUPABASE_KEY = process.env.NEXUS_SUPABASE_ANON_KEY;
 const PORTAL_SCHEMA = process.env.NEXUS_PORTAL_SCHEMA || "portal";
-const API_URL = process.env.NEXUS_API_URL || "http://api.nexus-common.svc.cluster.local:8000";
 
-// Portal view -> legacy nexus table, for the transitional nexusapi fallback.
+/**
+ * nexusapi's base URL, from the NEXUS_API_URL environment variable only (the chart sets it per
+ * environment). nexusapi is in-cluster only; there is no public fallback.
+ * @returns {string}
+ */
+export function nexusApiUrl() {
+  const url = (process.env.NEXUS_API_URL || "").replace(/\/+$/, "");
+  if (!url) {
+    throw new Error("NEXUS_API_URL is not set: set it in the app's chart values (env).");
+  }
+  return url;
+}
+
+// Portal view -> nexus table, when reading through nexusapi.
 const LEGACY_TABLES = {
   navigation: "navbar_departments",
   sites: "sites",
@@ -111,11 +124,11 @@ export async function readReference(view, { eq = {}, columns, limit } = {}) {
     return res.json();
   }
 
-  // Transitional: nexusapi's read-only select endpoint, on its in-cluster address.
+  // nexusapi's read-only select endpoint, on its in-cluster address.
   const where = Object.entries(eq)
     .map(([column, value]) => `${column} = '${value}'`)
     .join(" AND ");
-  const res = await fetch(`${API_URL}/database/tables/${LEGACY_TABLES[view]}/select`, {
+  const res = await fetch(`${nexusApiUrl()}/database/tables/${LEGACY_TABLES[view]}/select`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ columns: columns?.length ? columns : ["*"], where: where || null, limit }),

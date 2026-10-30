@@ -3,4 +3,4 @@ name: nexcode
 description: NexCODE - AI coding assistant with code-server IDE
 type: application
 version: 0.2.0
-appVersion: "sso-20261030"
+appVersion: "api-20261030"

@@ -4,7 +4,6 @@ import { resolveSchemaVersion, collectionNameForVersion } from "@/lib/rag/config
 import { resolveCredential } from "@/lib/credentials";
 
 // Allow self-signed certs for internal cluster endpoints
-process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
 /**
  * T15 (design D11; F-115) — the documents the store holds, for the chat
