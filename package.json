@@ -1,0 +1,33 @@
+{
+  "name": "nexcode",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "NODE_NO_WARNINGS=1 next dev",
+    "build": "next build",
+    "start": "NODE_NO_WARNINGS=1 next start -H 0.0.0.0 -p 3000",
+    "lint": "eslint .",
+    "test": "node --test \"tests/unit/**/*.test.js\"",
+    "test:integration": "node --test \"tests/integration/**/*.test.js\"",
+    "test:eval": "node tests/eval/run.js"
+  },
+  "dependencies": {
+    "@remixicon/react": "^4.9.0",
+    "@xyflow/react": "^12.10.2",
+    "framer-motion": "^12.38.0",
+    "jose": "^6.2.14",
+    "lucide-react": "^1.16.0",
+    "motion": "^12.38.0",
+    "next": "16.2.2",
+    "officeparser": "^7.4.0",
+    "pdf-parse": "^1.1.1",
+    "react": "19.2.4",
+    "react-dom": "19.2.4"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4",
+    "eslint": "^9",
+    "eslint-config-next": "16.2.2",
+    "tailwindcss": "^4"
+  }
+}

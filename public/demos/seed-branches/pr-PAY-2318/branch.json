@@ -1,0 +1,13 @@
+{
+  "schema": "nexcode.seed-branch/1",
+  "branch": "pr/PAY-2318",
+  "base": "main",
+  "author": { "name": "Tom Okafor", "email": "tom.okafor@nexus-bank.example" },
+  "date": "2026-05-12T09:41:00+01:00",
+  "message": "PAY-2318 Add refund API for card payments\n\nAdds requestRefund: checks the refund against the captured payment, sends it to the card scheme\ngateway (with retries) and records it. Adds the REFUND_REQUESTED audit action and async-retry.",
+  "files": [
+    "services/refund-api/src/refund-service.ts",
+    "services/refund-api/src/audit-log.ts",
+    "services/refund-api/package.json"
+  ]
+}

@@ -1,0 +1,10 @@
+# T22 (design D2): the parser stack, pinned to what the demo serves today
+# (image tilt-ecb5943ea629a65c, 2026-09-07). Every transitive version is held by
+# constraints.txt — the same image's full `pip freeze` — so a rebuild reproduces
+# this environment exactly (FM-N6 / E41). Change a version deliberately: bump it
+# here, regenerate constraints.txt from the new image, record it in the ticket.
+docling==2.117.0
+pypdfium2==5.12.1
+# T35 (t35-design D4; F-127): the inference engine for rapidocr (docling's dependency, already pinned in
+# constraints.txt) — OCR for pages without a text layer. CPU only. The version the design probe ran (2026-09-17).
+onnxruntime==1.30.0

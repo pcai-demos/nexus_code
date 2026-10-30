@@ -1,0 +1,419 @@
+{
+  "id": "s6",
+  "title": "Build a new component, from its ticket to the Bank's repository",
+  "summary": "New code written to the firm's rules from its first line: built, documented, tested and improved, audited, and committed with its evidence",
+  "story": "Disputes Operations keep card payment disputes in a spreadsheet, so reconciliation cannot see which settled payments are disputed. Priya Nair builds dispute intake into the settlement service with NexCODE: the code and its tests, its documentation to the Bank's standard, improvements with the tests run before and after, a security audit against the Bank's standards and OWASP, and a commit to the Bank's repository with the evidence record beside the code.",
+  "language": "Python",
+  "minutes": 10,
+  "icon": "RiHammerLine",
+  "ticket": {
+    "id": "DSP-2026-03",
+    "path": "nexus-payments/backlog/DSP-2026-03.md"
+  },
+  "select": {
+    "reset": true,
+    "runTests": false
+  },
+  "review": {
+    "base": "main",
+    "workspace": true,
+    "changed": [
+      "nexus-payments/services/settlement/dispute_intake.py",
+      "nexus-payments/services/settlement/test_dispute_intake.py"
+    ]
+  },
+  "card": {
+    "about": "New code is where a bank's rules matter most and are easiest to miss. NexCODE builds a new component of the settlement service from its ticket, to the four layers of rules from the first line: card numbers masked, money in Decimal, bound SQL parameters and an audit event. It documents the module to the Code Documentation Standard, with a tool showing no line of code changed; reads the test results and recommends improvements, then makes them with their tests; audits the code against the Bank's standards and OWASP ASVS, each finding traced to the regulation; and commits the code with its evidence record to the Bank's repository for review.",
+    "scenario": "Monday 10 August 2026. Hannah Clarke of Disputes Operations raised DSP-2026-03 on 3 August: card payment disputes are kept in a spreadsheet, and the scheme's deadlines are tracked by hand. Priya Nair builds dispute intake in the settlement service, Python like the rest of the service, from the ticket to a branch in the Bank's repository.",
+    "people": [
+      {
+        "name": "Priya Nair",
+        "role": "Senior engineer, Clearing Engineering",
+        "part": "the presenter plays Priya: builds the component with NexCODE, applies each change, runs the checks, records and commits it"
+      },
+      {
+        "name": "Hannah Clarke",
+        "role": "Disputes Operations",
+        "part": "raised DSP-2026-03"
+      },
+      {
+        "name": "Marcus Thorne",
+        "role": "Chief Architect",
+        "part": "owns the Code Documentation Standard"
+      },
+      {
+        "name": "David Vance",
+        "role": "Head of Payments Engineering",
+        "part": "reviews and approves the change (REV-005)"
+      }
+    ],
+    "teams": [
+      "Clearing Engineering, Payments & Settlements Technology",
+      "Disputes Operations",
+      "Application Security"
+    ],
+    "artefacts": {
+      "code": [
+        {
+          "path": "nexus-payments/backlog/DSP-2026-03.md",
+          "role": "the story: what to build, and its acceptance criteria"
+        },
+        {
+          "path": "nexus-payments/services/settlement/settlement_reconciler.py",
+          "role": "the service's existing module: the pattern the new one follows"
+        },
+        {
+          "path": "nexus-payments/services/settlement/test_settlement_reconciler.py",
+          "role": "the service's existing tests: how a test finds the fixture and imports its module"
+        },
+        {
+          "path": "nexus-payments/services/settlement/fixtures/settlement_fixture.sql",
+          "role": "the card transactions a dispute names, and every expected value a test uses"
+        }
+      ],
+      "documents": [
+        {
+          "source": "OWASP_ASVS-5.0.0_May2025.pdf",
+          "role": "the external secure-coding reference STD-SVS adopts at Level 2: parameterised queries (1.2.4), business input (2.2.1), minimum sensitive data (14.2.6, 14.2.7), logs (16.2.1, 16.2.5), errors (16.5.1)"
+        },
+        {
+          "source": "PCI-DSS-v4_0_1_June2024.pdf",
+          "role": "3.3.1, 3.4.1 and 3.5.1: no readable card number shown or stored; 6.2.4: secure engineering techniques for bespoke software"
+        },
+        {
+          "source": "FCA_SYSC-4_October2026.pdf",
+          "role": "SYSC 4.1.1R: sound administrative procedures and internal control, behind the change records"
+        },
+        {
+          "source": "FCA_SYSC_June2026.pdf",
+          "role": "SYSC 15A: the important business service the module supports, card settlement"
+        },
+        {
+          "source": "FCA_AI-Update_April2024.pdf",
+          "role": "page 16: the accountability and governance principle, behind labelling AI-assisted work"
+        },
+        {
+          "source": "PSRs_2017_April2026.pdf",
+          "role": "regulation 84: the full amount transferred, behind exact money"
+        },
+        {
+          "source": "Nexus_SEC-POL-001_Information-Security-and-Data-Handling-Policy_v5.md",
+          "role": "clauses 4.2 to 4.8: classification, card data, minimum data, logging and secure development"
+        },
+        {
+          "source": "Nexus_FIN-POL-003_Financial-Controls-and-Reconciliation-Policy_v4.md",
+          "role": "clause 4.3: amounts calculated exactly under a documented rule"
+        },
+        {
+          "source": "Nexus_TEC-POL-002_Technology-Change-Management-and-Segregation-of-Duties-Policy_v4.md",
+          "role": "clauses 4.5 and 4.8: automated checks, and the change record"
+        },
+        {
+          "source": "Nexus_TEC-POL-004_Technology-Lifecycle-and-Modernisation-Policy_v2.md",
+          "role": "clause 4.6: a system's behaviour documented, not held in people's heads"
+        },
+        {
+          "source": "Nexus_TEC-POL-005_AI-Assisted-Development-Policy_v2.md",
+          "role": "clauses 4.4 and 4.5: AI-assisted work labelled, and its records kept"
+        },
+        {
+          "source": "Nexus_LEG-POL-001_Intellectual-Property-and-Notices-Policy_v2.md",
+          "role": "clause 4.2: the Bank's copyright notice and trade mark line in its software"
+        },
+        {
+          "source": "Nexus_SCS_Secure-Coding-Standard_v4.md",
+          "role": "SCS-021, SCS-022, SCS-030 and SCS-031: card numbers, masking, minimum data and bound SQL parameters"
+        },
+        {
+          "source": "Nexus_PAY_Payments-Engineering-Standard_v3.md",
+          "role": "PAY-012: money in decimal; PAY-030: an audit event for every action on settlement data"
+        },
+        {
+          "source": "Nexus_TST_Testing-and-Definition-of-Done-Standard_v3.md",
+          "role": "TST-001: tests with every change"
+        },
+        {
+          "source": "Nexus_DOC_Code-Documentation-Standard_v1.md",
+          "role": "DOC-001 to DOC-008: the header, a docstring for every unit, money tags, the AI disclosure, and a documentation-only change proved by a tool"
+        },
+        {
+          "source": "Nexus_REV_Code-Review-Standard_v2.md",
+          "role": "REV-002 to REV-007: the pre-merge checks, severities, findings verified by tool or assessed, AI-assisted changes reviewed by a person"
+        },
+        {
+          "source": "Nexus_SVS_Security-Verification-Standard_v1.md",
+          "role": "SVS-001 to SVS-020: new code verified against OWASP ASVS 5.0.0 Level 2, with the results kept with the change"
+        },
+        {
+          "source": "Nexus_CLR-WIKI-024_Building-A-Settlement-Component.md",
+          "role": "the team's page for a new settlement component: the Python header, tests on the fixture, the disputes and audit tables, and the steps before merge"
+        },
+        {
+          "source": "Nexus_CLR-WIKI-014_Why-We-Log-The-Last-Four-Only.md",
+          "role": "why only the last four digits of a card number are ever logged"
+        },
+        {
+          "source": "Nexus_ADR-004_Monetary-Amounts-Use-Decimal.md",
+          "role": "the decision to keep money in Decimal"
+        },
+        {
+          "source": "Nexus_PM-2024-011_Penny-Drift-Post-Mortem.md",
+          "role": "the penny drift a float caused, behind ADR-004"
+        }
+      ]
+    },
+    "outputs": [
+      "dispute_intake.py and its unit tests, built to the four layers of rules from the first line",
+      "The module documented to the Code Documentation Standard, with a tool showing that no line of code changed",
+      "Improvements recommended and made, with the test results before and after",
+      "A security audit against the Bank's standards and OWASP ASVS 5.0.0: tool findings and NexCODE's, each traced to the regulation",
+      "The evidence record, committed with the code to a feature branch of the Bank's repository for review"
+    ],
+    "value": [
+      "New code that meets the Bank's rules from its first line, not after a review sends it back",
+      "Documentation, tests and a security audit done in the same sitting, each checked by a tool where a tool can check it",
+      "External standards, OWASP and PCI DSS, applied through the Bank's own standards and traced to their text",
+      "The code and its evidence committed together, labelled AI-assisted, for a person to review and approve"
+    ],
+    "highlight": {
+      "rule": "SVS-020",
+      "text": "The verification's results, by tool and by reviewer, MUST be kept with the change record. A finding rated High or Critical MUST be fixed before merge; a lower one is fixed, or accepted by the reviewer with the reason recorded.",
+      "source": "Nexus_SVS_Security-Verification-Standard_v1.md"
+    }
+  },
+  "open": [
+    "nexus-payments/backlog/DSP-2026-03.md",
+    "nexus-payments/services/settlement/settlement_reconciler.py"
+  ],
+  "steps": [
+    {
+      "id": "build",
+      "title": "Build it",
+      "mode": "change",
+      "prompt": "Build dispute intake for ticket DSP-2026-03 in the settlement service, in Python 3.13, the service's language. Write nexus-payments/services/settlement/dispute_intake.py with record_dispute(conn, transaction_id, card_number, amount, reason_code, received_on, actor): look up the card transaction by its id; refuse a dispute for an unknown transaction, for one that is not CAPTURED, or for an amount that is not positive or is more than the transaction's amount; store the dispute in a disputes table (create it if it is missing) with the card number masked to its last four digits, the amount, the reason code, the date and the status OPEN; emit an audit event for it; and return the stored dispute. Write nexus-payments/services/settlement/test_dispute_intake.py with unit tests (unittest, an in-memory SQLite database loaded from fixtures/settlement_fixture.sql) for an accepted dispute and for each refusal.",
+      "attach": [
+        "nexus-payments/services/settlement/settlement_reconciler.py",
+        "nexus-payments/services/settlement/test_settlement_reconciler.py",
+        "nexus-payments/services/settlement/fixtures/settlement_fixture.sql"
+      ],
+      "after": [
+        "run-tests"
+      ],
+      "repair": {
+        "prompt": "The tests failed after the change. Read the test output, find the cause and fix it, giving the changed files back whole."
+      },
+      "traceRules": [
+        "SCS-021",
+        "SCS-022",
+        "SCS-030",
+        "SCS-031",
+        "PAY-012",
+        "PAY-030",
+        "TST-001"
+      ],
+      "history": "off",
+      "layerTopics": {
+        "regulator": [
+          "the primary account number masked when displayed, and not stored in a readable form",
+          "database queries use parameterized queries or other protection against injection"
+        ],
+        "corporate": [
+          "card data minimised, masked and never written to logs",
+          "amounts calculated exactly under a documented rule"
+        ],
+        "sdlc": [
+          "card numbers never logged, masked to the last four digits",
+          "bound parameters for every SQL query",
+          "money in decimal, never binary floating point",
+          "an audit event for every action on settlement data",
+          "tests with every change"
+        ],
+        "team": [
+          "how a test loads the settlement fixture and imports its module",
+          "the disputes table and the audit_events table",
+          "a card number masked to its last four digits in code"
+        ]
+      }
+    },
+    {
+      "id": "comment",
+      "title": "Comment it",
+      "mode": "comments",
+      "prompt": "Bring nexus-payments/services/settlement/dispute_intake.py up to the Code Documentation Standard for DSP-2026-03: the module's header docstring from the team's Python template, with the Bank's notices and the AI disclosure; a docstring for every class and function saying what it does and why, its arguments, what it returns and each refusal it raises; and the requirement each piece of money logic implements. Date the history entry 10 August 2026. Change no line of code.",
+      "attach": [
+        "nexus-payments/services/settlement/dispute_intake.py"
+      ],
+      "comments": {
+        "source": "nexus-payments/services/settlement/dispute_intake.py"
+      },
+      "thinking": "off",
+      "history": "off",
+      "after": [
+        "run-tests"
+      ],
+      "repair": {
+        "prompt": "The checks failed after the change. Read the documentation check's findings in the test output and fix the docstrings and comments only, giving the module back whole again. Change no line of code."
+      },
+      "layerTopics": {
+        "regulator": [
+          "identify and document the people, processes, technology, facilities and information necessary to deliver each important business service"
+        ],
+        "corporate": [
+          "notices in the Bank's software: the copyright notice and trade mark line naming the Bank's current legal entity",
+          "AI-assisted changes labelled, naming the assistant and the model"
+        ],
+        "sdlc": [
+          "the mandatory header: name, purpose, service, owner, classification, notice, history and requirements",
+          "a purpose comment for every class, function and method",
+          "money logic carries the requirement it implements; AI assistance is disclosed in the header"
+        ],
+        "team": [
+          "the module header docstring for Python: MODULE, PURPOSE, SERVICE, OWNER, CLASSIFICATION, the copyright line, the trade mark line, HISTORY, REQUIREMENTS and AI-ASSISTED",
+          "docstrings: arguments, what it returns and each refusal it raises"
+        ]
+      }
+    },
+    {
+      "id": "improve",
+      "title": "Test and improve",
+      "mode": "improve",
+      "prompt": "The tests of dispute intake have run: the latest run is attached. Recommend improvements to nexus-payments/services/settlement/dispute_intake.py for DSP-2026-03: cases the tests miss, performance and maintainability, each with its reason and the rule behind it. Then make them: give the module and its tests back whole, with a test for each new case, the documentation kept to the Code Documentation Standard and a history entry dated 10 August 2026.",
+      "attach": [
+        "nexus-payments/services/settlement/dispute_intake.py",
+        "nexus-payments/services/settlement/test_dispute_intake.py",
+        "nexus-payments/services/settlement/fixtures/settlement_fixture.sql"
+      ],
+      "history": "off",
+      "after": [
+        "run-tests"
+      ],
+      "repair": {
+        "prompt": "The tests or the documentation check failed after the change. Read the output, find the cause and fix it, giving the changed files back whole."
+      },
+      "layerTopics": {
+        "regulator": [
+          "input validated against business rules before it is used",
+          "the primary account number masked when displayed, and not stored in a readable form"
+        ],
+        "corporate": [
+          "amounts calculated exactly under a documented rule",
+          "card data minimised, masked and never written to logs"
+        ],
+        "sdlc": [
+          "tests with every change, one rule per test, expected values from the fixture",
+          "business input checked against the business rules, and a refusal says which rule failed",
+          "money in decimal, never binary floating point"
+        ],
+        "team": [
+          "tests on the settlement fixture: one rule per test, no clock, no network",
+          "the disputes table and the audit_events table"
+        ]
+      }
+    },
+    {
+      "id": "audit",
+      "title": "Security audit",
+      "mode": "review",
+      "prompt": "Audit dispute intake's security for DSP-2026-03, before it is committed for review: the new module and its tests, against the Bank's standards and OWASP ASVS 5.0.0 Level 2, as STD-SVS sets it.",
+      "attach": [
+        "nexus-payments/services/settlement/dispute_intake.py",
+        "nexus-payments/services/settlement/test_dispute_intake.py"
+      ],
+      "traceRegulators": true,
+      "traceRules": [
+        "SVS-001",
+        "SVS-010",
+        "SVS-011",
+        "SVS-012",
+        "SVS-013",
+        "SVS-014",
+        "SVS-020"
+      ],
+      "history": "off",
+      "layerTopics": {
+        "regulator": [
+          "verify that database queries use parameterized queries",
+          "verify that input is validated against business rules",
+          "verify that the application does not log sensitive data"
+        ],
+        "corporate": [
+          "secure development: new code verified before it is released",
+          "card data minimised, masked and never written to logs"
+        ],
+        "sdlc": [
+          "new code verified against OWASP ASVS 5.0.0 Level 2 before it is merged",
+          "the pre-merge checks run first; findings verified by tool or assessed by the reviewer",
+          "card numbers in code, test data and logs"
+        ],
+        "team": [
+          "before you merge: tests, the documentation check, the pre-merge checks and STD-SVS",
+          "why only the last four digits of a card number are logged"
+        ]
+      }
+    },
+    {
+      "id": "fix",
+      "title": "Fix the blocking findings",
+      "mode": "change",
+      "optional": true,
+      "fixes": "audit",
+      "history": "off",
+      "prompt": "Fix the audit's Critical and High findings in dispute intake for DSP-2026-03, keeping the module documented to the Code Documentation Standard with a history entry dated 10 August 2026. Change nothing else.",
+      "attach": [
+        "nexus-payments/services/settlement/dispute_intake.py",
+        "nexus-payments/services/settlement/test_dispute_intake.py",
+        "nexus-payments/services/settlement/fixtures/settlement_fixture.sql"
+      ],
+      "after": [
+        "run-tests"
+      ],
+      "repair": {
+        "prompt": "The tests or the documentation check failed after the change. Read the output, find the cause and fix it, giving the changed files back whole."
+      },
+      "layerTopics": {
+        "regulator": [
+          "live PANs are not used in pre-production environments",
+          "the primary account number masked when displayed, and not stored in a readable form"
+        ],
+        "corporate": [
+          "live card numbers are never used in development or test; data minimisation",
+          "card data minimised, masked and never written to logs"
+        ],
+        "sdlc": [
+          "card numbers in code, test data, fixtures and logs",
+          "a Critical finding blocks the merge until it is fixed and reviewed again",
+          "an obviously synthetic value instead of a card number"
+        ],
+        "team": [
+          "a card number masked to its last four digits in code",
+          "why only the last four digits of a card number are logged"
+        ]
+      }
+    },
+    {
+      "id": "record",
+      "title": "Record the change",
+      "action": "record"
+    },
+    {
+      "id": "commit",
+      "title": "Commit to the Bank repository",
+      "action": "commit",
+      "commit": {
+        "branch": "feature/DSP-2026-03",
+        "paths": [
+          "nexus-payments/services/settlement/dispute_intake.py",
+          "nexus-payments/services/settlement/test_dispute_intake.py"
+        ],
+        "author": {
+          "name": "Priya Nair",
+          "email": "priya.nair@nexus-bank.example"
+        }
+      }
+    }
+  ],
+  "commands": {
+    "tests": "s6-tests"
+  },
+  "talkTrack": "New code is where the rules matter most. Select the demo: the ticket and the service's existing module open; there is nothing to fix, something to build. Build it: NexCODE explains the design in plain words, citing the rules from all four layers, and the module and its tests open in the IDE as new files; Apply, run the tests. Comment it: NexCODE writes the header from the team's template, with the Bank's notices and the AI disclosure, and a docstring for every function; the checks run the tests again and a tool that reads the Python itself shows no line of code changed. Test and improve: NexCODE reads the test results with the code and recommends improvements, each with its reason and rule, then makes them with their tests; the tests run again, before and after in the record. Security audit: the pre-merge checks run first, then NexCODE's own findings against the Bank's standards and OWASP ASVS, each traced to the regulation's text; a blocking finding gets its fix. Record the change, then Commit: the module, its tests and the evidence record go on feature/DSP-2026-03 in the Bank's repository, labelled AI-assisted, for David Vance to review. Point at the card: SVS-020 keeps the evidence with the change."
+}

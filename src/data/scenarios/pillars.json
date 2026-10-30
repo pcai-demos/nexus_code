@@ -1,0 +1,76 @@
+{
+  "schema": "nexcode.pillars/1",
+  "firm": "Nexus Bank plc, Payments & Settlements Technology division",
+  "note": "Each layer's documents by their store source name (the file name ingested through the File Browser). A layer whose documents are not in the store is reported as empty and not searched. The internal layers are filled as their content is reviewed and ingested.",
+  "pillars": [
+    {
+      "id": "regulator",
+      "label": "External regulation",
+      "marker": "REG",
+      "description": "UK regulators, legislation and card-scheme standards",
+      "documents": [
+        "FCA_SYSC-4_October2026.pdf",
+        "FCA_SYSC_June2026.pdf",
+        "PSRs_2017_April2026.pdf",
+        "PCI-DSS-v4_0_1_June2024.pdf",
+        "PRA_SS1-21_OperationalResilience_March2022.pdf",
+        "PRA_SS2-21_Outsourcing_November2024.pdf",
+        "PRA_SS1-23_ModelRisk_April2026.pdf",
+        "FCA_PS21-3_OperationalResilience_March2021.pdf",
+        "FCA_AI-Update_April2024.pdf",
+        "BoE_AI-Letter-to-DSIT-HMT_April2024.pdf",
+        "OWASP_ASVS-5.0.0_May2025.pdf"
+      ]
+    },
+    {
+      "id": "corporate",
+      "label": "Corporate policy",
+      "marker": "CORP",
+      "description": "Nexus Bank plc policies",
+      "documents": [
+        "Nexus_FIN-POL-003_Financial-Controls-and-Reconciliation-Policy_v4.md",
+        "Nexus_SEC-POL-001_Information-Security-and-Data-Handling-Policy_v5.md",
+        "Nexus_TPR-POL-002_Third-Party-and-Open-Source-Software-Policy_v3.md",
+        "Nexus_TEC-POL-002_Technology-Change-Management-and-Segregation-of-Duties-Policy_v4.md",
+        "Nexus_TEC-POL-005_AI-Assisted-Development-Policy_v2.md",
+        "Nexus_TEC-POL-004_Technology-Lifecycle-and-Modernisation-Policy_v2.md",
+        "Nexus_LEG-POL-001_Intellectual-Property-and-Notices-Policy_v2.md"
+      ]
+    },
+    {
+      "id": "sdlc",
+      "label": "Engineering standards",
+      "marker": "SDLC",
+      "description": "Payments & Settlements Technology engineering standards, with requirement IDs",
+      "documents": [
+        "Nexus_PAY_Payments-Engineering-Standard_v3.md",
+        "Nexus_TST_Testing-and-Definition-of-Done-Standard_v3.md",
+        "Nexus_SCS_Secure-Coding-Standard_v4.md",
+        "Nexus_REV_Code-Review-Standard_v2.md",
+        "Nexus_DEP_Approved-Dependencies-and-Licences-Standard_v3.md",
+        "Nexus_INT_Payments-Integration-Standard_v2.md",
+        "Nexus_MIG_Legacy-Modernisation-Standard_v1.md",
+        "Nexus_DOC_Code-Documentation-Standard_v1.md",
+        "Nexus_SVS_Security-Verification-Standard_v1.md"
+      ]
+    },
+    {
+      "id": "team",
+      "label": "Team knowledge",
+      "marker": "TEAM",
+      "description": "Clearing Engineering wiki pages, post-mortems and decision records",
+      "documents": [
+        "Nexus_PM-2024-011_Penny-Drift-Post-Mortem.md",
+        "Nexus_ADR-004_Monetary-Amounts-Use-Decimal.md",
+        "Nexus_CLR-WIKI-014_Why-We-Log-The-Last-Four-Only.md",
+        "Nexus_CLR-WIKI-006_Debugging-Tip-Dump-The-Full-Request-Payload.md",
+        "Nexus_ADR-007_Retries-and-Idempotency-Keys.md",
+        "Nexus_CLR-DIGEST-2026-04_Review-Comment-Digest.md",
+        "Nexus_CLR-WIKI-019_Running-The-Clearing-Batch-Locally.md",
+        "Nexus_ADR-008_Target-Languages-For-Batch-Modernisation.md",
+        "Nexus_CLR-WIKI-021_Commenting-The-Clearing-Batch.md",
+        "Nexus_CLR-WIKI-024_Building-A-Settlement-Component.md"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,48 @@
+{
+  "generatedAt": "2026-08-13T12:31:03.473Z",
+  "runsAttempted": 3,
+  "runsUsable": 3,
+  "runsExcluded": 0,
+  "excludedDetail": [],
+  "chunkCounts": [
+    {
+      "run": 1,
+      "chunks": 80
+    },
+    {
+      "run": 2,
+      "chunks": 80
+    },
+    {
+      "run": 3,
+      "chunks": 79
+    }
+  ],
+  "chunkCountDrift": true,
+  "peakOllamaResident": 3,
+  "evictionReachable": true,
+  "evictionsTotal": 0,
+  "expiriesTotal": 0,
+  "unexplainedTotal": 0,
+  "captionShortfallObserved": true,
+  "verdict": "H-NULL — sampling stands",
+  "action": "T24 is correctly scoped as written. Proceed.",
+  "caveat": "captionShortfall conflates VLM failures with genuine [DECORATIVE_ELEMENT] replies; confirm against pod logs before concluding.",
+  "config": {
+    "weaviateUrl": "http://weaviate.hpe-weaviate.svc.cluster.local:80",
+    "ollamaUrl": "http://ollama.ollama.svc.cluster.local:11434",
+    "embedUrl": "http://ollama.ollama.svc.cluster.local:11434/v1",
+    "embedModel": "qwen3-embedding:8b",
+    "vlmModel": "qwen3-vl:30b",
+    "appUrl": "http://127.0.0.1:3000",
+    "token": "<set>",
+    "runs": 3,
+    "gapSeconds": 400,
+    "pollMs": 2000,
+    "outDir": "/tmp/x6clean"
+  },
+  "files": [
+    "demos/demo_files/ext_reg_docs/Barratt_Homes-SaxonFields.pdf",
+    "demos/demo_files/ext_reg_docs/Ikea-wardrobe_build.pdf"
+  ]
+}

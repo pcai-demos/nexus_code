@@ -1,0 +1,16 @@
+{
+  "name": "@nexus-payments/refund-api",
+  "version": "0.4.0",
+  "private": true,
+  "description": "Card refund API for merchant customers, Payments & Settlements Technology",
+  "license": "UNLICENSED",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "test": "tsc -p tsconfig.json && node --test dist/test"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@types/node": "^20.17.0",
+    "typescript": "^7.0.0"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "name": "nexcode-theme",
+  "displayName": "NexCODE Dark",
+  "description": "Dark theme matching the NexCODE AI Developer Platform design system",
+  "version": "1.0.0",
+  "publisher": "nexcode",
+  "engines": {
+    "vscode": "^1.60.0"
+  },
+  "categories": ["Themes"],
+  "contributes": {
+    "themes": [
+      {
+        "label": "NexCODE Dark",
+        "uiTheme": "vs-dark",
+        "path": "./themes/nexcode-dark.json"
+      }
+    ]
+  }
+}

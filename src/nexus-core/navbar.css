@@ -1,0 +1,74 @@
+:root {
+  /* Tailwind CSS v4 Theme Colors Override */
+  --color-brand-vivid: #F2561D;
+  --color-brand-soft: #D9704A;
+  --color-brand-contrast: #008A8C;
+  --color-neutrals-light: #BFBFBF;
+  --color-neutrals-medium: #8C8C8C;
+  --color-neutrals-dark: #474747;
+  --color-neutrals-deep: #000000;
+  --color-neutrals-slate: #64748B;
+  --color-status-good: #008C48;
+  --color-status-failed: #BF0300;
+  --color-status-degraded: #F27D00;
+  
+  /* Fonts Mapping */
+  --font-sans: 'Poppins', sans-serif;
+  --font-serif: 'Poppins', sans-serif;
+  
+  --font-poppins: 'Poppins', sans-serif;
+  --font-instrument-serif: 'Poppins', sans-serif;
+}
+
+/* Hide scrollbar on submenu scroll containers */
+.overflow-x-auto::-webkit-scrollbar {
+  display: none;
+}
+
+/* ── Weather icon custom tooltip ─────────────────────────────────────────── */
+.weather-icon-tooltip-wrap {
+  position: relative !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  cursor: default;
+  padding: 4px;
+}
+
+.weather-icon-tooltip {
+  position: absolute !important;
+  top: calc(100% + 8px) !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  padding: 5px 10px !important;
+  background: rgba(24, 24, 24, 0.92) !important;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  border-radius: 6px !important;
+  color: #ffffff !important;
+  font-size: 12px !important;
+  font-weight: 400 !important;
+  letter-spacing: 0.03em;
+  white-space: nowrap !important;
+  pointer-events: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  transition: opacity 0.2s ease, visibility 0.2s ease;
+  z-index: 100 !important;
+}
+
+/* Small arrow pointing up */
+.weather-icon-tooltip::before {
+  content: "" !important;
+  position: absolute !important;
+  bottom: 100% !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  border: 5px solid transparent !important;
+  border-bottom-color: rgba(24, 24, 24, 0.92) !important;
+}
+
+.weather-icon-tooltip-wrap:hover .weather-icon-tooltip {
+  opacity: 1 !important;
+  visibility: visible !important;
+}

@@ -1,0 +1,15 @@
+{
+  "name": "nexcode-bridge",
+  "displayName": "NexCODE Bridge",
+  "description": "Bidirectional communication bridge between NexCODE chat and code-server IDE",
+  "version": "1.0.0",
+  "publisher": "nexcode",
+  "engines": {
+    "vscode": "^1.70.0"
+  },
+  "categories": ["Other"],
+  "activationEvents": ["*"],
+  "main": "./extension.js",
+  "contributes": {},
+  "dependencies": {}
+}

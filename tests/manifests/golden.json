@@ -1,0 +1,2775 @@
+{
+  "schemaVersion": 1,
+  "description": "Golden-corpus ground truth for the NexCODE RAG pipeline. Derived from the real demo corpus by cross-checking two independent production extractors; expectations appear here only when both engines agree. Byte-stable: an unchanged corpus reproduces an identical file.",
+  "corpusRoot": "public/demos/demo_files/ext_reg_docs",
+  "generatedBy": "scripts/derive_golden_manifest.py",
+  "groundTruthPolicy": {
+    "pdf": "pypdfium2 (production primary) cross-checked against pdf-parse (production fallback)",
+    "docx": "python-docx, independent of production officeparser/docling",
+    "pptx": "python-pptx, independent of production officeparser/docling",
+    "generated": "known by construction",
+    "expectedMinChunksRule": "max(1, chars // 4000) - conservative lower bound"
+  },
+  "corpus": [
+    {
+      "sourceId": "tests/fixtures/legacy_corpus/Barratt_Homes-SaxonFields.pdf",
+      "fileName": "Barratt_Homes-SaxonFields.pdf",
+      "fileType": "pdf",
+      "role": "corpus",
+      "paginated": true,
+      "pageCount": 2,
+      "hasTextLayer": false,
+      "extraction": {
+        "engineA": {
+          "name": "pypdfium2",
+          "pageCount": 2,
+          "chars": 0
+        },
+        "engineB": {
+          "name": "pdf-parse",
+          "pageCount": 2,
+          "chars": 0
+        }
+      },
+      "perPageChars": [
+        {
+          "page": 1,
+          "chars": 0
+        },
+        {
+          "page": 2,
+          "chars": 0
+        }
+      ],
+      "expectedMinChunks": 1,
+      "anchors": [],
+      "termCounts": [],
+      "divergences": [],
+      "notes": "No extractable text layer: this document is image-only. Any answer grounded in it can only come from VLM captioning of rendered pages, never from text extraction."
+    },
+    {
+      "sourceId": "tests/fixtures/legacy_corpus/Barratt_Homes_SitePlan.pdf",
+      "fileName": "Barratt_Homes_SitePlan.pdf",
+      "fileType": "pdf",
+      "role": "corpus",
+      "paginated": true,
+      "pageCount": 7,
+      "hasTextLayer": true,
+      "extraction": {
+        "engineA": {
+          "name": "pypdfium2",
+          "pageCount": 7,
+          "chars": 8526
+        },
+        "engineB": {
+          "name": "pdf-parse",
+          "pageCount": 7,
+          "chars": 7992
+        }
+      },
+      "perPageChars": [
+        {
+          "page": 1,
+          "chars": 2824
+        },
+        {
+          "page": 2,
+          "chars": 1382
+        },
+        {
+          "page": 3,
+          "chars": 864
+        },
+        {
+          "page": 4,
+          "chars": 864
+        },
+        {
+          "page": 5,
+          "chars": 864
+        },
+        {
+          "page": 6,
+          "chars": 864
+        },
+        {
+          "page": 7,
+          "chars": 864
+        }
+      ],
+      "expectedMinChunks": 2,
+      "anchors": [
+        {
+          "token": "Alderney",
+          "page": 1,
+          "confirmedByBothEngines": true
+        },
+        {
+          "token": "BATHROOM",
+          "page": 2,
+          "confirmedByBothEngines": true
+        }
+      ],
+      "termCounts": [
+        {
+          "token": "Adviser",
+          "count": 6,
+          "rule": "case-insensitive whole-word",
+          "confirmedByBothEngines": true
+        },
+        {
+          "token": "Barratt",
+          "count": 18,
+          "rule": "case-insensitive whole-word",
+          "confirmedByBothEngines": true
+        }
+      ],
+      "divergences": []
+    },
+    {
+      "sourceId": "public/demos/demo_files/ext_reg_docs/FCA_SYSC_June2026.pdf",
+      "fileName": "FCA_SYSC_June2026.pdf",
+      "fileType": "pdf",
+      "role": "corpus",
+      "paginated": true,
+      "pageCount": 50,
+      "hasTextLayer": true,
+      "extraction": {
+        "engineA": {
+          "name": "pypdfium2",
+          "pageCount": 50,
+          "chars": 92850
+        },
+        "engineB": {
+          "name": "pdf-parse",
+          "pageCount": 50,
+          "chars": 91382
+        }
+      },
+      "perPageChars": [
+        {
+          "page": 1,
+          "chars": 233
+        },
+        {
+          "page": 2,
+          "chars": 2547
+        },
+        {
+          "page": 3,
+          "chars": 1372
+        },
+        {
+          "page": 4,
+          "chars": 2700
+        },
+        {
+          "page": 5,
+          "chars": 2686
+        },
+        {
+          "page": 6,
+          "chars": 2606
+        },
+        {
+          "page": 7,
+          "chars": 2791
+        },
+        {
+          "page": 8,
+          "chars": 2952
+        },
+        {
+          "page": 9,
+          "chars": 3158
+        },
+        {
+          "page": 10,
+          "chars": 2798
+        },
+        {
+          "page": 11,
+          "chars": 1478
+        },
+        {
+          "page": 12,
+          "chars": 2615
+        },
+        {
+          "page": 13,
+          "chars": 2735
+        },
+        {
+          "page": 14,
+          "chars": 2909
+        },
+        {
+          "page": 15,
+          "chars": 2656
+        },
+        {
+          "page": 16,
+          "chars": 464
+        },
+        {
+          "page": 17,
+          "chars": 1977
+        },
+        {
+          "page": 18,
+          "chars": 2800
+        },
+        {
+          "page": 19,
+          "chars": 677
+        },
+        {
+          "page": 20,
+          "chars": 247
+        },
+        {
+          "page": 21,
+          "chars": 657
+        },
+        {
+          "page": 22,
+          "chars": 1853
+        },
+        {
+          "page": 23,
+          "chars": 1151
+        },
+        {
+          "page": 24,
+          "chars": 932
+        },
+        {
+          "page": 25,
+          "chars": 1023
+        },
+        {
+          "page": 26,
+          "chars": 2963
+        },
+        {
+          "page": 27,
+          "chars": 1066
+        },
+        {
+          "page": 28,
+          "chars": 2790
+        },
+        {
+          "page": 29,
+          "chars": 2816
+        },
+        {
+          "page": 30,
+          "chars": 1305
+        },
+        {
+          "page": 31,
+          "chars": 2811
+        },
+        {
+          "page": 32,
+          "chars": 1980
+        },
+        {
+          "page": 33,
+          "chars": 2858
+        },
+        {
+          "page": 34,
+          "chars": 3051
+        },
+        {
+          "page": 35,
+          "chars": 536
+        },
+        {
+          "page": 36,
+          "chars": 1161
+        },
+        {
+          "page": 37,
+          "chars": 241
+        },
+        {
+          "page": 38,
+          "chars": 1846
+        },
+        {
+          "page": 39,
+          "chars": 1500
+        },
+        {
+          "page": 40,
+          "chars": 2604
+        },
+        {
+          "page": 41,
+          "chars": 2688
+        },
+        {
+          "page": 42,
+          "chars": 1906
+        },
+        {
+          "page": 43,
+          "chars": 568
+        },
+        {
+          "page": 44,
+          "chars": 1313
+        },
+        {
+          "page": 45,
+          "chars": 2586
+        },
+        {
+          "page": 46,
+          "chars": 1417
+        },
+        {
+          "page": 47,
+          "chars": 2004
+        },
+        {
+          "page": 48,
+          "chars": 379
+        },
+        {
+          "page": 49,
+          "chars": 1082
+        },
+        {
+          "page": 50,
+          "chars": 1362
+        }
+      ],
+      "expectedMinChunks": 23,
+      "anchors": [
+        {
+          "token": "10A.7.2AR",
+          "page": 15,
+          "confirmedByBothEngines": true
+        },
+        {
+          "token": "10C.6.1R",
+          "page": 7,
+          "confirmedByBothEngines": true
+        },
+        {
+          "token": "13.2.4A",
+          "page": 22,
+          "confirmedByBothEngines": true
+        }
+      ],
+      "termCounts": [
+        {
+          "token": "Application",
+          "count": 9,
+          "rule": "case-insensitive whole-word",
+          "confirmedByBothEngines": true
+        },
+        {
+          "token": "Arrangements",
+          "count": 79,
+          "rule": "case-insensitive whole-word",
+          "confirmedByBothEngines": true
+        }
+      ],
+      "divergences": []
+    },
+    {
+      "sourceId": "tests/fixtures/legacy_corpus/Fervi_Lathe_TechnicalSupportManual.pdf",
+      "fileName": "Fervi_Lathe_TechnicalSupportManual.pdf",
+      "fileType": "pdf",
+      "role": "corpus",
+      "paginated": true,
+      "pageCount": 84,
+      "hasTextLayer": true,
+      "extraction": {
+        "engineA": {
+          "name": "pypdfium2",
+          "pageCount": 84,
+          "chars": 88469
+        },
+        "engineB": {
+          "name": "pdf-parse",
+          "pageCount": 84,
+          "chars": 87800
+        }
+      },
+      "perPageChars": [
+        {
+          "page": 1,
+          "chars": 159
+        },
+        {
+          "page": 2,
+          "chars": 1134
+        },
+        {
+          "page": 3,
+          "chars": 4472
+        },
+        {
+          "page": 4,
+          "chars": 4364
+        },
+        {
+          "page": 5,
+          "chars": 2067
+        },
+        {
+          "page": 6,
+          "chars": 910
+        },
+        {
+          "page": 7,
+          "chars": 2266
+        },
+        {
+          "page": 8,
+          "chars": 2732
+        },
+        {
+          "page": 9,
+          "chars": 2033
+        },
+        {
+          "page": 10,
+          "chars": 1248
+        },
+        {
+          "page": 11,
+          "chars": 1106
+        },
+        {
+          "page": 12,
+          "chars": 1039
+        },
+        {
+          "page": 13,
+          "chars": 684
+        },
+        {
+          "page": 14,
+          "chars": 2189
+        },
+        {
+          "page": 15,
+          "chars": 1487
+        },
+        {
+          "page": 16,
+          "chars": 941
+        },
+        {
+          "page": 17,
+          "chars": 432
+        },
+        {
+          "page": 18,
+          "chars": 1279
+        },
+        {
+          "page": 19,
+          "chars": 1264
+        },
+        {
+          "page": 20,
+          "chars": 1109
+        },
+        {
+          "page": 21,
+          "chars": 413
+        },
+        {
+          "page": 22,
+          "chars": 2383
+        },
+        {
+          "page": 23,
+          "chars": 630
+        },
+        {
+          "page": 24,
+          "chars": 2198
+        },
+        {
+          "page": 25,
+          "chars": 1290
+        },
+        {
+          "page": 26,
+          "chars": 2047
+        },
+        {
+          "page": 27,
+          "chars": 901
+        },
+        {
+          "page": 28,
+          "chars": 971
+        },
+        {
+          "page": 29,
+          "chars": 1686
+        },
+        {
+          "page": 30,
+          "chars": 944
+        },
+        {
+          "page": 31,
+          "chars": 611
+        },
+        {
+          "page": 32,
+          "chars": 2273
+        },
+        {
+          "page": 33,
+          "chars": 1473
+        },
+        {
+          "page": 34,
+          "chars": 1211
+        },
+        {
+          "page": 35,
+          "chars": 646
+        },
+        {
+          "page": 36,
+          "chars": 1044
+        },
+        {
+          "page": 37,
+          "chars": 1160
+        },
+        {
+          "page": 38,
+          "chars": 867
+        },
+        {
+          "page": 39,
+          "chars": 790
+        },
+        {
+          "page": 40,
+          "chars": 771
+        },
+        {
+          "page": 41,
+          "chars": 580
+        },
+        {
+          "page": 42,
+          "chars": 687
+        },
+        {
+          "page": 43,
+          "chars": 640
+        },
+        {
+          "page": 44,
+          "chars": 749
+        },
+        {
+          "page": 45,
+          "chars": 1777
+        },
+        {
+          "page": 46,
+          "chars": 1754
+        },
+        {
+          "page": 47,
+          "chars": 2044
+        },
+        {
+          "page": 48,
+          "chars": 666
+        },
+        {
+          "page": 49,
+          "chars": 1160
+        },
+        {
+          "page": 50,
+          "chars": 1207
+        },
+        {
+          "page": 51,
+          "chars": 1063
+        },
+        {
+          "page": 52,
+          "chars": 1205
+        },
+        {
+          "page": 53,
+          "chars": 738
+        },
+        {
+          "page": 54,
+          "chars": 1234
+        },
+        {
+          "page": 55,
+          "chars": 832
+        },
+        {
+          "page": 56,
+          "chars": 383
+        },
+        {
+          "page": 57,
+          "chars": 82
+        },
+        {
+          "page": 58,
+          "chars": 50
+        },
+        {
+          "page": 59,
+          "chars": 500
+        },
+        {
+          "page": 60,
+          "chars": 1251
+        },
+        {
+          "page": 61,
+          "chars": 60
+        },
+        {
+          "page": 62,
+          "chars": 50
+        },
+        {
+          "page": 63,
+          "chars": 660
+        },
+        {
+          "page": 64,
+          "chars": 1570
+        },
+        {
+          "page": 65,
+          "chars": 60
+        },
+        {
+          "page": 66,
+          "chars": 50
+        },
+        {
+          "page": 67,
+          "chars": 50
+        },
+        {
+          "page": 68,
+          "chars": 1653
+        },
+        {
+          "page": 69,
+          "chars": 1116
+        },
+        {
+          "page": 70,
+          "chars": 60
+        },
+        {
+          "page": 71,
+          "chars": 50
+        },
+        {
+          "page": 72,
+          "chars": 1532
+        },
+        {
+          "page": 73,
+          "chars": 215
+        },
+        {
+          "page": 74,
+          "chars": 60
+        },
+        {
+          "page": 75,
+          "chars": 50
+        },
+        {
+          "page": 76,
+          "chars": 1636
+        },
+        {
+          "page": 77,
+          "chars": 60
+        },
+        {
+          "page": 78,
+          "chars": 706
+        },
+        {
+          "page": 79,
+          "chars": 68
+        },
+        {
+          "page": 80,
+          "chars": 995
+        },
+        {
+          "page": 81,
+          "chars": 477
+        },
+        {
+          "page": 82,
+          "chars": 1302
+        },
+        {
+          "page": 83,
+          "chars": 92
+        },
+        {
+          "page": 84,
+          "chars": 71
+        }
+      ],
+      "expectedMinChunks": 22,
+      "anchors": [
+        {
+          "token": "10.1Automatic",
+          "page": 49,
+          "confirmedByBothEngines": true
+        },
+        {
+          "token": "11.1Lubrication",
+          "page": 52,
+          "confirmedByBothEngines": true
+        },
+        {
+          "token": "11.2Periodic",
+          "page": 54,
+          "confirmedByBothEngines": true
+        }
+      ],
+      "termCounts": [
+        {
+          "token": "ALWAYS",
+          "count": 11,
+          "rule": "case-insensitive whole-word",
+          "confirmedByBothEngines": true
+        },
+        {
+          "token": "Adjusting",
+          "count": 7,
+          "rule": "case-insensitive whole-word",
+          "confirmedByBothEngines": true
+        }
+      ],
+      "divergences": []
+    },
+    {
+      "sourceId": "tests/fixtures/legacy_corpus/GraemeHick.pdf",
+      "fileName": "GraemeHick.pdf",
+      "fileType": "pdf",
+      "role": "corpus",
+      "paginated": true,
+      "pageCount": 5,
+      "hasTextLayer": true,
+      "extraction": {
+        "engineA": {
+          "name": "pypdfium2",
+          "pageCount": 5,
+          "chars": 11709
+        },
+        "engineB": {
+          "name": "pdf-parse",
+          "pageCount": 5,
+          "chars": 11517
+        }
+      },
+      "perPageChars": [
+        {
+          "page": 1,
+          "chars": 2416
+        },
+        {
+          "page": 2,
+          "chars": 2561
+        },
+        {
+          "page": 3,
+          "chars": 3178
+        },
+        {
+          "page": 4,
+          "chars": 2709
+        },
+        {
+          "page": 5,
+          "chars": 845
+        }
+      ],
+      "expectedMinChunks": 2,
+      "anchors": [
+        {
+          "token": "21-year-old",
+          "page": 2,
+          "confirmedByBothEngines": true
+        },
+        {
+          "token": "1994-95",
+          "page": 3,
+          "confirmedByBothEngines": true
+        },
+        {
+          "token": "1994/95",
+          "page": 5,
+          "confirmedByBothEngines": true
+        }
+      ],
+      "termCounts": [
+        {
+          "token": "Ashes",
+          "count": 5,
+          "rule": "case-insensitive whole-word",
+          "confirmedByBothEngines": true
+        },
+        {
+          "token": "Australia",
+          "count": 8,
+          "rule": "case-insensitive whole-word",
+          "confirmedByBothEngines": true
+        }
+      ],
+      "divergences": []
+    },
+    {
+      "sourceId": "tests/fixtures/legacy_corpus/HPE PCAI TCO Analysis - July2026.docx",
+      "fileName": "HPE PCAI TCO Analysis - July2026.docx",
+      "fileType": "docx",
+      "role": "corpus",
+      "paginated": false,
+      "hasTextLayer": true,
+      "chars": 121449,
+      "paragraphCount": 538,
+      "headings": [
+        "Disclaimer",
+        "HPE Private Cloud AI: Executive Positioning Preface",
+        "The Strategic and Economic Case Beyond the Base Comparison",
+        "The Tokenomics Problem: Why Traditional TCO Frameworks Are No Longer Sufficient",
+        "The Comparison Scenarios: Scale Context and the Trajectory That Matters",
+        "What Token Volumes Actually Look Like at Enterprise Maturity",
+        "The Service Desk Illustration: One Use Case, One Reframe",
+        "Beyond Token Economics: The Strategic Case for Private AI",
+        "Data Sovereignty and Regulatory Compliance",
+        "Intellectual Property Protection",
+        "Performance Predictability and Operational Certainty",
+        "Model Governance and Validated Change Management",
+        "The Jevons Paradox: Why Falling Token Prices Do Not Reduce Enterprise Spend",
+        "Governance as Competitive Advantage",
+        "Summary: The PCAI Value Case",
+        "HPE Private Cloud AI (Gen2 Medium) vs Cloud IaaS vs Managed AI Platforms vs API Token Services",
+        "Executive Summary",
+        "Key Finding: No Single Winner — Scenario Determines the Optimal Choice",
+        "Master 3-Year TCO Table",
+        "Critical Callouts"
+      ],
+      "tableCount": 57,
+      "tableCellProbes": [
+        {
+          "table": 1,
+          "row": 0,
+          "col": 0,
+          "value": "Maturity Stage"
+        },
+        {
+          "table": 1,
+          "row": 0,
+          "col": 1,
+          "value": "Example Workload"
+        },
+        {
+          "table": 1,
+          "row": 0,
+          "col": 2,
+          "value": "Annual Token Volume"
+        },
+        {
+          "table": 1,
+          "row": 0,
+          "col": 3,
+          "value": "Annual AI Factory TCO"
+        },
+        {
+          "table": 1,
+          "row": 0,
+          "col": 4,
+          "value": "Annual API TCO"
+        },
+        {
+          "table": 1,
+          "row": 1,
+          "col": 0,
+          "value": "Year 1 — Pilot"
+        },
+        {
+          "table": 1,
+          "row": 1,
+          "col": 1,
+          "value": "Simple chatbot, FAQ assistant"
+        },
+        {
+          "table": 1,
+          "row": 1,
+          "col": 2,
+          "value": "~10 billion"
+        },
+        {
+          "table": 1,
+          "row": 1,
+          "col": 3,
+          "value": "$0.24M"
+        },
+        {
+          "table": 1,
+          "row": 1,
+          "col": 4,
+          "value": "$0.04M"
+        }
+      ],
+      "expectedMinChunks": 30,
+      "anchors": [
+        {
+          "token": "0.0012/GB",
+          "page": 1,
+          "confirmedByBothEngines": false,
+          "headings": [
+            "References"
+          ]
+        },
+        {
+          "token": "0.018/GB",
+          "page": 1,
+          "confirmedByBothEngines": false,
+          "headings": [
+            "6.1 Storage Methodology Transparency",
+            "Appendix A: Primary Source Data",
+            "References"
+          ]
+        },
+        {
+          "token": "0.020/GB-month",
+          "page": 1,
+          "confirmedByBothEngines": false,
+          "headings": [
+            "References"
+          ]
+        }
+      ],
+      "termCounts": [
+        {
+          "token": "Additional",
+          "count": 17,
+          "rule": "case-insensitive whole-word",
+          "confirmedByBothEngines": false
+        },
+        {
+          "token": "Allocation",
+          "count": 25,
+          "rule": "case-insensitive whole-word",
+          "confirmedByBothEngines": false
+        }
+      ],
+      "divergences": [],
+      "groundTruthEngine": "python-docx (independent of production officeparser/docling)"
+    },
+    {
+      "sourceId": "tests/fixtures/legacy_corpus/Ikea-wardrobe_build.pdf",
+      "fileName": "Ikea-wardrobe_build.pdf",
+      "fileType": "pdf",
+      "role": "corpus",
+      "paginated": true,
+      "pageCount": 40,
+      "hasTextLayer": true,
+      "extraction": {
+        "engineA": {
+          "name": "pypdfium2",
+          "pageCount": 40,
+          "chars": 10707
+        },
+        "engineB": {
+          "name": "pdf-parse",
+          "pageCount": 40,
+          "chars": 9127
+        }
+      },
+      "perPageChars": [
+        {
+          "page": 1,
+          "chars": 173
+        },
+        {
+          "page": 2,
+          "chars": 1662
+        },
+        {
+          "page": 3,
+          "chars": 254
+        },
+        {
+          "page": 4,
+          "chars": 245
+        },
+        {
+          "page": 5,
+          "chars": 403
+        },
+        {
+          "page": 6,
+          "chars": 301
+        },
+        {
+          "page": 7,
+          "chars": 179
+        },
+        {
+          "page": 8,
+          "chars": 220
+        },
+        {
+          "page": 9,
+          "chars": 199
+        },
+        {
+          "page": 10,
+          "chars": 237
+        },
+        {
+          "page": 11,
+          "chars": 180
+        },
+        {
+          "page": 12,
+          "chars": 193
+        },
+        {
+          "page": 13,
+          "chars": 196
+        },
+        {
+          "page": 14,
+          "chars": 230
+        },
+        {
+          "page": 15,
+          "chars": 200
+        },
+        {
+          "page": 16,
+          "chars": 181
+        },
+        {
+          "page": 17,
+          "chars": 216
+        },
+        {
+          "page": 18,
+          "chars": 229
+        },
+        {
+          "page": 19,
+          "chars": 192
+        },
+        {
+          "page": 20,
+          "chars": 211
+        },
+        {
+          "page": 21,
+          "chars": 216
+        },
+        {
+          "page": 22,
+          "chars": 201
+        },
+        {
+          "page": 23,
+          "chars": 168
+        },
+        {
+          "page": 24,
+          "chars": 241
+        },
+        {
+          "page": 25,
+          "chars": 205
+        },
+        {
+          "page": 26,
+          "chars": 207
+        },
+        {
+          "page": 27,
+          "chars": 188
+        },
+        {
+          "page": 28,
+          "chars": 185
+        },
+        {
+          "page": 29,
+          "chars": 168
+        },
+        {
+          "page": 30,
+          "chars": 1019
+        },
+        {
+          "page": 31,
+          "chars": 188
+        },
+        {
+          "page": 32,
+          "chars": 228
+        },
+        {
+          "page": 33,
+          "chars": 172
+        },
+        {
+          "page": 34,
+          "chars": 231
+        },
+        {
+          "page": 35,
+          "chars": 180
+        },
+        {
+          "page": 36,
+          "chars": 245
+        },
+        {
+          "page": 37,
+          "chars": 180
+        },
+        {
+          "page": 38,
+          "chars": 193
+        },
+        {
+          "page": 39,
+          "chars": 168
+        },
+        {
+          "page": 40,
+          "chars": 223
+        }
+      ],
+      "expectedMinChunks": 2,
+      "anchors": [
+        {
+          "token": "10087223",
+          "page": 4,
+          "confirmedByBothEngines": true
+        },
+        {
+          "token": "158548",
+          "page": 14,
+          "confirmedByBothEngines": true
+        },
+        {
+          "token": "2026-06-11",
+          "page": 40,
+          "confirmedByBothEngines": true
+        }
+      ],
+      "termCounts": [],
+      "divergences": []
+    },
+    {
+      "sourceId": "tests/fixtures/legacy_corpus/Miele_washing_machine_manual.pdf",
+      "fileName": "Miele_washing_machine_manual.pdf",
+      "fileType": "pdf",
+      "role": "corpus",
+      "paginated": true,
+      "pageCount": 124,
+      "hasTextLayer": true,
+      "extraction": {
+        "engineA": {
+          "name": "pypdfium2",
+          "pageCount": 124,
+          "chars": 155536
+        },
+        "engineB": {
+          "name": "pdf-parse",
+          "pageCount": 124,
+          "chars": 150872
+        }
+      },
+      "perPageChars": [
+        {
+          "page": 1,
+          "chars": 224
+        },
+        {
+          "page": 2,
+          "chars": 3591
+        },
+        {
+          "page": 3,
+          "chars": 4253
+        },
+        {
+          "page": 4,
+          "chars": 4578
+        },
+        {
+          "page": 5,
+          "chars": 4628
+        },
+        {
+          "page": 6,
+          "chars": 1411
+        },
+        {
+          "page": 7,
+          "chars": 1567
+        },
+        {
+          "page": 8,
+          "chars": 1749
+        },
+        {
+          "page": 9,
+          "chars": 1687
+        },
+        {
+          "page": 10,
+          "chars": 1413
+        },
+        {
+          "page": 11,
+          "chars": 1710
+        },
+        {
+          "page": 12,
+          "chars": 1540
+        },
+        {
+          "page": 13,
+          "chars": 913
+        },
+        {
+          "page": 14,
+          "chars": 1037
+        },
+        {
+          "page": 15,
+          "chars": 1510
+        },
+        {
+          "page": 16,
+          "chars": 1212
+        },
+        {
+          "page": 17,
+          "chars": 1043
+        },
+        {
+          "page": 18,
+          "chars": 765
+        },
+        {
+          "page": 19,
+          "chars": 928
+        },
+        {
+          "page": 20,
+          "chars": 1656
+        },
+        {
+          "page": 21,
+          "chars": 1247
+        },
+        {
+          "page": 22,
+          "chars": 1387
+        },
+        {
+          "page": 23,
+          "chars": 1244
+        },
+        {
+          "page": 24,
+          "chars": 417
+        },
+        {
+          "page": 25,
+          "chars": 898
+        },
+        {
+          "page": 26,
+          "chars": 1105
+        },
+        {
+          "page": 27,
+          "chars": 1941
+        },
+        {
+          "page": 28,
+          "chars": 1458
+        },
+        {
+          "page": 29,
+          "chars": 1851
+        },
+        {
+          "page": 30,
+          "chars": 954
+        },
+        {
+          "page": 31,
+          "chars": 1561
+        },
+        {
+          "page": 32,
+          "chars": 1527
+        },
+        {
+          "page": 33,
+          "chars": 892
+        },
+        {
+          "page": 34,
+          "chars": 1537
+        },
+        {
+          "page": 35,
+          "chars": 680
+        },
+        {
+          "page": 36,
+          "chars": 1336
+        },
+        {
+          "page": 37,
+          "chars": 1250
+        },
+        {
+          "page": 38,
+          "chars": 1035
+        },
+        {
+          "page": 39,
+          "chars": 671
+        },
+        {
+          "page": 40,
+          "chars": 1513
+        },
+        {
+          "page": 41,
+          "chars": 931
+        },
+        {
+          "page": 42,
+          "chars": 778
+        },
+        {
+          "page": 43,
+          "chars": 1210
+        },
+        {
+          "page": 44,
+          "chars": 1444
+        },
+        {
+          "page": 45,
+          "chars": 1193
+        },
+        {
+          "page": 46,
+          "chars": 974
+        },
+        {
+          "page": 47,
+          "chars": 1213
+        },
+        {
+          "page": 48,
+          "chars": 1407
+        },
+        {
+          "page": 49,
+          "chars": 1035
+        },
+        {
+          "page": 50,
+          "chars": 1052
+        },
+        {
+          "page": 51,
+          "chars": 872
+        },
+        {
+          "page": 52,
+          "chars": 1392
+        },
+        {
+          "page": 53,
+          "chars": 1316
+        },
+        {
+          "page": 54,
+          "chars": 634
+        },
+        {
+          "page": 55,
+          "chars": 555
+        },
+        {
+          "page": 56,
+          "chars": 722
+        },
+        {
+          "page": 57,
+          "chars": 1572
+        },
+        {
+          "page": 58,
+          "chars": 1671
+        },
+        {
+          "page": 59,
+          "chars": 1307
+        },
+        {
+          "page": 60,
+          "chars": 874
+        },
+        {
+          "page": 61,
+          "chars": 1325
+        },
+        {
+          "page": 62,
+          "chars": 1068
+        },
+        {
+          "page": 63,
+          "chars": 1114
+        },
+        {
+          "page": 64,
+          "chars": 1368
+        },
+        {
+          "page": 65,
+          "chars": 1564
+        },
+        {
+          "page": 66,
+          "chars": 1527
+        },
+        {
+          "page": 67,
+          "chars": 889
+        },
+        {
+          "page": 68,
+          "chars": 787
+        },
+        {
+          "page": 69,
+          "chars": 736
+        },
+        {
+          "page": 70,
+          "chars": 1511
+        },
+        {
+          "page": 71,
+          "chars": 790
+        },
+        {
+          "page": 72,
+          "chars": 1713
+        },
+        {
+          "page": 73,
+          "chars": 782
+        },
+        {
+          "page": 74,
+          "chars": 1203
+        },
+        {
+          "page": 75,
+          "chars": 1370
+        },
+        {
+          "page": 76,
+          "chars": 1219
+        },
+        {
+          "page": 77,
+          "chars": 1309
+        },
+        {
+          "page": 78,
+          "chars": 1641
+        },
+        {
+          "page": 79,
+          "chars": 984
+        },
+        {
+          "page": 80,
+          "chars": 1406
+        },
+        {
+          "page": 81,
+          "chars": 1490
+        },
+        {
+          "page": 82,
+          "chars": 835
+        },
+        {
+          "page": 83,
+          "chars": 1198
+        },
+        {
+          "page": 84,
+          "chars": 1329
+        },
+        {
+          "page": 85,
+          "chars": 854
+        },
+        {
+          "page": 86,
+          "chars": 802
+        },
+        {
+          "page": 87,
+          "chars": 1322
+        },
+        {
+          "page": 88,
+          "chars": 393
+        },
+        {
+          "page": 89,
+          "chars": 464
+        },
+        {
+          "page": 90,
+          "chars": 1629
+        },
+        {
+          "page": 91,
+          "chars": 370
+        },
+        {
+          "page": 92,
+          "chars": 684
+        },
+        {
+          "page": 93,
+          "chars": 365
+        },
+        {
+          "page": 94,
+          "chars": 1104
+        },
+        {
+          "page": 95,
+          "chars": 691
+        },
+        {
+          "page": 96,
+          "chars": 1431
+        },
+        {
+          "page": 97,
+          "chars": 831
+        },
+        {
+          "page": 98,
+          "chars": 1374
+        },
+        {
+          "page": 99,
+          "chars": 1251
+        },
+        {
+          "page": 100,
+          "chars": 1516
+        },
+        {
+          "page": 101,
+          "chars": 389
+        },
+        {
+          "page": 102,
+          "chars": 1481
+        },
+        {
+          "page": 103,
+          "chars": 298
+        },
+        {
+          "page": 104,
+          "chars": 2078
+        },
+        {
+          "page": 105,
+          "chars": 779
+        },
+        {
+          "page": 106,
+          "chars": 1344
+        },
+        {
+          "page": 107,
+          "chars": 382
+        },
+        {
+          "page": 108,
+          "chars": 1159
+        },
+        {
+          "page": 109,
+          "chars": 1326
+        },
+        {
+          "page": 110,
+          "chars": 1488
+        },
+        {
+          "page": 111,
+          "chars": 1508
+        },
+        {
+          "page": 112,
+          "chars": 1471
+        },
+        {
+          "page": 113,
+          "chars": 1382
+        },
+        {
+          "page": 114,
+          "chars": 1591
+        },
+        {
+          "page": 115,
+          "chars": 1791
+        },
+        {
+          "page": 116,
+          "chars": 1349
+        },
+        {
+          "page": 117,
+          "chars": 1974
+        },
+        {
+          "page": 118,
+          "chars": 1138
+        },
+        {
+          "page": 119,
+          "chars": 1113
+        },
+        {
+          "page": 120,
+          "chars": 1035
+        },
+        {
+          "page": 121,
+          "chars": 1261
+        },
+        {
+          "page": 122,
+          "chars": 0
+        },
+        {
+          "page": 123,
+          "chars": 840
+        },
+        {
+          "page": 124,
+          "chars": 49
+        }
+      ],
+      "expectedMinChunks": 38,
+      "anchors": [
+        {
+          "token": "2-component",
+          "page": 119,
+          "confirmedByBothEngines": true
+        },
+        {
+          "token": "2-phase",
+          "page": 31,
+          "confirmedByBothEngines": true
+        },
+        {
+          "token": "24-hour",
+          "page": 22,
+          "confirmedByBothEngines": true
+        }
+      ],
+      "termCounts": [
+        {
+          "token": "Access",
+          "count": 12,
+          "rule": "case-insensitive whole-word",
+          "confirmedByBothEngines": true
+        },
+        {
+          "token": "Adding",
+          "count": 8,
+          "rule": "case-insensitive whole-word",
+          "confirmedByBothEngines": true
+        }
+      ],
+      "divergences": []
+    },
+    {
+      "sourceId": "public/demos/demo_files/ext_reg_docs/PCI-DSS-v4_0_1_June2024.pdf",
+      "fileName": "PCI-DSS-v4_0_1_June2024.pdf",
+      "fileType": "pdf",
+      "role": "corpus",
+      "paginated": true,
+      "pageCount": 72,
+      "hasTextLayer": true,
+      "extraction": {
+        "engineA": {
+          "name": "pypdfium2",
+          "pageCount": 72,
+          "chars": 158251
+        },
+        "engineB": {
+          "name": "pdf-parse",
+          "pageCount": 72,
+          "chars": 155881
+        }
+      },
+      "perPageChars": [
+        {
+          "page": 1,
+          "chars": 2389
+        },
+        {
+          "page": 2,
+          "chars": 2132
+        },
+        {
+          "page": 3,
+          "chars": 1805
+        },
+        {
+          "page": 4,
+          "chars": 3773
+        },
+        {
+          "page": 5,
+          "chars": 2172
+        },
+        {
+          "page": 6,
+          "chars": 2659
+        },
+        {
+          "page": 7,
+          "chars": 2043
+        },
+        {
+          "page": 8,
+          "chars": 1972
+        },
+        {
+          "page": 9,
+          "chars": 1773
+        },
+        {
+          "page": 10,
+          "chars": 1284
+        },
+        {
+          "page": 11,
+          "chars": 1735
+        },
+        {
+          "page": 12,
+          "chars": 2003
+        },
+        {
+          "page": 13,
+          "chars": 1241
+        },
+        {
+          "page": 14,
+          "chars": 2720
+        },
+        {
+          "page": 15,
+          "chars": 1580
+        },
+        {
+          "page": 16,
+          "chars": 3080
+        },
+        {
+          "page": 17,
+          "chars": 3509
+        },
+        {
+          "page": 18,
+          "chars": 2867
+        },
+        {
+          "page": 19,
+          "chars": 1031
+        },
+        {
+          "page": 20,
+          "chars": 2161
+        },
+        {
+          "page": 21,
+          "chars": 1745
+        },
+        {
+          "page": 22,
+          "chars": 2665
+        },
+        {
+          "page": 23,
+          "chars": 2552
+        },
+        {
+          "page": 24,
+          "chars": 2595
+        },
+        {
+          "page": 25,
+          "chars": 950
+        },
+        {
+          "page": 26,
+          "chars": 2315
+        },
+        {
+          "page": 27,
+          "chars": 1850
+        },
+        {
+          "page": 28,
+          "chars": 905
+        },
+        {
+          "page": 29,
+          "chars": 2153
+        },
+        {
+          "page": 30,
+          "chars": 1315
+        },
+        {
+          "page": 31,
+          "chars": 2445
+        },
+        {
+          "page": 32,
+          "chars": 2808
+        },
+        {
+          "page": 33,
+          "chars": 3193
+        },
+        {
+          "page": 34,
+          "chars": 2269
+        },
+        {
+          "page": 35,
+          "chars": 1906
+        },
+        {
+          "page": 36,
+          "chars": 1779
+        },
+        {
+          "page": 37,
+          "chars": 2005
+        },
+        {
+          "page": 38,
+          "chars": 2390
+        },
+        {
+          "page": 39,
+          "chars": 1815
+        },
+        {
+          "page": 40,
+          "chars": 3256
+        },
+        {
+          "page": 41,
+          "chars": 2262
+        },
+        {
+          "page": 42,
+          "chars": 1134
+        },
+        {
+          "page": 43,
+          "chars": 1534
+        },
+        {
+          "page": 44,
+          "chars": 2045
+        },
+        {
+          "page": 45,
+          "chars": 2208
+        },
+        {
+          "page": 46,
+          "chars": 2266
+        },
+        {
+          "page": 47,
+          "chars": 2157
+        },
+        {
+          "page": 48,
+          "chars": 1781
+        },
+        {
+          "page": 49,
+          "chars": 2144
+        },
+        {
+          "page": 50,
+          "chars": 2509
+        },
+        {
+          "page": 51,
+          "chars": 3067
+        },
+        {
+          "page": 52,
+          "chars": 3087
+        },
+        {
+          "page": 53,
+          "chars": 3194
+        },
+        {
+          "page": 54,
+          "chars": 1379
+        },
+        {
+          "page": 55,
+          "chars": 3062
+        },
+        {
+          "page": 56,
+          "chars": 1900
+        },
+        {
+          "page": 57,
+          "chars": 1877
+        },
+        {
+          "page": 58,
+          "chars": 939
+        },
+        {
+          "page": 59,
+          "chars": 2570
+        },
+        {
+          "page": 60,
+          "chars": 2739
+        },
+        {
+          "page": 61,
+          "chars": 951
+        },
+        {
+          "page": 62,
+          "chars": 3706
+        },
+        {
+          "page": 63,
+          "chars": 1064
+        },
+        {
+          "page": 64,
+          "chars": 2732
+        },
+        {
+          "page": 65,
+          "chars": 2720
+        },
+        {
+          "page": 66,
+          "chars": 2434
+        },
+        {
+          "page": 67,
+          "chars": 3191
+        },
+        {
+          "page": 68,
+          "chars": 2558
+        },
+        {
+          "page": 69,
+          "chars": 2035
+        },
+        {
+          "page": 70,
+          "chars": 2553
+        },
+        {
+          "page": 71,
+          "chars": 2096
+        },
+        {
+          "page": 72,
+          "chars": 1517
+        }
+      ],
+      "expectedMinChunks": 39,
+      "anchors": [
+        {
+          "token": "3.1.2.a",
+          "page": 3,
+          "confirmedByBothEngines": true
+        },
+        {
+          "token": "3.2.1.a",
+          "page": 4,
+          "confirmedByBothEngines": true
+        },
+        {
+          "token": "3.3.1.a",
+          "page": 6,
+          "confirmedByBothEngines": true
+        }
+      ],
+      "termCounts": [
+        {
+          "token": "Access",
+          "count": 81,
+          "rule": "case-insensitive whole-word",
+          "confirmedByBothEngines": true
+        },
+        {
+          "token": "Account",
+          "count": 73,
+          "rule": "case-insensitive whole-word",
+          "confirmedByBothEngines": true
+        }
+      ],
+      "divergences": []
+    },
+    {
+      "sourceId": "public/demos/demo_files/ext_reg_docs/PSRs_2017_April2026.pdf",
+      "fileName": "PSRs_2017_April2026.pdf",
+      "fileType": "pdf",
+      "role": "corpus",
+      "paginated": true,
+      "pageCount": 22,
+      "hasTextLayer": true,
+      "extraction": {
+        "engineA": {
+          "name": "pypdfium2",
+          "pageCount": 22,
+          "chars": 76298
+        },
+        "engineB": {
+          "name": "pdf-parse",
+          "pageCount": 22,
+          "chars": 75795
+        }
+      },
+      "perPageChars": [
+        {
+          "page": 1,
+          "chars": 3261
+        },
+        {
+          "page": 2,
+          "chars": 3922
+        },
+        {
+          "page": 3,
+          "chars": 3749
+        },
+        {
+          "page": 4,
+          "chars": 3244
+        },
+        {
+          "page": 5,
+          "chars": 3762
+        },
+        {
+          "page": 6,
+          "chars": 3501
+        },
+        {
+          "page": 7,
+          "chars": 3266
+        },
+        {
+          "page": 8,
+          "chars": 2727
+        },
+        {
+          "page": 9,
+          "chars": 2431
+        },
+        {
+          "page": 10,
+          "chars": 3463
+        },
+        {
+          "page": 11,
+          "chars": 3545
+        },
+        {
+          "page": 12,
+          "chars": 4519
+        },
+        {
+          "page": 13,
+          "chars": 3745
+        },
+        {
+          "page": 14,
+          "chars": 3243
+        },
+        {
+          "page": 15,
+          "chars": 3757
+        },
+        {
+          "page": 16,
+          "chars": 3142
+        },
+        {
+          "page": 17,
+          "chars": 3569
+        },
+        {
+          "page": 18,
+          "chars": 3719
+        },
+        {
+          "page": 19,
+          "chars": 3723
+        },
+        {
+          "page": 20,
+          "chars": 2806
+        },
+        {
+          "page": 21,
+          "chars": 3331
+        },
+        {
+          "page": 22,
+          "chars": 3873
+        }
+      ],
+      "expectedMinChunks": 19,
+      "anchors": [
+        {
+          "token": "1.1.2022",
+          "page": 1,
+          "confirmedByBothEngines": true
+        },
+        {
+          "token": "1999/2979",
+          "page": 5,
+          "confirmedByBothEngines": true
+        },
+        {
+          "token": "2008/1911",
+          "page": 7,
+          "confirmedByBothEngines": true
+        }
+      ],
+      "termCounts": [
+        {
+          "token": "Amendment",
+          "count": 41,
+          "rule": "case-insensitive whole-word",
+          "confirmedByBothEngines": true
+        },
+        {
+          "token": "Amendments",
+          "count": 30,
+          "rule": "case-insensitive whole-word",
+          "confirmedByBothEngines": true
+        }
+      ],
+      "divergences": []
+    },
+    {
+      "sourceId": "tests/fixtures/legacy_corpus/SSX125_Manual.pdf",
+      "fileName": "SSX125_Manual.pdf",
+      "fileType": "pdf",
+      "role": "corpus",
+      "paginated": true,
+      "pageCount": 36,
+      "hasTextLayer": true,
+      "extraction": {
+        "engineA": {
+          "name": "pypdfium2",
+          "pageCount": 36,
+          "chars": 14201
+        },
+        "engineB": {
+          "name": "pdf-parse",
+          "pageCount": 36,
+          "chars": 13904
+        }
+      },
+      "perPageChars": [
+        {
+          "page": 1,
+          "chars": 348
+        },
+        {
+          "page": 2,
+          "chars": 520
+        },
+        {
+          "page": 3,
+          "chars": 644
+        },
+        {
+          "page": 4,
+          "chars": 371
+        },
+        {
+          "page": 5,
+          "chars": 386
+        },
+        {
+          "page": 6,
+          "chars": 599
+        },
+        {
+          "page": 7,
+          "chars": 171
+        },
+        {
+          "page": 8,
+          "chars": 501
+        },
+        {
+          "page": 9,
+          "chars": 458
+        },
+        {
+          "page": 10,
+          "chars": 516
+        },
+        {
+          "page": 11,
+          "chars": 162
+        },
+        {
+          "page": 12,
+          "chars": 280
+        },
+        {
+          "page": 13,
+          "chars": 168
+        },
+        {
+          "page": 14,
+          "chars": 346
+        },
+        {
+          "page": 15,
+          "chars": 58
+        },
+        {
+          "page": 16,
+          "chars": 195
+        },
+        {
+          "page": 17,
+          "chars": 309
+        },
+        {
+          "page": 18,
+          "chars": 374
+        },
+        {
+          "page": 19,
+          "chars": 240
+        },
+        {
+          "page": 20,
+          "chars": 314
+        },
+        {
+          "page": 21,
+          "chars": 103
+        },
+        {
+          "page": 22,
+          "chars": 196
+        },
+        {
+          "page": 23,
+          "chars": 173
+        },
+        {
+          "page": 24,
+          "chars": 690
+        },
+        {
+          "page": 25,
+          "chars": 126
+        },
+        {
+          "page": 26,
+          "chars": 93
+        },
+        {
+          "page": 27,
+          "chars": 697
+        },
+        {
+          "page": 28,
+          "chars": 631
+        },
+        {
+          "page": 29,
+          "chars": 646
+        },
+        {
+          "page": 30,
+          "chars": 580
+        },
+        {
+          "page": 31,
+          "chars": 611
+        },
+        {
+          "page": 32,
+          "chars": 726
+        },
+        {
+          "page": 33,
+          "chars": 750
+        },
+        {
+          "page": 34,
+          "chars": 914
+        },
+        {
+          "page": 35,
+          "chars": 21
+        },
+        {
+          "page": 36,
+          "chars": 284
+        }
+      ],
+      "expectedMinChunks": 3,
+      "anchors": [
+        {
+          "token": "3.17mm",
+          "page": 33,
+          "confirmedByBothEngines": true
+        },
+        {
+          "token": "4.25mm",
+          "page": 27,
+          "confirmedByBothEngines": true
+        },
+        {
+          "token": "B-2250",
+          "page": 34,
+          "confirmedByBothEngines": true
+        }
+      ],
+      "termCounts": [
+        {
+          "token": "ASSEMBLY",
+          "count": 8,
+          "rule": "case-insensitive whole-word",
+          "confirmedByBothEngines": true
+        },
+        {
+          "token": "Aluminium",
+          "count": 14,
+          "rule": "case-insensitive whole-word",
+          "confirmedByBothEngines": true
+        }
+      ],
+      "divergences": []
+    },
+    {
+      "sourceId": "tests/fixtures/legacy_corpus/The Tokenomics Time Bomb - HPE.pptx",
+      "fileName": "The Tokenomics Time Bomb - HPE.pptx",
+      "fileType": "pptx",
+      "role": "corpus",
+      "paginated": true,
+      "hasTextLayer": true,
+      "slideCount": 15,
+      "pageCount": 15,
+      "chars": 10869,
+      "perSlideChars": [
+        {
+          "page": 1,
+          "chars": 159
+        },
+        {
+          "page": 2,
+          "chars": 1166
+        },
+        {
+          "page": 3,
+          "chars": 977
+        },
+        {
+          "page": 4,
+          "chars": 960
+        },
+        {
+          "page": 5,
+          "chars": 787
+        },
+        {
+          "page": 6,
+          "chars": 727
+        },
+        {
+          "page": 7,
+          "chars": 296
+        },
+        {
+          "page": 8,
+          "chars": 1049
+        },
+        {
+          "page": 9,
+          "chars": 824
+        },
+        {
+          "page": 10,
+          "chars": 1365
+        },
+        {
+          "page": 11,
+          "chars": 575
+        },
+        {
+          "page": 12,
+          "chars": 1324
+        },
+        {
+          "page": 13,
+          "chars": 651
+        },
+        {
+          "page": 14,
+          "chars": 9
+        },
+        {
+          "page": 15,
+          "chars": 0,
+          "hidden": true
+        }
+      ],
+      "hiddenSlides": [
+        15
+      ],
+      "expectedMinChunks": 2,
+      "anchors": [
+        {
+          "token": "20/month",
+          "page": 10,
+          "confirmedByBothEngines": false,
+          "note": "T40 §12b (b) (2026-09-22, session 43): added in place. Slide 10 carries the same quote inside a GROUP shape, which build_pptx_entry's flat walk (slide.shapes) did not read (109 chars for the slide); slide 15 is the deck's HIDDEN duplicate of slide 10 (show=0) and docling indexes both. The derive script now walks groups; this entry's perSlideChars / chars are the flat walk's until the next regeneration. T41 (2026-09-23): slide 15's copy of this anchor is gone — the slide is hidden and the product skips it (design D7); the group walk now reads slide 10 whole."
+        },
+        {
+          "token": "GPT-5.1",
+          "page": 8,
+          "confirmedByBothEngines": false
+        },
+        {
+          "token": "ACTUALLY",
+          "page": 3,
+          "confirmedByBothEngines": false
+        }
+      ],
+      "termCounts": [
+        {
+          "token": "Cloud",
+          "count": 14,
+          "rule": "case-insensitive whole-word",
+          "confirmedByBothEngines": false
+        },
+        {
+          "token": "English",
+          "count": 7,
+          "rule": "case-insensitive whole-word",
+          "confirmedByBothEngines": false
+        }
+      ],
+      "divergences": [],
+      "groundTruthEngine": "python-pptx (independent of production officeparser/docling)",
+      "notes": "Slide-level page attribution is the expectation. Audit E02 records that the production Docling bridge currently yields zero chunks for paginated formats; U-PARSE/I-INGEST mark that as an expected failure until ticket T04. T40 §12b (b) (2026-09-22): the 20/month anchor is on slides 10 AND 15 (slide 10's copy in a group shape the flat walk missed; slide 15 hidden) — patched in place, see the anchor's note. T41 (2026-09-23, session 46): the entry's structural fields (perSlideChars, chars, expectedMinChunks, termCounts) regenerated by the derive script with the group walk, the chrome placeholders skipped and the hidden slide 15 read as empty and marked (the product skips it — design D7); the anchors are the committed set minus the hidden slide's (the eval's contract — pick_anchors would choose others under the fuller text)."
+    },
+    {
+      "sourceId": "tests/fixtures/legacy_corpus/story.md",
+      "fileName": "story.md",
+      "fileType": "md",
+      "role": "corpus",
+      "paginated": false,
+      "pageCount": 1,
+      "hasTextLayer": true,
+      "chars": 56750,
+      "lineCount": 506,
+      "headings": [
+        "The Cartographer of Quiet Roads"
+      ],
+      "expectedMinChunks": 14,
+      "anchors": [
+        {
+          "token": "According",
+          "page": 1,
+          "confirmedByBothEngines": false,
+          "headings": [
+            "The Cartographer of Quiet Roads"
+          ]
+        },
+        {
+          "token": "Across",
+          "page": 1,
+          "confirmedByBothEngines": false,
+          "headings": [
+            "The Cartographer of Quiet Roads"
+          ]
+        },
+        {
+          "token": "Afternoons",
+          "page": 1,
+          "confirmedByBothEngines": false,
+          "headings": [
+            "The Cartographer of Quiet Roads"
+          ]
+        }
+      ],
+      "termCounts": [
+        {
+          "token": "After",
+          "count": 34,
+          "rule": "case-insensitive whole-word",
+          "confirmedByBothEngines": false
+        },
+        {
+          "token": "Cavil",
+          "count": 12,
+          "rule": "case-insensitive whole-word",
+          "confirmedByBothEngines": false
+        }
+      ],
+      "divergences": []
+    }
+  ],
+  "generatedFixtures": [
+    "tests/fixtures/golden/adversarial/empty.txt",
+    "tests/fixtures/golden/adversarial/huge_line.txt",
+    "tests/fixtures/golden/adversarial/tiny.md",
+    "tests/fixtures/golden/adversarial/unsupported.xyz",
+    "tests/fixtures/golden/adversarial/utf8_stress.md",
+    "tests/fixtures/golden/csv_table.csv",
+    "tests/fixtures/golden/md_headings.md",
+    "tests/fixtures/golden/md_longpara.md",
+    "tests/fixtures/golden/text_basic.txt",
+    "tests/fixtures/golden/xlsx_sheets.xlsx"
+  ],
+  "generatedExpectations": [
+    {
+      "sourceId": "tests/fixtures/golden/text_basic.txt",
+      "fileType": "txt",
+      "role": "format-gap",
+      "anchors": [
+        {
+          "token": "BASALTNINE",
+          "page": 1
+        }
+      ],
+      "termCounts": [
+        {
+          "token": "reconciliation",
+          "count": 4,
+          "rule": "case-insensitive whole-word"
+        }
+      ],
+      "expectedMinChunks": 1,
+      "notes": "Audit E01: chunk() currently throws on this path (this.buffer unassigned). Ticket T01."
+    },
+    {
+      "sourceId": "tests/fixtures/golden/md_headings.md",
+      "fileType": "md",
+      "role": "format-gap",
+      "anchors": [
+        {
+          "token": "ZEPHYRQUARTZ",
+          "page": 1
+        }
+      ],
+      "headingOnlyToken": "ZEPHYRQUARTZ",
+      "expectedMinChunks": 1,
+      "notes": "Heading-only token probes audit E10 (heading text dropped from chunk bodies). Ticket T19."
+    },
+    {
+      "sourceId": "tests/fixtures/golden/md_longpara.md",
+      "fileType": "md",
+      "role": "format-gap",
+      "anchors": [
+        {
+          "token": "GARNETSEVEN",
+          "page": 1
+        }
+      ],
+      "expectedMinChunks": 2,
+      "notes": "Single paragraph > 4x default chunkSize; must split rather than emit one oversize chunk."
+    },
+    {
+      "sourceId": "tests/fixtures/golden/csv_table.csv",
+      "fileType": "csv",
+      "role": "format-gap",
+      "rowCount": 20,
+      "anchors": [
+        {
+          "token": "P020",
+          "page": 1
+        }
+      ],
+      "expectedMinChunks": 1,
+      "notes": "Row integrity probe: rows must not be split mid-record. Ticket T02."
+    },
+    {
+      "sourceId": "tests/fixtures/golden/xlsx_sheets.xlsx",
+      "fileType": "xlsx",
+      "role": "format-gap",
+      "sheetCount": 2,
+      "anchors": [
+        {
+          "token": "SHEET1_SENTINEL_AMBER",
+          "sheet": "Ledger"
+        },
+        {
+          "token": "SHEET2_SENTINEL_BASALT",
+          "sheet": "Exceptions"
+        }
+      ],
+      "expectedMinChunks": 1
+    },
+    {
+      "sourceId": "tests/fixtures/golden/adversarial/empty.txt",
+      "fileType": "txt",
+      "role": "adversarial",
+      "expectedMinChunks": 0,
+      "expectReportedReason": "empty_file",
+      "notes": "Must be reported, never silently counted as ingested (audit E16)."
+    },
+    {
+      "sourceId": "tests/fixtures/golden/adversarial/tiny.md",
+      "fileType": "md",
+      "role": "adversarial",
+      "anchors": [
+        {
+          "token": "OBSIDIANFOUR",
+          "page": 1
+        }
+      ],
+      "expectedMinChunks": 1,
+      "notes": "Below minChunkSize: content must survive via merge, not vanish (audit E09). Ticket T20."
+    },
+    {
+      "sourceId": "tests/fixtures/golden/adversarial/huge_line.txt",
+      "fileType": "txt",
+      "role": "adversarial",
+      "anchors": [
+        {
+          "token": "PERIDOTEIGHT",
+          "page": 1
+        }
+      ],
+      "expectedMinChunks": 2,
+      "maxSplitSeconds": 2,
+      "notes": "Separator-free 60k-char line: exercises the terminal split level of recursiveSplit."
+    },
+    {
+      "sourceId": "tests/fixtures/golden/adversarial/utf8_stress.md",
+      "fileType": "md",
+      "role": "adversarial",
+      "anchors": [
+        {
+          "token": "TOURMALINESIX",
+          "page": 1
+        }
+      ],
+      "expectedMinChunks": 1,
+      "notes": "Emoji / CJK / RTL / NBSP / combining marks must survive chunking without mojibake."
+    },
+    {
+      "sourceId": "tests/fixtures/golden/adversarial/unsupported.xyz",
+      "fileType": "xyz",
+      "role": "adversarial",
+      "expectedMinChunks": 0,
+      "expectReportedReason": "unsupported_extension",
+      "notes": "Audit E16: currently skipped silently while totalFiles still counts it."
+    },
+    {
+      "sourceId": "tests/fixtures/golden/adversarial/misleading_name_dpa.pdf",
+      "fileType": "pdf",
+      "role": "adversarial",
+      "copyOf": "tests/fixtures/legacy_corpus/GraemeHick.pdf",
+      "notes": "Real corpus document reused as an adversarial probe; expectations are inherited from its copyOf entry."
+    },
+    {
+      "sourceId": "tests/fixtures/golden/adversarial/duplicate_a/report.pdf",
+      "fileType": "pdf",
+      "role": "adversarial",
+      "copyOf": "tests/fixtures/legacy_corpus/GraemeHick.pdf",
+      "notes": "Real corpus document reused as an adversarial probe; expectations are inherited from its copyOf entry."
+    },
+    {
+      "sourceId": "tests/fixtures/golden/adversarial/duplicate_b/report.pdf",
+      "fileType": "pdf",
+      "role": "adversarial",
+      "copyOf": "public/demos/demo_files/ext_reg_docs/FCA_SYSC_June2026.pdf",
+      "notes": "Real corpus document reused as an adversarial probe; expectations are inherited from its copyOf entry."
+    }
+  ]
+}

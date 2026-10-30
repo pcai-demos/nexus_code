@@ -1,0 +1,181 @@
+{
+  "source": "tests/eval/baselines/t43-artifacts/probes/records/fs-FS-1-corpus-1790250510.json (T43's design probe, session 49, 2026-09-24; FS-1 = Q3 through /api/chat, documentScope unset)",
+  "note": "the spans are trimmed to what summariseTiming reads and carry NO offsets (the record predates T43); §0a: wall 55,167 ms, retrieval 14,578 (rerank 11,050), model 40,465, tokens 4,968 → 3,087; the two docling_ingestion spans carry ingest-time durations (67,272 / 24,699 ms) that are not this turn's time",
+  "fs": "FS-1",
+  "q": 3,
+  "scope": "corpus",
+  "sentAt": "2026-09-24T11:48:31.291Z",
+  "receivedAt": "2026-09-24T11:49:26.468Z",
+  "clientMs": 55177,
+  "telemetry": {
+    "latency": 55167,
+    "prompt_tokens": 4968,
+    "completion_tokens": 3087,
+    "estimated": false,
+    "cost": 0,
+    "finish_reason": "stop",
+    "max_tokens": 8192,
+    "answer_chars": 3823,
+    "reasoning_chars": 6772
+  },
+  "generation": {
+    "provider": "openai-compatible",
+    "model": "qwen3.8:27b",
+    "finishReason": "stop",
+    "cut": false,
+    "code": null,
+    "message": "The answer ran to its end (finish reason \"stop\") inside the 8,192-token budget.",
+    "budget": {
+      "requested": 1024,
+      "applied": 8192,
+      "floor": 8192,
+      "rule": "default"
+    },
+    "thinking": {
+      "control": "provider-default",
+      "reasoningChars": 6772,
+      "answerChars": 3823,
+      "reasoningShare": 0.639,
+      "shareBasis": "characters"
+    },
+    "usage": {
+      "promptTokens": 4968,
+      "completionTokens": 3087,
+      "providerReported": true
+    },
+    "attempts": 1
+  },
+  "router": {
+    "model": {
+      "profile": "chat",
+      "endpointType": null,
+      "origin": "ollama.ollama.svc.cluster.local:11434",
+      "model": "qwen3.8:27b",
+      "source": "legacy"
+    }
+  },
+  "retrieval": {
+    "state": "ok",
+    "code": null,
+    "message": null,
+    "chunkCount": 8
+  },
+  "traces": [
+    {
+      "id": "trace-router-1790250511295",
+      "timestamp": "2026-09-24T11:48:31.295Z",
+      "category": "task_classification",
+      "title": "Mode Router",
+      "badge": "FORCED /DOC",
+      "durationMs": 0,
+      "details": {}
+    },
+    {
+      "id": "trace-db-1790250511409",
+      "timestamp": "2026-09-24T11:48:31.409Z",
+      "category": "document_summary",
+      "title": "Vector Store Inspection",
+      "badge": "WEAVIATE STORE",
+      "durationMs": 114,
+      "details": {}
+    },
+    {
+      "id": "trace-docling-1790250511409",
+      "timestamp": "2026-09-24T11:48:31.409Z",
+      "category": "docling_ingestion",
+      "title": "Document Parser Engine Inspection",
+      "badge": "MIXED ENGINES",
+      "durationMs": 67272,
+      "details": {
+        "durationSource": "measured",
+        "durationMs": 67272
+      }
+    },
+    {
+      "id": "trace-vlm-1790250511410",
+      "timestamp": "2026-09-24T11:48:31.410Z",
+      "category": "docling_ingestion",
+      "title": "VLM Diagram & Figure Auto-Captioning Inspection",
+      "badge": "VLM ACTIVE (QWEN3.8:27B)",
+      "durationMs": 24699,
+      "details": {
+        "durationSource": "measured",
+        "durationMs": 24699
+      }
+    },
+    {
+      "id": "trace-rag-1790250525988",
+      "timestamp": "2026-09-24T11:48:45.988Z",
+      "category": "rag_pipeline",
+      "title": "RAG Retrieval & Reranking Pass",
+      "badge": "8 CHUNKS MATCHED",
+      "durationMs": 14578,
+      "details": {
+        "retrievalState": "ok",
+        "retrievalCode": null,
+        "retrievedChunksCount": 8,
+        "report": {
+          "searchStrategy": "hybrid",
+          "candidatesReturned": 20,
+          "resultsReturned": 8,
+          "rerankTransport": {
+            "elapsedMs": 11050,
+            "budgetMs": 60000,
+            "stoppedEarly": false,
+            "documents": 20,
+            "payloadChars": 14595,
+            "planned": 2,
+            "sent": 2
+          }
+        }
+      }
+    },
+    {
+      "id": "trace-scope-1790250525997",
+      "timestamp": "2026-09-24T11:48:45.997Z",
+      "category": "rag_pipeline",
+      "title": "Turn Scope",
+      "badge": "SCOPED: Fervi_Lathe_TechnicalSupportManual.pdf",
+      "durationMs": 1,
+      "details": {}
+    },
+    {
+      "id": "trace-assembly-1790250525997",
+      "timestamp": "2026-09-24T11:48:45.997Z",
+      "category": "rag_pipeline",
+      "title": "Page Context Assembly",
+      "badge": "2 COMPANIONS ADDED",
+      "durationMs": 8,
+      "details": {}
+    },
+    {
+      "id": "trace-llm-1790250566462",
+      "timestamp": "2026-09-24T11:49:26.462Z",
+      "category": "llm_inference",
+      "title": "LLM Model Inference Dispatch",
+      "badge": "qwen3.8:27b",
+      "durationMs": 40465,
+      "details": {
+        "modelName": "qwen3.8:27b",
+        "finishReason": "stop",
+        "usage": {
+          "promptTokens": 4968,
+          "completionTokens": 3087,
+          "providerReported": true
+        }
+      }
+    },
+    {
+      "id": "trace-citations-1790250566462",
+      "timestamp": "2026-09-24T11:49:26.462Z",
+      "category": "citation_audit",
+      "title": "Citation Audit",
+      "badge": "6 CITATIONS",
+      "durationMs": 0,
+      "details": {
+        "contextBlockCount": 10,
+        "pageClaimCount": 2
+      }
+    }
+  ]
+}

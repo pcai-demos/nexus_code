@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#F2561D">
+  <!-- Code bracket: < -->
+  <path d="M8.5 6.5L3 12L8.5 17.5L9.9 16.1L5.8 12L9.9 7.9L8.5 6.5Z"/>
+  <!-- Code bracket: > -->
+  <path d="M15.5 6.5L14.1 7.9L18.2 12L14.1 16.1L15.5 17.5L21 12L15.5 6.5Z"/>
+  <!-- Sparkles/AI star in the middle -->
+  <path d="M12 6L12.8 9.2L16 10L12.8 10.8L12 14L11.2 10.8L8 10L11.2 9.2L12 6Z"/>
+</svg>

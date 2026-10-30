@@ -1,0 +1,591 @@
+{
+  "version": 1,
+  "built": "2026-10-12",
+  "note": "Built by inputs/demo-design/evidence/session-90-s4-build/build_regulator_index.js; checked against the live store by verify_regulator_index.js. Only entries marked verified are used. The OWASP ASVS 5.0.0 entries (S6-D5 (b)) were located in the PDF's own text and checked against the live store after the owner's ingest by inputs/demo-design/evidence/session-90-s6-measure/verify_asvs.js (asvsVerifiedAt).",
+  "entries": {
+    "asvs:1.2.4": {
+      "label": "OWASP ASVS 5.0.0 requirement 1.2.4",
+      "source": "OWASP_ASVS-5.0.0_May2025.pdf",
+      "page": 26,
+      "anchor": "Verify that data selection or database queries (e.g., SQL, HQL, NoSQL, Cypher) use parameterized",
+      "verified": true,
+      "storePage": 26,
+      "storeChunk": 124
+    },
+    "asvs:14.2.6": {
+      "label": "OWASP ASVS 5.0.0 requirement 14.2.6",
+      "source": "OWASP_ASVS-5.0.0_May2025.pdf",
+      "page": 84,
+      "anchor": "Verify that the application only returns the minimum required sensitive data for the application’s",
+      "verified": true,
+      "storePage": 84,
+      "storeChunk": 369
+    },
+    "asvs:14.2.7": {
+      "label": "OWASP ASVS 5.0.0 requirement 14.2.7",
+      "source": "OWASP_ASVS-5.0.0_May2025.pdf",
+      "page": 84,
+      "anchor": "Verify that sensitive information is subject to data retention classification, ensuring that outdated or",
+      "verified": true,
+      "storePage": 84,
+      "storeChunk": 370
+    },
+    "asvs:16.2.1": {
+      "label": "OWASP ASVS 5.0.0 requirement 16.2.1",
+      "source": "OWASP_ASVS-5.0.0_May2025.pdf",
+      "page": 90,
+      "anchor": "Verify that each log entry includes necessary metadata (such as when, where, who, what)",
+      "verified": true,
+      "storePage": 90,
+      "storeChunk": 396
+    },
+    "asvs:16.2.5": {
+      "label": "OWASP ASVS 5.0.0 requirement 16.2.5",
+      "source": "OWASP_ASVS-5.0.0_May2025.pdf",
+      "page": 91,
+      "anchor": "Verify that when logging sensitive data, the application enforces logging based on the data’s",
+      "verified": true,
+      "storePage": 91,
+      "storeChunk": 398
+    },
+    "asvs:16.5.1": {
+      "label": "OWASP ASVS 5.0.0 requirement 16.5.1",
+      "source": "OWASP_ASVS-5.0.0_May2025.pdf",
+      "page": 92,
+      "anchor": "Verify that a generic message is returned to the consumer when an unexpected or",
+      "verified": true,
+      "storePage": 92,
+      "storeChunk": 404
+    },
+    "asvs:2.2.1": {
+      "label": "OWASP ASVS 5.0.0 requirement 2.2.1",
+      "source": "OWASP_ASVS-5.0.0_May2025.pdf",
+      "page": 31,
+      "anchor": "Verify that input is validated to enforce business or functional expectations for that input.",
+      "verified": true,
+      "storePage": 31,
+      "storeChunk": 147
+    },
+    "boe-ai:annex-3": {
+      "label": "Bank of England AI letter (April 2024), annex paragraph 3",
+      "source": "BoE_AI-Letter-to-DSIT-HMT_April2024.pdf",
+      "page": 7,
+      "anchor": "Safety, security, and robustness, as defined by the UK Government, establishes that ‘AI systems",
+      "verified": true,
+      "storePage": 7,
+      "storeChunk": 30
+    },
+    "boe-ai:annex-6": {
+      "label": "Bank of England AI letter (April 2024), annex paragraph 6",
+      "source": "BoE_AI-Letter-to-DSIT-HMT_April2024.pdf",
+      "page": 8,
+      "anchor": "Accountability and governance, as defined in the guidance, emphasises that “governance measures could be",
+      "verified": true,
+      "storePage": 8,
+      "storeChunk": 40
+    },
+    "boe-ai:annex-9": {
+      "label": "Bank of England AI letter (April 2024), annex paragraph 9",
+      "source": "BoE_AI-Letter-to-DSIT-HMT_April2024.pdf",
+      "page": 11,
+      "anchor": "Chapter 4 of DP5/22 set out current legal requirements and guidance considered to be",
+      "verified": true,
+      "storePage": 11,
+      "storeChunk": 57
+    },
+    "fca-ai:p10": {
+      "label": "FCA AI Update (April 2024), page 10",
+      "source": "FCA_AI-Update_April2024.pdf",
+      "page": 10,
+      "anchor": "Our approach to regulation and supervision Our rules, regulations and core principles do not",
+      "verified": true,
+      "storePage": 10,
+      "storeChunk": 24
+    },
+    "fca-ai:p16": {
+      "label": "FCA AI Update (April 2024), page 16",
+      "source": "FCA_AI-Update_April2024.pdf",
+      "page": 16,
+      "anchor": "Accountability and governance Under this principle “governance measures should be put in place to",
+      "topic": "accountability and governance",
+      "verified": true,
+      "storePage": 16,
+      "storeChunk": 59
+    },
+    "fca-ai:p17": {
+      "label": "FCA AI Update (April 2024), page 17",
+      "source": "FCA_AI-Update_April2024.pdf",
+      "page": 17,
+      "anchor": "The Senior Managers and Certification Regime (SM&CR) emphasises senior management accountability and is relevant",
+      "verified": true,
+      "storePage": 17,
+      "storeChunk": 62
+    },
+    "fca-ai:p18": {
+      "label": "FCA AI Update (April 2024), page 18",
+      "source": "FCA_AI-Update_April2024.pdf",
+      "page": 18,
+      "anchor": "Contestability and redress Under this principle “where appropriate, users, impacted third parties and actors",
+      "verified": true,
+      "storePage": 18,
+      "storeChunk": 68
+    },
+    "pci:3.2.1": {
+      "label": "PCI DSS v4.0.1 Requirement 3.2.1",
+      "source": "PCI-DSS-v4_0_1_June2024.pdf",
+      "page": 4,
+      "anchor": "Account data storage is kept to a minimum through implementation of data retention and",
+      "verified": true,
+      "storePage": 4,
+      "storeChunk": 15
+    },
+    "pci:3.3.1": {
+      "label": "PCI DSS v4.0.1 Requirement 3.3.1",
+      "source": "PCI-DSS-v4_0_1_June2024.pdf",
+      "page": 6,
+      "anchor": "SAD is not stored after authorization, even if encrypted. All sensitive authentication data received",
+      "verified": true,
+      "storePage": 6,
+      "storeChunk": 25
+    },
+    "pci:3.4.1": {
+      "label": "PCI DSS v4.0.1 Requirement 3.4.1",
+      "source": "PCI-DSS-v4_0_1_June2024.pdf",
+      "page": 14,
+      "anchor": "PAN is masked when displayed (the BIN and last four digits are the maximum",
+      "verified": true,
+      "storePage": 14,
+      "storeChunk": 47
+    },
+    "pci:3.5.1": {
+      "label": "PCI DSS v4.0.1 Requirement 3.5.1",
+      "source": "PCI-DSS-v4_0_1_June2024.pdf",
+      "page": 17,
+      "anchor": "PAN is rendered unreadable anywhere it is stored by using any of the following",
+      "verified": true,
+      "storePage": 17,
+      "storeChunk": 59
+    },
+    "pci:6.2.1": {
+      "label": "PCI DSS v4.0.1 Requirement 6.2.1",
+      "source": "PCI-DSS-v4_0_1_June2024.pdf",
+      "page": 49,
+      "anchor": "Bespoke and custom software are developed securely, as follows: • Based on industry standards",
+      "verified": true,
+      "storePage": 49,
+      "storeChunk": 169
+    },
+    "pci:6.2.3": {
+      "label": "PCI DSS v4.0.1 Requirement 6.2.3",
+      "source": "PCI-DSS-v4_0_1_June2024.pdf",
+      "page": 51,
+      "anchor": "Bespoke and custom software is reviewed prior to being released into production or to",
+      "verified": true,
+      "storePage": 51,
+      "storeChunk": 177
+    },
+    "pci:6.2.3.1": {
+      "label": "PCI DSS v4.0.1 Requirement 6.2.3.1",
+      "source": "PCI-DSS-v4_0_1_June2024.pdf",
+      "page": 52,
+      "anchor": "If manual code reviews are performed for bespoke and custom software prior to release",
+      "verified": true,
+      "storePage": 52,
+      "storeChunk": 183
+    },
+    "pci:6.2.4": {
+      "label": "PCI DSS v4.0.1 Requirement 6.2.4",
+      "source": "PCI-DSS-v4_0_1_June2024.pdf",
+      "page": 53,
+      "anchor": "Software engineering techniques or other methods are defined and in use by software development",
+      "verified": true,
+      "storePage": 53,
+      "storeChunk": 189
+    },
+    "pci:6.3.1": {
+      "label": "PCI DSS v4.0.1 Requirement 6.3.1",
+      "source": "PCI-DSS-v4_0_1_June2024.pdf",
+      "page": 55,
+      "anchor": "Security vulnerabilities are identified and managed as follows: • New security vulnerabilities are identified",
+      "verified": true,
+      "storePage": 55,
+      "storeChunk": 194
+    },
+    "pci:6.3.2": {
+      "label": "PCI DSS v4.0.1 Requirement 6.3.2",
+      "source": "PCI-DSS-v4_0_1_June2024.pdf",
+      "page": 59,
+      "anchor": "An inventory of bespoke and custom software, and third-party software components incorporated into bespoke",
+      "verified": true,
+      "storePage": 59,
+      "storeChunk": 206
+    },
+    "pci:6.3.3": {
+      "label": "PCI DSS v4.0.1 Requirement 6.3.3",
+      "source": "PCI-DSS-v4_0_1_June2024.pdf",
+      "page": 60,
+      "anchor": "All system components are protected from known vulnerabilities by installing applicable security patches/updates as",
+      "verified": true,
+      "storePage": 60,
+      "storeChunk": 210
+    },
+    "pci:6.5.1": {
+      "label": "PCI DSS v4.0.1 Requirement 6.5.1",
+      "source": "PCI-DSS-v4_0_1_June2024.pdf",
+      "page": 67,
+      "anchor": "Changes to all system components in the production environment are made according to established",
+      "verified": true,
+      "storePage": 67,
+      "storeChunk": 238
+    },
+    "pci:6.5.4": {
+      "label": "PCI DSS v4.0.1 Requirement 6.5.4",
+      "source": "PCI-DSS-v4_0_1_June2024.pdf",
+      "page": 70,
+      "anchor": "Roles and functions are separated between production and pre-production environments to provide accountability such",
+      "verified": true,
+      "storePage": 70,
+      "storeChunk": 247
+    },
+    "pci:6.5.5": {
+      "label": "PCI DSS v4.0.1 Requirement 6.5.5",
+      "source": "PCI-DSS-v4_0_1_June2024.pdf",
+      "page": 71,
+      "anchor": "Live PANs are not used in pre-production environments, except where those environments are included",
+      "verified": true,
+      "storePage": 71,
+      "storeChunk": 251
+    },
+    "ps21-3:p30": {
+      "label": "FCA PS21/3, page 30",
+      "source": "FCA_PS21-3_OperationalResilience_March2021.pdf",
+      "page": 30,
+      "anchor": "this could include individuals responsible for specific capabilities, the size and strength of their",
+      "verified": true,
+      "storePage": 30,
+      "storeChunk": 144
+    },
+    "ps21-3:p31": {
+      "label": "FCA PS21/3, page 31",
+      "source": "FCA_PS21-3_OperationalResilience_March2021.pdf",
+      "page": 31,
+      "anchor": "It is also likely that firms will identify, through the mapping exercise, individuals fulfilling",
+      "verified": true,
+      "storePage": 31,
+      "storeChunk": 150
+    },
+    "psrs:84": {
+      "label": "Payment Services Regulations 2017, regulation 84",
+      "source": "PSRs_2017_April2026.pdf",
+      "page": 13,
+      "anchor": "Subject to paragraph (2), the payment service providers of the payer and payee must",
+      "verified": true,
+      "storePage": 13,
+      "storeChunk": 73
+    },
+    "psrs:89": {
+      "label": "Payment Services Regulations 2017, regulation 89",
+      "source": "PSRs_2017_April2026.pdf",
+      "page": 16,
+      "anchor": "The credit value date for the payee's payment account must be no later than",
+      "verified": true,
+      "storePage": 16,
+      "storeChunk": 91
+    },
+    "psrs:98": {
+      "label": "Payment Services Regulations 2017, regulation 98",
+      "source": "PSRs_2017_April2026.pdf",
+      "page": 21,
+      "anchor": "Each payment service provider must establish a framework with appropriate mitigation measures and control",
+      "verified": true,
+      "storePage": 21,
+      "storeChunk": 116
+    },
+    "psrs:99": {
+      "label": "Payment Services Regulations 2017, regulation 99",
+      "source": "PSRs_2017_April2026.pdf",
+      "page": 21,
+      "anchor": "If a payment service provider becomes aware of a major operational or security incident,",
+      "verified": true,
+      "storePage": 21,
+      "storeChunk": 117
+    },
+    "ss1-21:4.5": {
+      "label": "PRA SS1/21 paragraph 4.5",
+      "source": "PRA_SS1-21_OperationalResilience_March2022.pdf",
+      "page": 10,
+      "anchor": "The PRA expects firms to be able to remain within impact tolerances for important",
+      "verified": true,
+      "storePage": 10,
+      "storeChunk": 41
+    },
+    "ss1-21:5.1": {
+      "label": "PRA SS1/21 paragraph 5.1",
+      "source": "PRA_SS1-21_OperationalResilience_March2022.pdf",
+      "page": 12,
+      "anchor": "The Operational Resilience Parts20 require firms to identify and document the necessary people, processes,",
+      "verified": true,
+      "storePage": 12,
+      "storeChunk": 53
+    },
+    "ss1-21:5.2": {
+      "label": "PRA SS1/21 paragraph 5.2",
+      "source": "PRA_SS1-21_OperationalResilience_March2022.pdf",
+      "page": 12,
+      "anchor": "Adequate mapping should enable firms to meet the following outcomes: (a) The identification of",
+      "verified": true,
+      "storePage": 12,
+      "storeChunk": 54
+    },
+    "ss1-21:5.3": {
+      "label": "PRA SS1/21 paragraph 5.3",
+      "source": "PRA_SS1-21_OperationalResilience_March2022.pdf",
+      "page": 12,
+      "anchor": "To meet the requirements in the Operational Resilience Parts21, the PRA expects firms to",
+      "verified": true,
+      "storePage": 12,
+      "storeChunk": 55
+    },
+    "ss1-21:5.5": {
+      "label": "PRA SS1/21 paragraph 5.5",
+      "source": "PRA_SS1-21_OperationalResilience_March2022.pdf",
+      "page": 12,
+      "anchor": "The PRA expects firms to map the resources necessary to deliver important business services",
+      "verified": true,
+      "storePage": 12,
+      "storeChunk": 56
+    },
+    "ss1-21:5.9": {
+      "label": "PRA SS1/21 paragraph 5.9",
+      "source": "PRA_SS1-21_OperationalResilience_March2022.pdf",
+      "page": 13,
+      "anchor": "The PRA expects firms to update their mapping annually at a minimum, or following",
+      "verified": true,
+      "storePage": 13,
+      "storeChunk": 60
+    },
+    "ss1-21:6.6": {
+      "label": "PRA SS1/21 paragraph 6.6",
+      "source": "PRA_SS1-21_OperationalResilience_March2022.pdf",
+      "page": 13,
+      "anchor": "The PRA expects firms to develop a testing plan that details how they will",
+      "verified": true,
+      "storePage": 13,
+      "storeChunk": 64
+    },
+    "ss1-21:7.1": {
+      "label": "PRA SS1/21 paragraph 7.1",
+      "source": "PRA_SS1-21_OperationalResilience_March2022.pdf",
+      "page": 15,
+      "anchor": "Boards are specifically required to approve the important business services identified for their firm",
+      "verified": true,
+      "storePage": 15,
+      "storeChunk": 75
+    },
+    "ss1-21:8.1": {
+      "label": "PRA SS1/21 paragraph 8.1",
+      "source": "PRA_SS1-21_OperationalResilience_March2022.pdf",
+      "page": 16,
+      "anchor": "The Operational Resilience Parts31 require firms to document a self-assessment of their compliance with",
+      "verified": true,
+      "storePage": 16,
+      "storeChunk": 81
+    },
+    "ss1-21:8.3": {
+      "label": "PRA SS1/21 paragraph 8.3",
+      "source": "PRA_SS1-21_OperationalResilience_March2022.pdf",
+      "page": 16,
+      "anchor": "When documenting a self-assessment to meet the Operational Resilience Parts, 34 firms should: ",
+      "verified": true,
+      "storePage": 16,
+      "storeChunk": 83
+    },
+    "ss2-21:2.3": {
+      "label": "PRA SS2/21 paragraph 2.3",
+      "source": "PRA_SS2-21_Outsourcing_November2024.pdf",
+      "page": 8,
+      "anchor": "The PRA’s overarching aim is for firms to apply adequate governance and controls to",
+      "verified": true,
+      "storePage": 8,
+      "storeChunk": 33
+    },
+    "ss2-21:2.4": {
+      "label": "PRA SS2/21 paragraph 2.4",
+      "source": "PRA_SS2-21_Outsourcing_November2024.pdf",
+      "page": 8,
+      "anchor": "The EBA Outsourcing GL provide examples of arrangements between banks and third parties which",
+      "verified": true,
+      "storePage": 8,
+      "storeChunk": 33
+    },
+    "ss2-21:2.5": {
+      "label": "PRA SS2/21 paragraph 2.5",
+      "source": "PRA_SS2-21_Outsourcing_November2024.pdf",
+      "page": 9,
+      "anchor": "As some non-outsourcing third party arrangements may also impact the PRA’s objectives, the PRA",
+      "verified": true,
+      "storePage": 9,
+      "storeChunk": 36
+    },
+    "ss2-21:2.6": {
+      "label": "PRA SS2/21 paragraph 2.6",
+      "source": "PRA_SS2-21_Outsourcing_November2024.pdf",
+      "page": 9,
+      "anchor": "Where a firm deems a non-outsourcing third party arrangement ‘material’ or ‘high risk’, it",
+      "verified": true,
+      "storePage": 9,
+      "storeChunk": 37
+    },
+    "sysc:15A.2.1R": {
+      "label": "FCA SYSC 15A.2.1R",
+      "source": "FCA_SYSC_June2026.pdf",
+      "page": 40,
+      "anchor": "Important business services A firm must identify its important business services. SYSC 15A.2.2 R",
+      "verified": true,
+      "storePage": 40,
+      "storeChunk": 140
+    },
+    "sysc:15A.2.5R": {
+      "label": "FCA SYSC 15A.2.5R",
+      "source": "FCA_SYSC_June2026.pdf",
+      "page": 41,
+      "anchor": "Impact tolerances A firm must, for each of its important business services, set an",
+      "verified": true,
+      "storePage": 41,
+      "storeChunk": 144
+    },
+    "sysc:15A.2.9R": {
+      "label": "FCA SYSC 15A.2.9R",
+      "source": "FCA_SYSC_June2026.pdf",
+      "page": 41,
+      "anchor": "A firm must ensure it can remain within its impact tolerance for each important",
+      "verified": true,
+      "storePage": 41,
+      "storeChunk": 148
+    },
+    "sysc:15A.3.1R": {
+      "label": "FCA SYSC 15A.3.1R",
+      "source": "FCA_SYSC_June2026.pdf",
+      "page": 43,
+      "anchor": "A firm must have in place sound, effective and comprehensive strategies, processes and systems",
+      "verified": true,
+      "storePage": 43,
+      "storeChunk": 152
+    },
+    "sysc:15A.3.2R": {
+      "label": "FCA SYSC 15A.3.2R",
+      "source": "FCA_SYSC_June2026.pdf",
+      "page": 43,
+      "anchor": "The strategies, processes and systems required under SYSC 15A.3.1R must be comprehensive and proportionate",
+      "verified": true,
+      "storePage": 43,
+      "storeChunk": 152
+    },
+    "sysc:15A.4.1R": {
+      "label": "FCA SYSC 15A.4.1R",
+      "source": "FCA_SYSC_June2026.pdf",
+      "page": 44,
+      "anchor": "A firm must identify and document the people, processes, technology, facilities and information necessary",
+      "verified": true,
+      "storePage": 44,
+      "storeChunk": 153
+    },
+    "sysc:15A.4.3R": {
+      "label": "FCA SYSC 15A.4.3R",
+      "source": "FCA_SYSC_June2026.pdf",
+      "page": 44,
+      "anchor": "A firm must keep its compliance with SYSC 15A.4.1R under review and, in particular,",
+      "verified": true,
+      "storePage": 44,
+      "storeChunk": 154
+    },
+    "sysc:15A.5.6G": {
+      "label": "FCA SYSC 15A.5.6G",
+      "source": "FCA_SYSC_June2026.pdf",
+      "page": 45,
+      "anchor": "In carrying out the scenario testing, a firm should, among other things, consider the",
+      "verified": true,
+      "storePage": 45,
+      "storeChunk": 159
+    },
+    "sysc:15A.5.7R": {
+      "label": "FCA SYSC 15A.5.7R",
+      "source": "FCA_SYSC_June2026.pdf",
+      "page": 46,
+      "anchor": "A firm must carry out the scenario testing: (1) if there is a material",
+      "verified": true,
+      "storePage": 46,
+      "storeChunk": 160
+    },
+    "sysc:15A.5.8R": {
+      "label": "FCA SYSC 15A.5.8R",
+      "source": "FCA_SYSC_June2026.pdf",
+      "page": 46,
+      "anchor": "Lessons learned A firm must, following scenario testing or, in the event of an",
+      "verified": true,
+      "storePage": 46,
+      "storeChunk": 161
+    },
+    "sysc:15A.5.9R": {
+      "label": "FCA SYSC 15A.5.9R",
+      "source": "FCA_SYSC_June2026.pdf",
+      "page": 46,
+      "anchor": "Following the lessons learned exercise, a firm must make necessary improvements to address weaknesses",
+      "verified": true,
+      "storePage": 46,
+      "storeChunk": 161
+    },
+    "sysc:15A.6.1R": {
+      "label": "FCA SYSC 15A.6.1R",
+      "source": "FCA_SYSC_June2026.pdf",
+      "page": 47,
+      "anchor": "A firm must make, and keep up to date, a written record of its",
+      "verified": true,
+      "storePage": 47,
+      "storeChunk": 162
+    },
+    "sysc:15A.6.2R": {
+      "label": "FCA SYSC 15A.6.2R",
+      "source": "FCA_SYSC_June2026.pdf",
+      "page": 47,
+      "anchor": "A firm must retain each version of the records referred to in SYSC 15A.6.1R",
+      "verified": true,
+      "storePage": 47,
+      "storeChunk": 165
+    },
+    "sysc:15A.7.1R": {
+      "label": "FCA SYSC 15A.7.1R",
+      "source": "FCA_SYSC_June2026.pdf",
+      "page": 48,
+      "anchor": "A firm must ensure that its governing body approves and regularly reviews the written",
+      "verified": true,
+      "storePage": 48,
+      "storeChunk": 166
+    },
+    "sysc:4.1.1R": {
+      "label": "FCA SYSC 4.1.1R",
+      "source": "FCA_SYSC-4_October2026.pdf",
+      "page": 4,
+      "anchor": "General requirements (1) A firm must have robust governance arrangements, which include a clear",
+      "verified": true,
+      "storePage": 4,
+      "storeChunk": 5
+    },
+    "sysc:4.1.2R": {
+      "label": "FCA SYSC 4.1.2R",
+      "source": "FCA_SYSC-4_October2026.pdf",
+      "page": 6,
+      "anchor": "For a common platform firm, the arrangements, processes and mechanisms referred to in SYSC",
+      "verified": true,
+      "storePage": 6,
+      "storeChunk": 14
+    }
+  },
+  "unresolved": [
+    "ps21-3:1.7"
+  ],
+  "verifiedAt": "2026-10-12T12:26:12.555Z",
+  "verifiedOn": "nexcode-7d47b89b78-swv8g",
+  "asvsVerifiedAt": "2026-10-13T14:41:41.309Z",
+  "asvsVerifiedOn": "nexcode-57c8844dc5-fkprq"
+}

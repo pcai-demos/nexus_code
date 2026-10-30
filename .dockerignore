@@ -1,0 +1,24 @@
+.git
+.gitignore
+.next
+.DS_Store
+# T23 (F-102): Docker matches a bare name at the context root only; nested
+# Finder files shipped in every image and moved the tree hash.
+**/.DS_Store
+**/._*
+.tiltignore
+nexcode-data/
+node_modules/
+helm/
+scratch/
+*.session.json
+*.local
+*.md
+# T22 (design D4): the developer's macOS virtualenv was copied into every Linux
+# image as a 1.4 GB tree of dangling symlinks (F-6); the agent configuration and
+# the audit documents have no runtime role. tests/ deliberately stays IN the
+# image — the seven in-pod gates run from it (the session-21 correction to F-7).
+.venv/
+.claude/
+inputs/
+*.log

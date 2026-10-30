@@ -1,0 +1,201 @@
+{
+  "id": "s4",
+  "title": "The closer: the auditor's question",
+  "summary": "The use of AI is on the record, and the firm's rules answer an auditor directly, link by link",
+  "story": "Grace Whitfield of Internal Audit joins after the demo. Priya Nair opens the evidence record the demo wrote, then puts Grace's question twice: to the document chat, and to NexCODE, which walks the four layers from the standards to the policy clause to the regulation and cites every link. The answer goes on the record too.",
+  "language": "",
+  "minutes": 2,
+  "icon": "RiScalesLine",
+  "ticket": {
+    "id": "IA-2026-14",
+    "path": "nexus-payments/backlog/IA-2026-14.md"
+  },
+  "select": {
+    "reset": false
+  },
+  "card": {
+    "about": "The closer: the use of AI is itself on the record, and the firm's rules answer an auditor directly. The presenter opens the evidence record the last demo wrote, or an example record when none has run, then asks the auditor's question twice. The document chat answers from the documents as one pile. NexCODE searches each layer of rules on its own topics, reads each policy clause's \"Traces to:\" line and looks the regulation up in its own text, so the answer walks from the standard to the policy clause to the regulation, citing every link and naming any link it cannot find. The answer is recorded like any change.",
+    "scenario": "Tuesday 14 July 2026. Grace Whitfield of Internal Audit is testing the payments engineering controls (IA-2026-14). Her questions: which of our standards require decimal arithmetic for money, and which regulation they trace to; and which rules govern code written with an AI assistant, and which regulator expectations they rest on. Priya Nair answers with NexCODE in front of her, and the answer goes on the record.",
+    "people": [
+      {
+        "name": "Priya Nair",
+        "role": "Senior engineer, Clearing Engineering",
+        "part": "the presenter plays Priya: opens the latest record, puts the auditor's question, records the answer"
+      },
+      {
+        "name": "Grace Whitfield",
+        "role": "Internal Audit",
+        "part": "raised IA-2026-14: tests that the squad's rules rest on the regulations they name"
+      },
+      {
+        "name": "Sarah Jenkins",
+        "role": "Director of Risk and Compliance",
+        "part": "reads the evidence record"
+      }
+    ],
+    "teams": [
+      "Internal Audit",
+      "Clearing Engineering, Payments & Settlements Technology",
+      "Risk & Compliance"
+    ],
+    "artefacts": {
+      "code": [
+        {
+          "path": "nexus-payments/backlog/IA-2026-14.md",
+          "role": "the audit request, in the tracker's shape"
+        }
+      ],
+      "documents": [
+        {
+          "source": "PSRs_2017_April2026.pdf",
+          "role": "regulation 84: the full amount of a payment transferred, no charges deducted; behind decimal money"
+        },
+        {
+          "source": "FCA_SYSC-4_October2026.pdf",
+          "role": "SYSC 4.1.1R: robust governance, effective internal control and sound administrative and accounting procedures"
+        },
+        {
+          "source": "FCA_AI-Update_April2024.pdf",
+          "role": "the regulators' technology-agnostic approach to AI, its accountability and governance (pages 10, 16 to 18)"
+        },
+        {
+          "source": "BoE_AI-Letter-to-DSIT-HMT_April2024.pdf",
+          "role": "annex paragraphs 6 and 9: accountability and governance of AI, and the existing requirements that apply to it"
+        },
+        {
+          "source": "PCI-DSS-v4_0_1_June2024.pdf",
+          "role": "6.2.3.1 code reviewed by someone other than its author before release; 3.2.1 and 3.5.1 card data kept to a minimum and unreadable"
+        },
+        {
+          "source": "PRA_SS2-21_Outsourcing_November2024.pdf",
+          "role": "paragraphs 2.4 and 2.5: outsourcing and other third-party arrangements, behind approved assistants on the Bank's own platform"
+        },
+        {
+          "source": "Nexus_FIN-POL-003_Financial-Controls-and-Reconciliation-Policy_v4.md",
+          "role": "clause 4.3: every payment, charge and scheme fee calculated exactly, to the penny; PAY-011 to PAY-013 trace to it"
+        },
+        {
+          "source": "Nexus_TEC-POL-005_AI-Assisted-Development-Policy_v2.md",
+          "role": "clauses 4.1 to 4.7 and 5.1: AI-assisted development, reviewed, labelled and recorded"
+        },
+        {
+          "source": "Nexus_TEC-POL-002_Technology-Change-Management-and-Segregation-of-Duties-Policy_v4.md",
+          "role": "clauses 4.3 to 4.8: approval, review, segregation of duties and change records, which TEC-POL-005 applies to AI-assisted changes"
+        },
+        {
+          "source": "Nexus_PAY_Payments-Engineering-Standard_v3.md",
+          "role": "PAY-011 currency and scale; PAY-012 decimal types and rounding; PAY-013 conversion at the boundaries"
+        },
+        {
+          "source": "Nexus_REV_Code-Review-Standard_v2.md",
+          "role": "REV-005 AI-generated changes labelled and reviewed by a human; REV-006 AI-assisted reviews"
+        },
+        {
+          "source": "Nexus_ADR-004_Monetary-Amounts-Use-Decimal.md",
+          "role": "the team's decision: money in a decimal type with an explicit scale"
+        },
+        {
+          "source": "Nexus_PM-2024-011_Penny-Drift-Post-Mortem.md",
+          "role": "the 2024 penny drift: a fee batch in floating point, pennies short for nine weeks; L1 money is never a float"
+        },
+        {
+          "source": "Nexus_ADR-008_Target-Languages-For-Batch-Modernisation.md",
+          "role": "D3 no binary floating point for money in either language; an AI-drafted port is labelled AI-assisted"
+        },
+        {
+          "source": "Nexus_CLR-DIGEST-2026-04_Review-Comment-Digest.md",
+          "role": "F1 money in floats; the note on labelling AI-assisted pull requests (REV-005)"
+        }
+      ]
+    },
+    "outputs": [
+      "The latest evidence record of the demos, opened for the auditor: the model, the sources searched and cited, the tests and the approval",
+      "The question through the document chat, for contrast",
+      "The question through NexCODE: each standard, the policy clause it traces to and the regulation behind that clause, every link cited and any missing link named",
+      "An evidence record of the answer: the question, what each layer searched for, the passages cited and the chain"
+    ],
+    "value": [
+      "An auditor's question is answered from the firm's own rules, link by link, in front of the auditor",
+      "Each regulation is looked up from the policy clause that names it and checked against the provision's own words; a link that cannot be found is said plainly",
+      "The use of AI is itself on the record: the model, the sources and the answer"
+    ]
+  },
+  "open": [
+    "nexus-payments/backlog/IA-2026-14.md"
+  ],
+  "steps": [
+    {
+      "id": "show-record",
+      "title": "Show the latest record",
+      "action": "results"
+    },
+    {
+      "id": "doc",
+      "title": "The document chat first",
+      "mode": "doc",
+      "prompt": "/doc Which of our standards require decimal arithmetic for monetary values, and which regulation do they trace to?",
+      "chat": {
+        "lookupScope": "off"
+      }
+    },
+    {
+      "id": "money",
+      "title": "The auditor's question",
+      "mode": "audit",
+      "prompt": "Which of our standards require decimal arithmetic for monetary values, and which regulation do they trace to?",
+      "layerTopics": {
+        "regulator": [
+          "the full amount of the payment transaction is transferred and no charges are deducted from the amount transferred",
+          "sound administrative and accounting procedures"
+        ],
+        "corporate": [
+          "accurate records of payment transactions and charges"
+        ],
+        "sdlc": [
+          "amounts, fees and charges held and calculated in a decimal type",
+          "amounts and rates parsed into the decimal type from their text form",
+          "every monetary value carries its currency and a scale of two decimal places"
+        ],
+        "team": [
+          "money is never a float",
+          "decimal, never float",
+          "no binary floating point for money"
+        ]
+      }
+    },
+    {
+      "id": "ai",
+      "title": "AI governance",
+      "mode": "audit",
+      "optional": true,
+      "prompt": "Which of our rules govern code written with an AI assistant, and which regulator expectations do they rest on?",
+      "layerTopics": {
+        "regulator": [
+          "firms remain accountable under existing rules for their use of AI",
+          "governance, human oversight and accountability of AI models",
+          "a senior manager responsible for the use of AI"
+        ],
+        "corporate": [
+          "AI-assisted development is software development: existing controls apply",
+          "a human reviews and approves every AI-generated change",
+          "AI-assisted changes are labelled",
+          "records of AI use are kept with the change record"
+        ],
+        "sdlc": [
+          "AI-generated changes are labelled and reviewed by a human"
+        ],
+        "team": [
+          "using an AI coding assistant on this team",
+          "AI-assisted pull requests"
+        ]
+      }
+    },
+    {
+      "id": "record",
+      "title": "Record the answer",
+      "action": "record"
+    }
+  ],
+  "commands": {},
+  "talkTrack": "The closer: the use of AI is itself on the record, and the firm's rules answer an auditor directly. Select the demo: nothing is reset, so the record the last demo wrote is still there. Show the latest record: the Results panel opens on it, with the model, the sources searched and cited, the tests and the approval, still pending. Then Grace's question, first through the document chat. It searches the documents as one pile; in the measured runs it found the standards and the team's notes but never reached the regulation. Then through NexCODE: each layer is searched on its own topics, each policy clause's \"Traces to:\" line is read and the regulation it names is looked up in its own text. The answer walks from PAY-012 to FIN-POL-003 clause 4.3 to the Payment Services Regulations, regulation 84, and SYSC 4.1.1R, citing every link, and names any link it cannot find. Optionally ask the AI-governance question too. Record the answer: the evidence record keeps the question, what each layer searched for, the passages cited and the chain."
+}

@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "outDir": "dist",
+    "rootDir": ".",
+    "typeRoots": ["/usr/share/nodejs/@types"],
+    "types": ["node"],
+    "paths": {
+      "*": ["/usr/share/nodejs/@types/*", "/usr/share/nodejs/*"]
+    }
+  },
+  "include": ["src/**/*.ts", "test/**/*.ts"]
+}

@@ -1,0 +1,280 @@
+{
+  "id": "s3",
+  "title": "Modernise the clearing batch: COBOL to Java 21",
+  "summary": "Port a legacy COBOL program to Java 21, proved equivalent by a tool against the live COBOL",
+  "ticket": {
+    "id": "MOD-2026-07",
+    "path": "nexus-payments/backlog/MOD-2026-07.md"
+  },
+  "story": "The nightly clearing batch, CLEARING.cbl, totals each night's settlement records by scheme; its totals feed the settlement reconciliation. Its runtime reaches end of life on 31 December 2026 and its last maintainer retires in September, so it must be ported, with proof that nothing changed.",
+  "language": "COBOL to Java 21",
+  "minutes": 5,
+  "icon": "RiCupLine",
+  "select": {
+    "reset": true,
+    "runTests": true
+  },
+  "card": {
+    "about": "A legacy modernisation done the way a regulated bank must do it. A tool computes the program's record and report layouts from its own source; NexCODE ports the logic to Java 21 with the Bank's COBOL compatibility library, guided by the four layers of rules; and a tool proves the port equivalent by running the real COBOL beside it on the same fixture and comparing the two reports byte for byte. The evidence record carries that proof.",
+    "scenario": "Priya Nair picks up MOD-2026-07. The clearing batch must leave its end-of-life COBOL runtime, and the 2024 rewrite of a fee batch (PM-2024-011) went live without proof and lost pennies for nine weeks. Select runs the real COBOL on the fixture first; the migration step asks NexCODE for the Java 21 port and its characterisation test; the presenter applies them and runs the tests, which compile the port, run it, compare its report with the COBOL's and run the test.",
+    "people": [
+      {
+        "name": "Priya Nair",
+        "role": "Senior engineer, Clearing Engineering",
+        "part": "the presenter plays Priya: asks for the port, applies it, runs the tests, records the change"
+      },
+      {
+        "name": "David Vance",
+        "role": "Head of Payments Engineering",
+        "part": "raised MOD-2026-07 and approves the cut-over"
+      },
+      {
+        "name": "Marcus Thorne",
+        "role": "Chief Architect",
+        "part": "owns the Legacy Modernisation Standard and ADR-008"
+      },
+      {
+        "name": "Grace Whitfield",
+        "role": "Internal Audit",
+        "part": "tests the equivalence evidence before cut-over"
+      }
+    ],
+    "teams": [
+      "Clearing Engineering, Payments & Settlements Technology",
+      "Architecture",
+      "Risk & Compliance",
+      "Internal Audit"
+    ],
+    "artefacts": {
+      "code": [
+        {
+          "path": "nexus-payments/backlog/MOD-2026-07.md",
+          "role": "the modernisation ticket: why now, the target files, the acceptance criteria"
+        },
+        {
+          "path": "nexus-payments/legacy/clearing-batch/CLEARING.cbl",
+          "role": "the nightly clearing batch (GnuCOBOL), with its out-of-date comments"
+        },
+        {
+          "path": "nexus-payments/legacy/clearing-batch/clearing_input.dat",
+          "role": "the fixture: business day 24 June 2026, anonymised, 21 transactions"
+        },
+        {
+          "path": "nexus-payments/legacy/clearing-batch/expected_totals.txt",
+          "role": "the COBOL program's own report on the fixture: the oracle"
+        },
+        {
+          "path": "nexus-payments/libs/cobol-compat/src/main/java/com/nexusbank/cobol/Picture.java",
+          "role": "the Bank's COBOL compatibility library (MIG-004): fields by PICTURE, ROUNDED, edited pictures, line-sequential files"
+        }
+      ],
+      "documents": [
+        {
+          "source": "PRA_SS1-21_OperationalResilience_March2022.pdf",
+          "role": "paragraph 6.6: a service with insufficient integrity is outside its impact tolerance, and testing is in proportion to whether its resources have materially changed; paragraphs 5.1 to 5.3 and 5.9: mapping, vulnerabilities acted on, and the mapping updated after significant change"
+        },
+        {
+          "source": "FCA_SYSC_June2026.pdf",
+          "role": "SYSC 15A: mapping the people and technology behind each important business service (15A.4.1R) and keeping it under review (15A.4.3R); key people (15A.5.6G(2)); scenario testing (15A.5.7R); staying within tolerance (15A.2.9R)"
+        },
+        {
+          "source": "FCA_SYSC-4_October2026.pdf",
+          "role": "SYSC 4.1.1R sound administrative and accounting procedures, behind equivalence before go-live"
+        },
+        {
+          "source": "FCA_PS21-3_OperationalResilience_March2021.pdf",
+          "role": "paragraph 1.7: changes to systems cause disruptions; chapter 5: plans for key people being unavailable"
+        },
+        {
+          "source": "PCI-DSS-v4_0_1_June2024.pdf",
+          "role": "6.5.1 change procedures (approval, testing, a way back to a secure state) and 6.3.3 security patches, for systems in PCI DSS scope; 6.2.3.1 review by someone other than the author, behind the AI disclosure"
+        },
+        {
+          "source": "PSRs_2017_April2026.pdf",
+          "role": "regulation 84, the full amount transferred and the charges stated, behind decimal money and the rounding rule"
+        },
+        {
+          "source": "FCA_AI-Update_April2024.pdf",
+          "role": "the regulators' technology-agnostic approach to AI, cited for approach, not as rules"
+        },
+        {
+          "source": "Nexus_TEC-POL-004_Technology-Lifecycle-and-Modernisation-Policy_v2.md",
+          "role": "end-of-life technology replaced under a plan; a replacement proved to give the same results before it goes live; parallel run, cut-over and the service's mapping; knowledge held by one person"
+        },
+        {
+          "source": "Nexus_FIN-POL-003_Financial-Controls-and-Reconciliation-Policy_v4.md",
+          "role": "charges calculated exactly, to the penny (4.3); changes to charging systems tested before deployment (4.8)"
+        },
+        {
+          "source": "Nexus_TEC-POL-002_Technology-Change-Management-and-Segregation-of-Duties-Policy_v4.md",
+          "role": "every change controlled and recorded (4.1); automated checks beside the reviewer's judgement (4.5)"
+        },
+        {
+          "source": "Nexus_TEC-POL-005_AI-Assisted-Development-Policy_v2.md",
+          "role": "a human reviews and approves every AI-assisted change, which is labelled and recorded"
+        },
+        {
+          "source": "Nexus_MIG_Legacy-Modernisation-Standard_v1.md",
+          "role": "MIG-001 equivalence proved by a tool, byte for byte; MIG-002 behaviour first; MIG-003 the fixture; MIG-004 the COBOL to Java mapping, through the Bank's COBOL compatibility library"
+        },
+        {
+          "source": "Nexus_TST_Testing-and-Definition-of-Done-Standard_v3.md",
+          "role": "TST-010 characterisation tests for migrations: the same inputs give identical outputs, to the penny; TST-005 fixtures"
+        },
+        {
+          "source": "Nexus_PAY_Payments-Engineering-Standard_v3.md",
+          "role": "PAY-012 decimal money, rounded half up once per transaction; PAY-013 parsed from text"
+        },
+        {
+          "source": "Nexus_REV_Code-Review-Standard_v2.md",
+          "role": "REV-005 an AI-assisted change is labelled and reviewed by a human; REV-002 the pre-merge checks"
+        },
+        {
+          "source": "Nexus_PM-2024-011_Penny-Drift-Post-Mortem.md",
+          "role": "lesson L5, a rewrite is a change to money code: the 2024 rewrite that lost pennies for nine weeks"
+        },
+        {
+          "source": "Nexus_ADR-004_Monetary-Amounts-Use-Decimal.md",
+          "role": "Decimal, never float; round once, half up, per transaction; parse from text"
+        },
+        {
+          "source": "Nexus_CLR-WIKI-019_Running-The-Clearing-Batch-Locally.md",
+          "role": "the team's page: build, run and diff the batch; the record layout; the quirks a port must keep; trust the code, not its comments"
+        },
+        {
+          "source": "Nexus_ADR-008_Target-Languages-For-Batch-Modernisation.md",
+          "role": "Java 21 by default; no binary floating point for money; the characterisation test ships with the migration"
+        }
+      ]
+    },
+    "outputs": [
+      "A Java 21 port of the clearing batch on the Bank's COBOL compatibility library, with its characterisation test",
+      "The equivalence proof: the port's report against the live COBOL's on the same fixture, byte for byte, verified by tool",
+      "The test run captured with its commands, exit codes and output, shown in the IDE",
+      "An evidence record with the equivalence, the rules cited, the model and the AI disclosure, approval pending"
+    ],
+    "value": [
+      "A modernisation is approvable only with evidence that nothing changed: here a tool proves it against the real COBOL",
+      "Facts come from tools (the layouts, the comparison) and the port from the model, kept apart in the record",
+      "The team's own lesson from 2024 is applied, not relearnt",
+      "The same proof for Java or Rust: the presenter can show either card"
+    ]
+  },
+  "open": [
+    "nexus-payments/backlog/MOD-2026-07.md",
+    "nexus-payments/legacy/clearing-batch/CLEARING.cbl",
+    "nexus-payments/legacy/clearing-batch/clearing_input.dat",
+    "nexus-payments/legacy/clearing-batch/expected_totals.txt"
+  ],
+  "clean": [
+    "nexus-payments/services/clearing"
+  ],
+  "steps": [
+    {
+      "id": "explain",
+      "title": "Explain the program",
+      "mode": "explain",
+      "optional": true,
+      "prompt": "Explain what CLEARING.cbl does and where the regulatory risk sits in porting it.",
+      "attach": [
+        "nexus-payments/backlog/MOD-2026-07.md",
+        "nexus-payments/legacy/clearing-batch/CLEARING.cbl"
+      ],
+      "layerTopics": {
+        "regulator": [
+          "testing proportionate to whether the operational resources supporting an important business service have materially changed",
+          "review its compliance if there is a material change to the firm's business or its important business services",
+          "changes to system components are made according to established procedures, including testing"
+        ],
+        "corporate": [
+          "end-of-life technology replaced under a plan",
+          "knowledge held by few people",
+          "equivalence proved before go-live",
+          "testing of changes to systems that calculate charges"
+        ],
+        "sdlc": [
+          "a migration MUST NOT change behaviour, even where that looks wrong",
+          "equivalence evidence: a tool compares the old and the new program's outputs byte for byte",
+          "characterisation tests for migrations",
+          "changes to fee and settlement code"
+        ],
+        "team": [
+          "a rewrite is a change to money code",
+          "trust the code, not its comments",
+          "ROUNDED rounds half away from zero"
+        ]
+      }
+    },
+    {
+      "id": "migrate",
+      "title": "Migrate to Java 21",
+      "mode": "migrate",
+      "prompt": "Migrate nexus-payments/legacy/clearing-batch/CLEARING.cbl to Java 21 under MOD-2026-07. Keep its behaviour identical: the same input must give the same report, byte for byte. Write nexus-payments/services/clearing/src/main/java/com/nexusbank/clearing/ClearingBatch.java, taking the input file and the report file as its two arguments, and a JUnit 5 characterisation test, nexus-payments/services/clearing/src/test/java/com/nexusbank/clearing/ClearingBatchCharacterisationTest.java. The tests run from the repository root, nexus-payments/: the test runs ClearingBatch on legacy/clearing-batch/clearing_input.dat, writes its report to a JUnit @TempDir and compares it with legacy/clearing-batch/expected_totals.txt by Reports.assertSameBytes(expected, actual). Use the Bank's COBOL compatibility library in libs/cobol-compat (package com.nexusbank.cobol), as MIG-004 requires, and do not write your own versions of it: FixedRecord.text and FixedRecord.decimal for each input field, CobolMath.rounded for COMPUTE ... ROUNDED, Picture.edit for every edited picture, Picture.text for every text item moved into a report line, LineSequential to read the input and write the report, and Reports.assertSameBytes to compare the two reports in the test. Pass each PICTURE exactly as the COBOL source writes it, with its column from the layouts.",
+      "migrate": {
+        "source": "nexus-payments/legacy/clearing-batch/CLEARING.cbl",
+        "records": [
+          "IN-REC",
+          "RPT-TITLE",
+          "RPT-DATE-LINE",
+          "RPT-HEADINGS",
+          "RPT-DETAIL",
+          "RPT-COUNT-LINE"
+        ],
+        "beside": {
+          "nexus-payments/services/clearing/src/main/java/com/nexusbank/clearing/ClearingBatch.java": "nexus-payments/legacy/clearing-batch/CLEARING.cbl",
+          "nexus-payments/services/clearing/src/test/java/com/nexusbank/clearing/ClearingBatchCharacterisationTest.java": "nexus-payments/legacy/clearing-batch/expected_totals.txt"
+        }
+      },
+      "attach": [
+        "nexus-payments/legacy/clearing-batch/CLEARING.cbl",
+        "nexus-payments/libs/cobol-compat/src/main/java/com/nexusbank/cobol/Pic.java",
+        "nexus-payments/libs/cobol-compat/src/main/java/com/nexusbank/cobol/FixedRecord.java",
+        "nexus-payments/libs/cobol-compat/src/main/java/com/nexusbank/cobol/CobolMath.java",
+        "nexus-payments/libs/cobol-compat/src/main/java/com/nexusbank/cobol/Picture.java",
+        "nexus-payments/libs/cobol-compat/src/main/java/com/nexusbank/cobol/LineSequential.java",
+        "nexus-payments/libs/cobol-compat/src/main/java/com/nexusbank/cobol/Reports.java",
+        "nexus-payments/backlog/MOD-2026-07.md"
+      ],
+      "layerTopics": {
+        "regulator": [
+          "testing proportionate to whether the operational resources supporting an important business service have materially changed",
+          "review its compliance if there is a material change to the firm's business or its important business services",
+          "changes to all system components in the production environment are made according to established procedures that include testing"
+        ],
+        "corporate": [
+          "equivalence proved before go-live",
+          "parallel run and approved cut-over",
+          "mapping and testing after a replacement",
+          "testing of changes to systems that calculate charges"
+        ],
+        "sdlc": [
+          "a tool, not a person, compares their outputs byte for byte",
+          "a migration MUST NOT change behaviour",
+          "characterisation tests for migrations",
+          "COBOL to Java mapping with the COBOL compatibility library"
+        ],
+        "team": [
+          "a rewrite is a change to money code",
+          "ROUNDED rounds half away from zero",
+          "Java 21 by default"
+        ]
+      },
+      "after": [
+        "run-tests"
+      ],
+      "repair": {
+        "prompt": "The tests failed: the attached run shows which check failed. Fix the port so its report is identical to the COBOL's, byte for byte, and its characterisation test passes; give each changed file whole again."
+      }
+    },
+    {
+      "id": "record",
+      "title": "Record the change",
+      "action": "record"
+    }
+  ],
+  "commands": {
+    "tests": "s3-java-tests",
+    "select": "s3-legacy"
+  },
+  "talkTrack": "Mature estates carry exactly this burden. Select the demo: the real COBOL compiles and runs on the fixture, and its report matches the expected one. Migrate: a tool lays out the program's records, NexCODE ports the logic to Java 21 with the Bank's compatibility library and writes the characterisation test. Apply and run the tests: the port's report is compared with the COBOL's, byte for byte, by a tool. Record: the proof goes into the evidence record."
+}

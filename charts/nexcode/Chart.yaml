@@ -2,5 +2,5 @@ apiVersion: v2
 name: nexcode
 description: NexCODE - AI coding assistant with code-server IDE
 type: application
-version: 0.1.0
-appVersion: "tilt-0d62d9641ebbbd56"
+version: 0.2.0
+appVersion: "api-20261030"

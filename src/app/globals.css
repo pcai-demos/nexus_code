@@ -1,0 +1,184 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap');
+@import "tailwindcss";
+@import "../nexus-core/navbar.css";
+
+@theme inline {
+  --color-brand-vivid:       #F2561D;
+  --color-brand-soft:        #D9704A;
+  --color-brand-contrast:    #008A8C;
+  --color-brand-accent:      #8B5CF6;
+
+  --color-neutrals-light:    #BFBFBF;
+  --color-neutrals-medium:   #8C8C8C;
+  --color-neutrals-dark:     #474747;
+  --color-neutrals-deep:     #000000;
+  --color-neutrals-slate:    #64748B;
+
+  --color-status-good:       #008C48;
+  --color-status-failed:     #BF0300;
+  --color-status-degraded:   #F27D00;
+
+  --color-surface-page:      #000000;
+  --color-surface-card:      #121212;
+
+  --color-glass-dark:        rgba(18, 18, 18, 0.92);
+  --color-glass-nav:         rgba(0, 0, 0, 0.35);
+
+  --color-text:              #FFFFFF;
+  --color-text-muted:        #BFBFBF;
+  --color-text-faint:        #8C8C8C;
+  --color-border:            #474747;
+
+  --font-sans:               var(--font-poppins), Arial, Helvetica, sans-serif;
+  --font-serif:              var(--font-poppins), Arial, Helvetica, sans-serif;
+}
+
+:root {
+  /* Spacing */
+  --space-1:  4px;
+  --space-2:  8px;
+  --space-3:  12px;
+  --space-4:  16px;
+  --space-5:  20px;
+  --space-6:  24px;
+  --space-7:  28px;
+  --space-8:  32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+  --space-20: 80px;
+  --space-30: 120px;
+
+  /* Radii */
+  --radius-sm:     8px;
+  --radius-card:   12px;
+  --radius-ai:     22px;
+  --radius-status: 24px;
+  --radius-full:   9999px;
+
+  /* Typography */
+  --text-xs:     clamp(0.75rem,  0.7rem  + 0.25vw, 0.875rem);
+  --text-sm:     clamp(0.875rem, 0.8rem  + 0.35vw, 1rem);
+  --text-base:   clamp(1rem,     0.95rem + 0.25vw, 1.125rem);
+  --text-lg:     clamp(1.125rem, 1rem    + 0.75vw, 1.5rem);
+  --text-xl:     clamp(1.5rem,   1.2rem  + 1.25vw, 2.25rem);
+
+  /* Shadows */
+  --shadow-card:  0 4px 24px rgba(0, 0, 0, 0.5);
+  --shadow-vivid: 0 8px 32px rgba(242, 86, 29, 0.15);
+  --shadow-teal:  0 8px 32px rgba(0, 138, 140, 0.15);
+
+  /* Motion */
+  --transition-base:  200ms ease-out;
+  --transition-slow:  300ms ease-out;
+
+  /* Layout */
+  --z-nav:   40;
+  --z-modal: 100;
+  --content-wide: 1280px;
+}
+
+body {
+  min-height: 100dvh;
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  font-weight: 400;
+  line-height: 1.5;
+  color: var(--color-text);
+  background-color: var(--color-surface-page);
+  overflow-x: hidden;
+}
+
+/* React Flow edge SVGs need overflow:visible and no size constraints */
+.react-flow__edges svg { max-width: none; height: auto; overflow: visible; }
+.react-flow svg { max-width: none; }
+
+button { cursor: pointer; background: none; border: none; }
+
+:focus-visible {
+  outline: 2px solid var(--color-brand-vivid);
+  outline-offset: 2px;
+}
+
+/* Custom Scrollbars */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: var(--radius-full);
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(242, 86, 29, 0.3);
+  border-radius: var(--radius-full);
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(242, 86, 29, 0.5);
+}
+
+/* Gradient Utilities */
+.nexus-gradient-h {
+  background: linear-gradient(90deg, transparent 0%, #D9704A 20%, #F2561D 80%, transparent 100%);
+}
+
+/* Glass Utilities */
+.nexus-glass {
+  background: rgba(18, 18, 18, 0.85);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(242, 86, 29, 0.15);
+  transition: border-color var(--transition-base), box-shadow var(--transition-base);
+}
+
+.nexus-glass:hover {
+  border-color: rgba(242, 86, 29, 0.4);
+  box-shadow: var(--shadow-vivid);
+}
+
+.nexus-glass-nav {
+  background: var(--color-glass-nav);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+/* Shimmer Button */
+.shimmer-button {
+  position: relative !important;
+  overflow: hidden !important;
+  transition: transform var(--transition-base), filter var(--transition-base), box-shadow var(--transition-base) !important;
+}
+
+.shimmer-button::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -150%;
+  width: 150%;
+  height: 100%;
+  background: linear-gradient(
+    115deg,
+    transparent 30%,
+    rgba(255, 255, 255, 0.2) 50%,
+    transparent 70%
+  );
+  transform: skewX(-20deg);
+  pointer-events: none;
+}
+
+.shimmer-button:hover::after {
+  left: 150%;
+  transition: left 800ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.shimmer-button:hover {
+  filter: brightness(1.1);
+  box-shadow: 0 4px 12px rgba(242, 86, 29, 0.25);
+}
+
+.shimmer-button:active {
+  transform: scale(0.98);
+}

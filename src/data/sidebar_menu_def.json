@@ -1,0 +1,52 @@
+[
+  {
+    "label": "AI Context Tracing",
+    "tooltip": "AI Context Tracing",
+    "icon": "RiFootprintFill",
+    "color": {
+      "name": "color-brand-vivid",
+      "hex": "#8C8C8C"
+    },
+    "children": []
+  },
+  {
+    "label": "AI Consumption Stats",
+    "tooltip": "AI Consumption Stats",
+    "icon": "RiCoinFill",
+    "color": {
+      "name": "color-brand-vivid",
+      "hex": "#8C8C8C"
+    },
+    "children": []
+  },
+  {
+    "label": "Session Reset",
+    "tooltip": "Reset: clear the chat, or reset the demo environment",
+    "icon": "RiResetLeftFill",
+    "color": {
+      "name": "color-brand-vivid",
+      "hex": "#8C8C8C"
+    },
+    "children": []
+  },
+  {
+    "label": "Admin Panel",
+    "tooltip": "Admin Panel",
+    "icon": "RiSettings2Fill",
+    "color": {
+      "name": "color-brand-vivid",
+      "hex": "#8C8C8C"
+    },
+    "children": []
+  },
+  {
+    "label": "Exit App",
+    "tooltip": "Exit App",
+    "icon": "RiLogoutBoxLine",
+    "color": {
+      "name": "color-brand-vivid",
+      "hex": "#8C8C8C"
+    },
+    "children": []
+  }
+]

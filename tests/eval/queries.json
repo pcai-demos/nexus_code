@@ -1,0 +1,511 @@
+{
+  "schemaVersion": 1,
+  "description": "Eval query set for the golden corpus. Every expected (source,page) pair is taken from tests/manifests/golden.json anchors, which are only recorded when BOTH production PDF extractors agree - so no expectation here is guessed. Regenerate expectations by re-running scripts/derive_golden_manifest.py; run.js fails loudly if this file drifts from the manifest.",
+  "relevanceGranularity": "page",
+  "queries": [
+    {
+      "id": "q001",
+      "style": "anchor-exact",
+      "query": "Alderney",
+      "relevant": [
+        {
+          "source": "Barratt_Homes_SitePlan.pdf",
+          "pages": [
+            1
+          ]
+        }
+      ],
+      "note": "cross-confirmed anchor; BM25 alone must find this F-120 (T40 D9 a, 2026-09-22): on a fresh class the page-1 legend chunk competes with the page-5 floor-plan caption in a pool of ten; rr 0.5 / recall 1.0 on both fresh legs of every chain since T37 (the caption change) and T40 (the keyword half); the expected reading, not a red."
+    },
+    {
+      "id": "q002",
+      "style": "anchor-nl",
+      "query": "What does the document say about BATHROOM?",
+      "relevant": [
+        {
+          "source": "Barratt_Homes_SitePlan.pdf",
+          "pages": [
+            2
+          ]
+        }
+      ],
+      "note": "same ground truth, natural-language phrasing"
+    },
+    {
+      "id": "q003",
+      "style": "anchor-exact",
+      "query": "10A.7.2AR",
+      "relevant": [
+        {
+          "source": "FCA_SYSC_June2026.pdf",
+          "pages": [
+            15
+          ]
+        }
+      ],
+      "note": "cross-confirmed anchor; BM25 alone must find this"
+    },
+    {
+      "id": "q004",
+      "style": "anchor-nl",
+      "query": "What does the document say about 10C.6.1R?",
+      "relevant": [
+        {
+          "source": "FCA_SYSC_June2026.pdf",
+          "pages": [
+            7
+          ]
+        }
+      ],
+      "note": "same ground truth, natural-language phrasing"
+    },
+    {
+      "id": "q005",
+      "style": "anchor-exact",
+      "query": "13.2.4A",
+      "relevant": [
+        {
+          "source": "FCA_SYSC_June2026.pdf",
+          "pages": [
+            22
+          ]
+        }
+      ],
+      "note": "cross-confirmed anchor"
+    },
+    {
+      "id": "q006",
+      "style": "anchor-exact",
+      "query": "10.1Automatic",
+      "relevant": [
+        {
+          "source": "Fervi_Lathe_TechnicalSupportManual.pdf",
+          "pages": [
+            49
+          ]
+        }
+      ],
+      "note": "cross-confirmed anchor; BM25 alone must find this"
+    },
+    {
+      "id": "q007",
+      "style": "anchor-nl",
+      "query": "What does the document say about 11.1Lubrication?",
+      "relevant": [
+        {
+          "source": "Fervi_Lathe_TechnicalSupportManual.pdf",
+          "pages": [
+            52
+          ]
+        }
+      ],
+      "note": "same ground truth, natural-language phrasing"
+    },
+    {
+      "id": "q008",
+      "style": "anchor-exact",
+      "query": "11.2Periodic",
+      "relevant": [
+        {
+          "source": "Fervi_Lathe_TechnicalSupportManual.pdf",
+          "pages": [
+            54
+          ]
+        }
+      ],
+      "note": "cross-confirmed anchor"
+    },
+    {
+      "id": "q009",
+      "style": "anchor-exact",
+      "query": "21-year-old",
+      "relevant": [
+        {
+          "source": "GraemeHick.pdf",
+          "pages": [
+            2
+          ]
+        }
+      ],
+      "note": "cross-confirmed anchor; BM25 alone must find this"
+    },
+    {
+      "id": "q010",
+      "style": "anchor-nl",
+      "query": "What does the document say about 1994-95?",
+      "relevant": [
+        {
+          "source": "GraemeHick.pdf",
+          "pages": [
+            3
+          ]
+        }
+      ],
+      "note": "same ground truth, natural-language phrasing"
+    },
+    {
+      "id": "q011",
+      "style": "anchor-exact",
+      "query": "1994/95",
+      "relevant": [
+        {
+          "source": "GraemeHick.pdf",
+          "pages": [
+            5
+          ]
+        }
+      ],
+      "note": "cross-confirmed anchor"
+    },
+    {
+      "id": "q012",
+      "style": "anchor-exact",
+      "query": "0.0012/GB",
+      "relevant": [
+        {
+          "source": "HPE PCAI TCO Analysis - July2026.docx",
+          "pages": [
+            1
+          ],
+          "sections": [
+            "References"
+          ]
+        }
+      ],
+      "note": "cross-confirmed anchor; BM25 alone must find this (T38: scored at section level — the heading(s) the manifest's engine places the anchor under)"
+    },
+    {
+      "id": "q013",
+      "style": "anchor-nl",
+      "query": "What does the document say about 0.018/GB?",
+      "relevant": [
+        {
+          "source": "HPE PCAI TCO Analysis - July2026.docx",
+          "pages": [
+            1
+          ],
+          "sections": [
+            "6.1 Storage Methodology Transparency",
+            "Appendix A: Primary Source Data",
+            "References"
+          ]
+        }
+      ],
+      "note": "same ground truth, natural-language phrasing (T38: scored at section level — the heading(s) the manifest's engine places the anchor under)"
+    },
+    {
+      "id": "q014",
+      "style": "anchor-exact",
+      "query": "10087223",
+      "relevant": [
+        {
+          "source": "Ikea-wardrobe_build.pdf",
+          "pages": [
+            4
+          ]
+        }
+      ],
+      "note": "cross-confirmed anchor; BM25 alone must find this"
+    },
+    {
+      "id": "q015",
+      "style": "anchor-nl",
+      "query": "What does the document say about 158548?",
+      "relevant": [
+        {
+          "source": "Ikea-wardrobe_build.pdf",
+          "pages": [
+            14
+          ]
+        }
+      ],
+      "note": "same ground truth, natural-language phrasing"
+    },
+    {
+      "id": "q016",
+      "style": "anchor-exact",
+      "query": "2026-06-11",
+      "relevant": [
+        {
+          "source": "Ikea-wardrobe_build.pdf",
+          "pages": [
+            40
+          ]
+        }
+      ],
+      "note": "cross-confirmed anchor"
+    },
+    {
+      "id": "q017",
+      "style": "anchor-exact",
+      "query": "2-component",
+      "relevant": [
+        {
+          "source": "Miele_washing_machine_manual.pdf",
+          "pages": [
+            119
+          ]
+        }
+      ],
+      "note": "cross-confirmed anchor; BM25 alone must find this"
+    },
+    {
+      "id": "q018",
+      "style": "anchor-nl",
+      "query": "What does the document say about 2-phase?",
+      "relevant": [
+        {
+          "source": "Miele_washing_machine_manual.pdf",
+          "pages": [
+            31
+          ]
+        }
+      ],
+      "note": "same ground truth, natural-language phrasing"
+    },
+    {
+      "id": "q019",
+      "style": "anchor-exact",
+      "query": "24-hour",
+      "relevant": [
+        {
+          "source": "Miele_washing_machine_manual.pdf",
+          "pages": [
+            22
+          ]
+        }
+      ],
+      "note": "cross-confirmed anchor"
+    },
+    {
+      "id": "q020",
+      "style": "anchor-exact",
+      "query": "3.1.2.a",
+      "relevant": [
+        {
+          "source": "PCI-DSS-v4_0_1_June2024.pdf",
+          "pages": [
+            3
+          ]
+        }
+      ],
+      "note": "cross-confirmed anchor; BM25 alone must find this"
+    },
+    {
+      "id": "q021",
+      "style": "anchor-nl",
+      "query": "What does the document say about 3.2.1.a?",
+      "relevant": [
+        {
+          "source": "PCI-DSS-v4_0_1_June2024.pdf",
+          "pages": [
+            4
+          ]
+        }
+      ],
+      "note": "same ground truth, natural-language phrasing"
+    },
+    {
+      "id": "q022",
+      "style": "anchor-exact",
+      "query": "3.3.1.a",
+      "relevant": [
+        {
+          "source": "PCI-DSS-v4_0_1_June2024.pdf",
+          "pages": [
+            6
+          ]
+        }
+      ],
+      "note": "cross-confirmed anchor"
+    },
+    {
+      "id": "q023",
+      "style": "anchor-exact",
+      "query": "1.1.2022",
+      "relevant": [
+        {
+          "source": "PSRs_2017_April2026.pdf",
+          "pages": [
+            1
+          ]
+        }
+      ],
+      "note": "cross-confirmed anchor; BM25 alone must find this"
+    },
+    {
+      "id": "q024",
+      "style": "anchor-nl",
+      "query": "What does the document say about 1999/2979?",
+      "relevant": [
+        {
+          "source": "PSRs_2017_April2026.pdf",
+          "pages": [
+            5
+          ]
+        }
+      ],
+      "note": "same ground truth, natural-language phrasing"
+    },
+    {
+      "id": "q025",
+      "style": "anchor-exact",
+      "query": "2008/1911",
+      "relevant": [
+        {
+          "source": "PSRs_2017_April2026.pdf",
+          "pages": [
+            7
+          ]
+        }
+      ],
+      "note": "cross-confirmed anchor"
+    },
+    {
+      "id": "q026",
+      "style": "anchor-exact",
+      "query": "3.17mm",
+      "relevant": [
+        {
+          "source": "SSX125_Manual.pdf",
+          "pages": [
+            33
+          ]
+        }
+      ],
+      "note": "cross-confirmed anchor; BM25 alone must find this"
+    },
+    {
+      "id": "q027",
+      "style": "anchor-nl",
+      "query": "What does the document say about 4.25mm?",
+      "relevant": [
+        {
+          "source": "SSX125_Manual.pdf",
+          "pages": [
+            27
+          ]
+        }
+      ],
+      "note": "same ground truth, natural-language phrasing"
+    },
+    {
+      "id": "q028",
+      "style": "anchor-exact",
+      "query": "B-2250",
+      "relevant": [
+        {
+          "source": "SSX125_Manual.pdf",
+          "pages": [
+            34
+          ]
+        }
+      ],
+      "note": "cross-confirmed anchor"
+    },
+    {
+      "id": "q029",
+      "style": "anchor-exact",
+      "query": "20/month",
+      "relevant": [
+        {
+          "source": "The Tokenomics Time Bomb - HPE.pptx",
+          "pages": [
+            10
+          ]
+        }
+      ],
+      "note": "cross-confirmed anchor; BM25 alone must find this. T40 §12b (b) (2026-09-22, session 43): slide 10 added — the deck carries its 'BROAD CONSENSUS' slide twice (slides 10 and 15, the same quotes, `$20/month all-you-can-eat AI` on both; read from production), F-160's shape inside one document. The keyword-only probe on the F-147 leg's fresh class put slide 10 first (0.9451) and slide 15 second (0.9404) — within the tolerant τ's ε — so a golden of slide 15 alone read rr 0.5 for a correct answer. Gated on the F-147 leg's keyword pass (gates40 (6)); the hybrid pass reports it (a known 0 on that class — the fusion's vector half, §11a A13). T41 (design D7, 2026-09-23): slide 15 is HIDDEN (F-165) and the product skips it since T41 — the golden set is slide 10 alone (the leg probe: slide 10 first at 0.929 on the keyword pass, slide 15 absent)."
+    },
+    {
+      "id": "q030",
+      "style": "anchor-nl",
+      "query": "What does the document say about GPT-5.1?",
+      "relevant": [
+        {
+          "source": "The Tokenomics Time Bomb - HPE.pptx",
+          "pages": [
+            8
+          ]
+        }
+      ],
+      "note": "same ground truth, natural-language phrasing"
+    },
+    {
+      "id": "q031",
+      "style": "anchor-nl",
+      "query": "What does the document say about the Token Receipt?",
+      "relevant": [
+        {
+          "source": "The Tokenomics Time Bomb - HPE.pptx",
+          "pages": [
+            3
+          ]
+        }
+      ],
+      "note": "T40 (t40-design.md D8 a; F-147): the natural-language form of slide 3 (\"The Token Receipt Nobody Sees\"). The original anchor-exact `ACTUALLY` sits in 13 chunks of the corpus and no retrieval change reaches it — the reranker judges no chunk relevant to a bare common word — a test-premise defect of F-31's shape, not a retrieval one. `Token Receipt` is on slide 3 alone (measured 2026-09-21)."
+    },
+    {
+      "id": "q032",
+      "style": "anchor-nl",
+      "query": "What does the document say about Elias Marr?",
+      "relevant": [
+        {
+          "source": "story.md",
+          "pages": [
+            1
+          ],
+          "sections": [
+            "The Cartographer of Quiet Roads"
+          ]
+        }
+      ],
+      "note": "T40 (t40-design.md D8 a; F-147): the natural-language form for the story (document-level). The original anchor-exact `According` sits in 29 chunks of the corpus and no retrieval change reaches it — a test-premise defect, not a retrieval one. `Elias Marr` (the protagonist) is in story.md alone (measured 2026-09-21)."
+    },
+    {
+      "id": "q033",
+      "style": "anchor-nl",
+      "query": "What does the document say about Wren Fold?",
+      "relevant": [
+        {
+          "source": "story.md",
+          "pages": [
+            1
+          ],
+          "sections": [
+            "The Cartographer of Quiet Roads"
+          ]
+        }
+      ],
+      "note": "T40 (t40-design.md D8 a; F-147): `Across`, the original term, is a common word; `Wren Fold` (a place in the story) is in story.md alone (measured 2026-09-21). Scored at document level (T34 D8): the right file, never a page."
+    },
+    {
+      "id": "q034",
+      "style": "absence",
+      "query": "ZORBLATTIUM_9",
+      "relevant": [],
+      "note": "must not fabricate a match; scored for grounding, excluded from recall/MRR"
+    },
+    {
+      "id": "q035",
+      "style": "absence",
+      "query": "QUUXFRAMMIS",
+      "relevant": [],
+      "note": "must not fabricate a match; scored for grounding, excluded from recall/MRR"
+    },
+    {
+      "id": "q036",
+      "style": "absence",
+      "query": "NONEXISTENT_CLAUSE_88",
+      "relevant": [],
+      "note": "must not fabricate a match; scored for grounding, excluded from recall/MRR"
+    },
+    {
+      "id": "q037",
+      "style": "absence",
+      "query": "XYZZYPLUGH",
+      "relevant": [],
+      "note": "must not fabricate a match; scored for grounding, excluded from recall/MRR"
+    }
+  ]
+}
