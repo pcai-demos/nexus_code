@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import PricingPanel from "@/components/PricingPanel";
+import ModelCheck from "@/components/ModelCheck";
 // T17: the settings vocabulary and the schema-line functions come from the
 // ONE module the server resolves through (design D1, D7, D9) — no literal
 // here can disagree with what the server reads.
@@ -138,12 +139,16 @@ export default function AdminDrawer({
   setCodeAgentToggle,
   ragAgentToggle,
   setRagAgentToggle,
+  // D31: called after a save that changed the embedding model or endpoint; the page re-indexes the store.
+  onEmbeddingChanged,
+  indexedDocumentCount = 0,
 }) {
   // Tabs visibility states and active tab selection state
   const [activeTab, setActiveTab] = useState("chat");
+  const [showReindexNotice, setShowReindexNotice] = useState(false);
 
   // Local form states (uncommitted until clicking Save)
-  const [localEndpointType, setLocalEndpointType] = useState(endpointType);
+  const [localEndpointType, setLocalEndpointType] = useState("litellm");
   const [localMlisUrl, setLocalMlisUrl] = useState(mlisUrl);
   const [localMlisToken, setLocalMlisToken] = useState(mlisToken);
   const [localLiteLlmUrl, setLocalLiteLlmUrl] = useState(liteLlmUrl);
@@ -155,7 +160,7 @@ export default function AdminDrawer({
   const [localLiteLlmModelName, setLocalLiteLlmModelName] = useState(liteLlmModelName);
 
   // Local states for Code Agent
-  const [localCodeEndpointType, setLocalCodeEndpointType] = useState(codeEndpointType);
+  const [localCodeEndpointType, setLocalCodeEndpointType] = useState("litellm");
   const [localCodeMlisUrl, setLocalCodeMlisUrl] = useState(codeMlisUrl);
   const [localCodeMlisToken, setLocalCodeMlisToken] = useState(codeMlisToken);
   const [localCodeLiteLlmUrl, setLocalCodeLiteLlmUrl] = useState(codeLiteLlmUrl);
@@ -173,8 +178,8 @@ export default function AdminDrawer({
   const [localRerankEndpointUrl, setLocalRerankEndpointUrl] = useState(rerankEndpointUrl);
   const [localRerankApiKey, setLocalRerankApiKey] = useState(rerankApiKey);
   const [localVlmModelName, setLocalVlmModelName] = useState(vlmModelName || "qwen3.8:27b");
-  const [localVlmEndpointUrl, setLocalVlmEndpointUrl] = useState(vlmEndpointUrl || "https://ollama.demo.lon-pcai.twlon.com/v1/");
-  const [localVlmApiKey, setLocalVlmApiKey] = useState(vlmApiKey || "1234567890");
+  const [localVlmEndpointUrl, setLocalVlmEndpointUrl] = useState(vlmEndpointUrl || "http://litellm.litellm.svc.cluster.local:4000/v1");
+  const [localVlmApiKey, setLocalVlmApiKey] = useState(vlmApiKey || "");
   const [localRagSettings, setLocalRagSettings] = useState(ragSettings);
   const [showAdvancedRag, setShowAdvancedRag] = useState(false);
   const [tempRagSettings, setTempRagSettings] = useState(null);
@@ -370,7 +375,7 @@ export default function AdminDrawer({
   // Sync state with props when opening or if props change
   useEffect(() => {
     if (isOpen) {
-      setLocalEndpointType(endpointType);
+      setLocalEndpointType("litellm");
       setLocalMlisUrl(mlisUrl);
       setLocalMlisToken(mlisToken);
       setLocalLiteLlmUrl(liteLlmUrl);
@@ -381,7 +386,7 @@ export default function AdminDrawer({
       setLocalOllamaModelName(ollamaModelName);
       setLocalLiteLlmModelName(liteLlmModelName);
 
-      setLocalCodeEndpointType(codeEndpointType);
+      setLocalCodeEndpointType("litellm");
       setLocalCodeMlisUrl(codeMlisUrl);
       setLocalCodeMlisToken(codeMlisToken);
       setLocalCodeLiteLlmUrl(codeLiteLlmUrl);
@@ -485,52 +490,6 @@ export default function AdminDrawer({
 
     let active = true;
 
-    const fetchOllamaModels = async () => {
-      if (!localOllamaUrl) {
-        if (active) {
-          setOllamaModelsList([]);
-          setOllamaFetchError(false);
-        }
-        return;
-      }
-      if (active) {
-        setOllamaFetching(true);
-        setOllamaFetchError(false);
-      }
-      try {
-        const url = `/api/models?endpoint=${encodeURIComponent(localOllamaUrl)}&token=${encodeURIComponent(localOllamaToken || "")}`;
-        const res = await fetch(url);
-        if (res.ok) {
-          const data = await res.json();
-          if (data && Array.isArray(data.models)) {
-            const filtered = data.models.filter(m => m !== "all-team-models" && m !== "*");
-            if (active) {
-              setOllamaModelsList(filtered);
-              setOllamaFetchError(filtered.length === 0);
-            }
-          } else {
-            if (active) {
-              setOllamaFetchError(true);
-              setOllamaModelsList([]);
-            }
-          }
-        } else {
-          if (active) {
-            setOllamaFetchError(true);
-            setOllamaModelsList([]);
-          }
-        }
-      } catch (err) {
-        console.error("Failed to fetch Ollama models:", err);
-        if (active) {
-          setOllamaFetchError(true);
-          setOllamaModelsList([]);
-        }
-      } finally {
-        if (active) setOllamaFetching(false);
-      }
-    };
-
     const fetchLiteLlmModels = async () => {
       if (!localLiteLlmUrl) {
         if (active) {
@@ -544,8 +503,12 @@ export default function AdminDrawer({
         setLiteLlmFetchError(false);
       }
       try {
-        const url = `/api/models?endpoint=${encodeURIComponent(localLiteLlmUrl)}&token=${encodeURIComponent(localLiteLlmToken || "")}`;
-        const res = await fetch(url);
+        // The key travels in the body, never the URL (F-104).
+        const res = await fetch("/api/models", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ endpoint: localLiteLlmUrl, token: localLiteLlmToken || "" }),
+        });
         if (res.ok) {
           const data = await res.json();
           if (data && Array.isArray(data.models)) {
@@ -581,41 +544,12 @@ export default function AdminDrawer({
         if (active) setLiteLlmFetching(false);
       }
     };
-    const fetchMlisEndpoints = async () => {
-      if (active) {
-        setMlisEndpointsFetching(true);
-        setMlisEndpointsFetchError(false);
-      }
-      try {
-        const res = await fetch("/api/mlis-endpoints");
-        if (res.ok) {
-          const data = await res.json();
-          if (data && Array.isArray(data.endpoints)) {
-            if (active) {
-              setMlisEndpointsList(data.endpoints);
-            }
-          } else {
-            if (active) setMlisEndpointsFetchError(true);
-          }
-        } else {
-          if (active) setMlisEndpointsFetchError(true);
-        }
-      } catch (err) {
-        console.error("Failed to fetch MLIS endpoints:", err);
-        if (active) setMlisEndpointsFetchError(true);
-      } finally {
-        if (active) setMlisEndpointsFetching(false);
-      }
-    };
-
-    fetchOllamaModels();
     fetchLiteLlmModels();
-    fetchMlisEndpoints();
 
     return () => {
       active = false;
     };
-  }, [isOpen, localOllamaUrl, localOllamaToken, localLiteLlmUrl, localLiteLlmToken]);
+  }, [isOpen, localLiteLlmUrl, localLiteLlmToken]);
 
   const validateMlisToken = async (url, token) => {
     if (!url || !token) {
@@ -659,13 +593,21 @@ export default function AdminDrawer({
 
   if (!isOpen) return null;
 
-  const handleSave = (e) => {
+  const handleSave = (e, reindexAccepted = false) => {
     if (e) e.preventDefault();
+    // D31: a different embedding model (or endpoint) makes the stored vectors meaningless, so a save that changes it
+    // re-indexes. The presenter is told first (the modal below); the destructive clear itself is the Standards
+    // drawer's typed confirmation (T21 / E38).
+    const embeddingChanged = localEmbedModelName !== embedModelName || localEmbedEndpointUrl !== embedEndpointUrl;
+    if (embeddingChanged && !reindexAccepted) {
+      setShowReindexNotice(true);
+      return;
+    }
     setSaving(true);
 
     setTimeout(() => {
-      // Chat Agent LLM Settings
-      setEndpointType(localEndpointType);
+      // Chat Agent LLM Settings (D31: every model comes from LiteLLM)
+      setEndpointType("litellm");
       setMlisUrl(localMlisUrl);
       setMlisToken(localMlisToken);
       setLiteLlmUrl(localLiteLlmUrl);
@@ -676,7 +618,7 @@ export default function AdminDrawer({
       setLiteLlmModelName(localLiteLlmModelName);
 
       // Code Agent LLM Settings
-      setCodeEndpointType(localCodeEndpointType);
+      setCodeEndpointType("litellm");
       setCodeMlisUrl(localCodeMlisUrl);
       setCodeMlisToken(localCodeMlisToken);
       setCodeLiteLlmUrl(localCodeLiteLlmUrl);
@@ -728,7 +670,7 @@ export default function AdminDrawer({
 
       // Save configurations to localStorage for persistence across reloads/sessions
       if (typeof window !== "undefined") {
-        localStorage.setItem("nxs_endpointType", localEndpointType);
+        localStorage.setItem("nxs_endpointType", "litellm");
         localStorage.setItem("nxs_mlisUrl", localMlisUrl);
         localStorage.setItem("nxs_mlisToken", localMlisToken);
         localStorage.setItem("nxs_liteLlmUrl", localLiteLlmUrl);
@@ -739,7 +681,7 @@ export default function AdminDrawer({
         localStorage.setItem("nxs_liteLlmModelName", localLiteLlmModelName);
 
         // Code Agent
-        localStorage.setItem("nxs_codeEndpointType", localCodeEndpointType);
+        localStorage.setItem("nxs_codeEndpointType", "litellm");
         localStorage.setItem("nxs_codeMlisUrl", localCodeMlisUrl);
         localStorage.setItem("nxs_codeMlisToken", localCodeMlisToken);
         localStorage.setItem("nxs_codeLiteLlmUrl", localCodeLiteLlmUrl);
@@ -782,6 +724,7 @@ export default function AdminDrawer({
       setTimeout(() => {
         setSaveSuccess(false);
       }, 1500);
+      if (embeddingChanged && typeof onEmbeddingChanged === "function") onEmbeddingChanged(localEmbedModelName);
     }, 800);
   };
 
@@ -1204,138 +1147,15 @@ export default function AdminDrawer({
                       CHAT AGENT LLM SETTINGS
                     </h3>
                     
-                    {/* Selector Checkboxes */}
-                    <div className="flex items-center gap-3.5">
-                      <label className="flex items-center gap-1.5 cursor-pointer text-[10px] font-sans font-bold uppercase tracking-[0.5px] text-white">
-                        <input
-                          type="checkbox"
-                          checked={localEndpointType === "mlis"}
-                          onChange={() => setLocalEndpointType("mlis")}
-                          className="w-3.5 h-3.5 accent-brand-vivid bg-black/40 border border-white/10 rounded cursor-pointer"
-                        />
-                        HPE MLIS
-                      </label>
-                      <label className="flex items-center gap-1.5 cursor-pointer text-[10px] font-sans font-bold uppercase tracking-[0.5px] text-white">
-                        <input
-                          type="checkbox"
-                          checked={localEndpointType === "litellm"}
-                          onChange={() => setLocalEndpointType("litellm")}
-                          className="w-3.5 h-3.5 accent-brand-vivid bg-black/40 border border-white/10 rounded cursor-pointer"
-                        />
-                        LiteLLM
-                      </label>
-                      <label className="flex items-center gap-1.5 cursor-pointer text-[10px] font-sans font-bold uppercase tracking-[0.5px] text-white">
-                        <input
-                          type="checkbox"
-                          checked={localEndpointType === "ollama"}
-                          onChange={() => setLocalEndpointType("ollama")}
-                          className="w-3.5 h-3.5 accent-brand-vivid bg-black/40 border border-white/10 rounded cursor-pointer"
-                        />
-                        Ollama
-                      </label>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Sub-sections */}
-                {/* HPE MLIS Settings */}
-                <div className="flex flex-col gap-3.5 bg-white/2 border border-white/5 rounded-xl p-4">
-                  <h4 className="text-white text-[10px] font-sans font-bold uppercase tracking-[1px] flex items-center gap-1.5">
-                    1. HPE MLIS Connection Settings
-                  </h4>
-                  <div className="flex flex-col gap-3.5">
-                    <div className="flex flex-col gap-1 w-full">
-                      <label className="text-[9px] md:text-[10px] font-sans font-bold uppercase tracking-[0.5px] text-neutrals-medium">
-                        Select MLIS Model Endpoint
-                      </label>
-                      <select
-                        onChange={(e) => {
-                          const selectedUrl = e.target.value;
-                          setLocalMlisUrl(selectedUrl);
-                          if (selectedUrl) {
-                            const savedToken = localStorage.getItem(`nxs_mlisToken_${selectedUrl}`);
-                            if (savedToken) {
-                              setLocalMlisToken(savedToken);
-                              setTokenValidationStatus("success");
-                              setValidationMessage("Previously verified token loaded.");
-                            } else {
-                              setLocalMlisToken("");
-                              setTokenValidationStatus("idle");
-                              setValidationMessage("");
-                            }
-                          } else {
-                            setLocalMlisToken("");
-                            setTokenValidationStatus("idle");
-                            setValidationMessage("");
-                          }
-                        }}
-                        value={localMlisUrl}
-                        className="py-1.5 px-3 rounded-lg border border-white/10 bg-black/40 text-xs text-white outline-none focus:border-brand-vivid font-sans w-full cursor-pointer"
-                      >
-                        <option value="">-- Select a deployed model --</option>
-                        {mlisEndpointsList.map((ep) => (
-                          <option key={ep.url} value={ep.url}>
-                            {ep.name}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                    <div className="flex flex-col gap-1 w-full">
-                      <label className="text-[9px] md:text-[10px] font-sans font-bold uppercase tracking-[0.5px] text-neutrals-medium">
-                        HPE MLIS Model Endpoint URL
-                      </label>
-                      <input
-                        type="text"
-                        value={localMlisUrl}
-                        onChange={(e) => setLocalMlisUrl(e.target.value)}
-                        className="py-1.5 px-3 rounded-lg border border-white/10 bg-black/40 text-xs text-white outline-none focus:border-brand-vivid font-mono w-full"
-                      />
-                    </div>
-                    <div className="flex flex-col gap-1 w-full">
-                      <label className="text-[9px] md:text-[10px] font-sans font-bold uppercase tracking-[0.5px] text-neutrals-medium">
-                        Model API Endpoint Token
-                      </label>
-                      <input
-                        type="text"
-                        value={localMlisToken}
-                        onChange={(e) => {
-                          setLocalMlisToken(e.target.value);
-                          setTokenValidationStatus("idle");
-                          setValidationMessage("");
-                        }}
-                        onBlur={() => validateMlisToken(localMlisUrl, localMlisToken)}
-                        placeholder="Paste model API endpoint token"
-                        className="py-1.5 px-3 rounded-lg border border-white/10 bg-black/40 text-xs text-white outline-none focus:border-brand-vivid font-mono w-full"
-                        style={{ WebkitTextSecurity: "disc" }}
-                      />
-                      {serverCredentialHint("chat")}
-                      {validationMessage && (
-                        <div className={`text-[10px] font-sans font-medium flex items-center gap-1 mt-1 ${
-                          tokenValidationStatus === "success" ? "text-emerald-400" :
-                          tokenValidationStatus === "error" ? "text-rose-400" :
-                          "text-neutrals-medium"
-                        }`}>
-                          {isValidatingToken && (
-                            <RiLoader4Line size={12} className="animate-spin text-brand-vivid" />
-                          )}
-                          {tokenValidationStatus === "success" && (
-                            <RiCheckLine size={12} className="text-emerald-400" />
-                          )}
-                          {tokenValidationStatus === "error" && (
-                            <RiCloseLine size={12} className="text-rose-400" />
-                          )}
-                          {validationMessage}
-                        </div>
-                      )}
-                    </div>
                   </div>
                 </div>
 
                 {/* LiteLLM Settings */}
                 <div className="flex flex-col gap-3.5 bg-white/2 border border-white/5 rounded-xl p-4">
                   <h4 className="text-white text-[10px] font-sans font-bold uppercase tracking-[1px] flex items-center gap-1.5">
-                    2. LiteLLM Connection Settings
+                    LiteLLM Connection Settings
                   </h4>
+                  <ModelCheck model={localLiteLlmModelName} token={localLiteLlmToken} />
                   <div className="flex flex-col gap-3.5">
                     <div className="flex flex-col gap-1 w-full relative font-sans" ref={liteLlmAutocompleteRef}>
                       <label className="text-[9px] md:text-[10px] font-sans font-bold uppercase tracking-[0.5px] text-neutrals-medium">
@@ -1416,90 +1236,6 @@ export default function AdminDrawer({
                   </div>
                 </div>
 
-                {/* Ollama Settings */}
-                <div className="flex flex-col gap-3.5 bg-white/2 border border-white/5 rounded-xl p-4">
-                  <h4 className="text-white text-[10px] font-sans font-bold uppercase tracking-[1px] flex items-center gap-1.5">
-                    3. Ollama Connection Settings
-                  </h4>
-                  <div className="flex flex-col gap-3.5">
-                    <div className="flex flex-col gap-1 w-full relative font-sans" ref={ollamaAutocompleteRef}>
-                      <label className="text-[9px] md:text-[10px] font-sans font-bold uppercase tracking-[0.5px] text-neutrals-medium">
-                        Model Name
-                      </label>
-                      <input
-                        type="text"
-                        value={localOllamaModelName}
-                        onChange={(e) => {
-                          setLocalOllamaModelName(e.target.value);
-                          setIsOllamaListOpen(true);
-                        }}
-                        onFocus={(e) => {
-                          e.target.select();
-                          setIsOllamaListOpen(true);
-                        }}
-                        className="py-1.5 px-3 rounded-lg border border-white/10 bg-black/40 text-xs text-white outline-none focus:border-brand-vivid font-sans w-full"
-                      />
-                      {isOllamaListOpen && (
-                        <div className="absolute top-[100%] left-0 right-0 mt-1 bg-[#181818] border border-white/15 rounded-lg max-h-48 overflow-y-auto custom-scrollbar shadow-2xl z-[100] p-1 flex flex-col gap-0.5">
-                          {ollamaFetching && (
-                            <div className="py-2 px-3 text-[11px] text-neutrals-medium font-sans flex items-center gap-1.5 border-b border-white/5 pb-1.5 mb-1">
-                              <RiLoader4Line size={12} className="animate-spin text-brand-vivid" />
-                              Fetching models...
-                            </div>
-                          )}
-                          {ollamaFetchError && (
-                            <div className="py-2 px-3 text-[11px] text-red-400 font-sans italic border-b border-white/5 pb-1.5 mb-1">
-                              model list cannot be fetched
-                            </div>
-                          )}
-                          {(() => {
-                            const query = localOllamaModelName.toLowerCase();
-                            const isExactMatch = ollamaModelsList.some(m => m.toLowerCase() === query);
-                            const filtered = isExactMatch ? ollamaModelsList : ollamaModelsList.filter(m => m.toLowerCase().includes(query));
-                            if (filtered.length === 0) return <div className="py-2 px-3 text-[11px] text-neutrals-medium font-sans italic">No matching models</div>;
-                            return filtered.map((model) => (
-                              <button
-                                key={model}
-                                type="button"
-                                onClick={() => {
-                                  setLocalOllamaModelName(model);
-                                  setIsOllamaListOpen(false);
-                                }}
-                                className="w-full text-left py-1.5 px-3 hover:bg-brand-vivid/10 hover:text-white rounded text-[11px] text-neutrals-light font-sans transition-all cursor-pointer border-0 bg-transparent outline-none"
-                              >
-                                {model}
-                              </button>
-                            ));
-                          })()}
-                        </div>
-                      )}
-                    </div>
-                    <div className="flex flex-col gap-1 w-full">
-                      <label className="text-[9px] md:text-[10px] font-sans font-bold uppercase tracking-[0.5px] text-neutrals-medium">
-                        Ollama Model Endpoint URL
-                      </label>
-                      <input
-                        type="text"
-                        value={localOllamaUrl}
-                        onChange={(e) => setLocalOllamaUrl(e.target.value)}
-                        className="py-1.5 px-3 rounded-lg border border-white/10 bg-black/40 text-xs text-white outline-none focus:border-brand-vivid font-mono w-full"
-                      />
-                    </div>
-                    <div className="flex flex-col gap-1 w-full">
-                      <label className="text-[9px] md:text-[10px] font-sans font-bold uppercase tracking-[0.5px] text-neutrals-medium">
-                        Model API Endpoint Token
-                      </label>
-                      <input
-                        type="text"
-                        value={localOllamaToken}
-                        onChange={(e) => setLocalOllamaToken(e.target.value)}
-                        className="py-1.5 px-3 rounded-lg border border-white/10 bg-black/40 text-xs text-white outline-none focus:border-brand-vivid font-mono w-full"
-                        style={{ WebkitTextSecurity: "disc" }}
-                      />
-                    </div>
-                  </div>
-                </div>
-
                 {/* LLM Test Query Panel */}
                 <div className="flex flex-col gap-1.5 w-full border-t border-white/5 pt-3">
                   <label className="text-[9px] md:text-[10px] font-sans font-bold uppercase tracking-[0.5px] text-neutrals-medium">
@@ -1542,109 +1278,15 @@ export default function AdminDrawer({
                       CODE AGENT LLM SETTINGS
                     </h3>
                     
-                    {/* Selector Checkboxes */}
-                    <div className="flex items-center gap-3.5">
-                      <label className="flex items-center gap-1.5 cursor-pointer text-[10px] font-sans font-bold uppercase tracking-[0.5px] text-white">
-                        <input
-                          type="checkbox"
-                          checked={localCodeEndpointType === "mlis"}
-                          onChange={() => setLocalCodeEndpointType("mlis")}
-                          className="w-3.5 h-3.5 accent-brand-vivid bg-black/40 border border-white/10 rounded cursor-pointer"
-                        />
-                        HPE MLIS
-                      </label>
-                      <label className="flex items-center gap-1.5 cursor-pointer text-[10px] font-sans font-bold uppercase tracking-[0.5px] text-white">
-                        <input
-                          type="checkbox"
-                          checked={localCodeEndpointType === "litellm"}
-                          onChange={() => setLocalCodeEndpointType("litellm")}
-                          className="w-3.5 h-3.5 accent-brand-vivid bg-black/40 border border-white/10 rounded cursor-pointer"
-                        />
-                        LiteLLM
-                      </label>
-                      <label className="flex items-center gap-1.5 cursor-pointer text-[10px] font-sans font-bold uppercase tracking-[0.5px] text-white">
-                        <input
-                          type="checkbox"
-                          checked={localCodeEndpointType === "ollama"}
-                          onChange={() => setLocalCodeEndpointType("ollama")}
-                          className="w-3.5 h-3.5 accent-brand-vivid bg-black/40 border border-white/10 rounded cursor-pointer"
-                        />
-                        Ollama
-                      </label>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Sub-sections */}
-                {/* HPE MLIS Settings */}
-                <div className="flex flex-col gap-3.5 bg-white/2 border border-white/5 rounded-xl p-4">
-                  <h4 className="text-white text-[10px] font-sans font-bold uppercase tracking-[1px] flex items-center gap-1.5">
-                    1. HPE MLIS Connection Settings
-                  </h4>
-                  <div className="flex flex-col gap-3.5">
-                    <div className="flex flex-col gap-1 w-full">
-                      <label className="text-[9px] md:text-[10px] font-sans font-bold uppercase tracking-[0.5px] text-neutrals-medium">
-                        Select MLIS Model Endpoint
-                      </label>
-                      <select
-                        onChange={(e) => {
-                          const selectedUrl = e.target.value;
-                          setLocalCodeMlisUrl(selectedUrl);
-                          if (selectedUrl) {
-                            const savedToken = localStorage.getItem(`nxs_mlisToken_${selectedUrl}`);
-                            if (savedToken) {
-                              setLocalCodeMlisToken(savedToken);
-                            } else {
-                              setLocalCodeMlisToken("");
-                            }
-                          } else {
-                            setLocalCodeMlisToken("");
-                          }
-                        }}
-                        value={localCodeMlisUrl}
-                        className="py-1.5 px-3 rounded-lg border border-white/10 bg-black/40 text-xs text-white outline-none focus:border-brand-vivid font-sans w-full cursor-pointer"
-                      >
-                        <option value="">-- Select a deployed model --</option>
-                        {mlisEndpointsList.map((ep) => (
-                          <option key={ep.url} value={ep.url}>
-                            {ep.name}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                    <div className="flex flex-col gap-1 w-full">
-                      <label className="text-[9px] md:text-[10px] font-sans font-bold uppercase tracking-[0.5px] text-neutrals-medium">
-                        HPE MLIS Model Endpoint URL
-                      </label>
-                      <input
-                        type="text"
-                        value={localCodeMlisUrl}
-                        onChange={(e) => setLocalCodeMlisUrl(e.target.value)}
-                        className="py-1.5 px-3 rounded-lg border border-white/10 bg-black/40 text-xs text-white outline-none focus:border-brand-vivid font-mono w-full"
-                      />
-                    </div>
-                    <div className="flex flex-col gap-1 w-full">
-                      <label className="text-[9px] md:text-[10px] font-sans font-bold uppercase tracking-[0.5px] text-neutrals-medium">
-                        Model API Endpoint Token
-                      </label>
-                      <input
-                        type="text"
-                        value={localCodeMlisToken}
-                        onChange={(e) => setLocalCodeMlisToken(e.target.value)}
-                        placeholder="Paste model API endpoint token"
-                        className="py-1.5 px-3 rounded-lg border border-white/10 bg-black/40 text-xs text-white outline-none focus:border-brand-vivid font-mono w-full"
-                        style={{ WebkitTextSecurity: "disc" }}
-                      />
-                      {serverCredentialHint("chat")}
-                    </div>
                   </div>
                 </div>
 
                 {/* LiteLLM Settings */}
                 <div className="flex flex-col gap-3.5 bg-white/2 border border-white/5 rounded-xl p-4">
                   <h4 className="text-white text-[10px] font-sans font-bold uppercase tracking-[1px] flex items-center gap-1.5">
-                    2. LiteLLM Connection Settings
+                    LiteLLM Connection Settings
                   </h4>
+                  <ModelCheck model={localCodeLiteLlmModelName} token={localCodeLiteLlmToken} need="thinkingOff" />
                   <div className="flex flex-col gap-3.5">
                     <div className="flex flex-col gap-1 w-full relative font-sans" ref={codeLiteLlmAutocompleteRef}>
                       <label className="text-[9px] md:text-[10px] font-sans font-bold uppercase tracking-[0.5px] text-neutrals-medium">
@@ -1721,90 +1363,6 @@ export default function AdminDrawer({
                         style={{ WebkitTextSecurity: "disc" }}
                       />
                       {serverCredentialHint("litellm")}
-                    </div>
-                  </div>
-                </div>
-
-                {/* Ollama Settings */}
-                <div className="flex flex-col gap-3.5 bg-white/2 border border-white/5 rounded-xl p-4">
-                  <h4 className="text-white text-[10px] font-sans font-bold uppercase tracking-[1px] flex items-center gap-1.5">
-                    3. Ollama Connection Settings
-                  </h4>
-                  <div className="flex flex-col gap-3.5">
-                    <div className="flex flex-col gap-1 w-full relative font-sans" ref={codeOllamaAutocompleteRef}>
-                      <label className="text-[9px] md:text-[10px] font-sans font-bold uppercase tracking-[0.5px] text-neutrals-medium">
-                        Model Name
-                      </label>
-                      <input
-                        type="text"
-                        value={localCodeOllamaModelName}
-                        onChange={(e) => {
-                          setLocalCodeOllamaModelName(e.target.value);
-                          setIsCodeOllamaListOpen(true);
-                        }}
-                        onFocus={(e) => {
-                          e.target.select();
-                          setIsCodeOllamaListOpen(true);
-                        }}
-                        className="py-1.5 px-3 rounded-lg border border-white/10 bg-black/40 text-xs text-white outline-none focus:border-brand-vivid font-sans w-full"
-                      />
-                      {isCodeOllamaListOpen && (
-                        <div className="absolute top-[100%] left-0 right-0 mt-1 bg-[#181818] border border-white/15 rounded-lg max-h-48 overflow-y-auto custom-scrollbar shadow-2xl z-[100] p-1 flex flex-col gap-0.5">
-                          {ollamaFetching && (
-                            <div className="py-2 px-3 text-[11px] text-neutrals-medium font-sans flex items-center gap-1.5 border-b border-white/5 pb-1.5 mb-1">
-                              <RiLoader4Line size={12} className="animate-spin text-brand-vivid" />
-                              Fetching models...
-                            </div>
-                          )}
-                          {ollamaFetchError && (
-                            <div className="py-2 px-3 text-[11px] text-red-400 font-sans italic border-b border-white/5 pb-1.5 mb-1">
-                              model list cannot be fetched
-                            </div>
-                          )}
-                          {(() => {
-                            const query = localCodeOllamaModelName.toLowerCase();
-                            const isExactMatch = ollamaModelsList.some(m => m.toLowerCase() === query);
-                            const filtered = isExactMatch ? ollamaModelsList : ollamaModelsList.filter(m => m.toLowerCase().includes(query));
-                            if (filtered.length === 0) return <div className="py-2 px-3 text-[11px] text-neutrals-medium font-sans italic">No matching models</div>;
-                            return filtered.map((model) => (
-                              <button
-                                key={model}
-                                type="button"
-                                onClick={() => {
-                                  setLocalCodeOllamaModelName(model);
-                                  setIsCodeOllamaListOpen(false);
-                                }}
-                                className="w-full text-left py-1.5 px-3 hover:bg-brand-vivid/10 hover:text-white rounded text-[11px] text-neutrals-light font-sans transition-all cursor-pointer border-0 bg-transparent outline-none"
-                              >
-                                {model}
-                              </button>
-                            ));
-                          })()}
-                        </div>
-                      )}
-                    </div>
-                    <div className="flex flex-col gap-1 w-full">
-                      <label className="text-[9px] md:text-[10px] font-sans font-bold uppercase tracking-[0.5px] text-neutrals-medium">
-                        Ollama Model Endpoint URL
-                      </label>
-                      <input
-                        type="text"
-                        value={localCodeOllamaUrl}
-                        onChange={(e) => setLocalCodeOllamaUrl(e.target.value)}
-                        className="py-1.5 px-3 rounded-lg border border-white/10 bg-black/40 text-xs text-white outline-none focus:border-brand-vivid font-mono w-full"
-                      />
-                    </div>
-                    <div className="flex flex-col gap-1 w-full">
-                      <label className="text-[9px] md:text-[10px] font-sans font-bold uppercase tracking-[0.5px] text-neutrals-medium">
-                        Model API Endpoint Token
-                      </label>
-                      <input
-                        type="text"
-                        value={localCodeOllamaToken}
-                        onChange={(e) => setLocalCodeOllamaToken(e.target.value)}
-                        className="py-1.5 px-3 rounded-lg border border-white/10 bg-black/40 text-xs text-white outline-none focus:border-brand-vivid font-mono w-full"
-                        style={{ WebkitTextSecurity: "disc" }}
-                      />
                     </div>
                   </div>
                 </div>
@@ -2957,6 +2515,7 @@ export default function AdminDrawer({
                   <h4 className="text-white text-[10px] font-sans font-bold uppercase tracking-[1px]">
                     Embedding Model Configurations
                   </h4>
+                  <ModelCheck model={localEmbedModelName} token={localEmbedApiKey} />
                   <div className="flex flex-col gap-3.5">
                     <div className="flex flex-col gap-1 w-full">
                       <label className="text-[9px] md:text-[10px] font-sans font-bold uppercase tracking-[0.5px] text-neutrals-medium">
@@ -3030,6 +2589,7 @@ export default function AdminDrawer({
                   <h4 className="text-white text-[10px] font-sans font-bold uppercase tracking-[1px]">
                     Reranker Model Configurations
                   </h4>
+                  <ModelCheck model={localRerankModelName} token={localRerankApiKey} />
                   <div className="flex flex-col gap-3.5">
                     <div className="flex flex-col gap-1 w-full">
                       <label className="text-[9px] md:text-[10px] font-sans font-bold uppercase tracking-[0.5px] text-neutrals-medium">
@@ -3103,6 +2663,7 @@ export default function AdminDrawer({
                   <h4 className="text-white text-[10px] font-sans font-bold uppercase tracking-[1px]">
                     Vision Language Model (VLM) Configurations
                   </h4>
+                  <ModelCheck model={localVlmModelName} token={localVlmApiKey} need="captioning" />
                   <div className="flex flex-col gap-3.5">
                     <div className="flex flex-col gap-1 w-full">
                       <label className="text-[9px] md:text-[10px] font-sans font-bold uppercase tracking-[0.5px] text-neutrals-medium flex items-center gap-1">
@@ -3370,6 +2931,29 @@ export default function AdminDrawer({
 
         </form>
 
+        {/* D31: an embedding change re-indexes — said before anything is saved */}
+        {showReindexNotice && (
+          <div className="fixed inset-0 z-[70] flex items-center justify-center bg-black/60 backdrop-blur-sm p-6">
+            <div role="dialog" aria-modal="true" aria-labelledby="reindex-title" className="w-full max-w-md rounded-2xl border border-amber-500/40 bg-[#141414] text-white p-6 flex flex-col gap-4 shadow-[0_8px_32px_rgba(0,0,0,0.6)]">
+              <h3 id="reindex-title" className="text-sm font-sans font-bold uppercase tracking-[1.2px] text-amber-300">Re-index required</h3>
+              <p className="text-xs font-sans text-neutrals-light leading-relaxed">
+                Changing the embedding model to <span className="font-mono text-white">{localEmbedModelName}</span> makes the
+                stored vectors unusable. Saving opens Tidy Up to clear the collection (you type its name), then the{" "}
+                {indexedDocumentCount} indexed document(s) are ingested again with the new model. Document answers are
+                unavailable until that finishes.
+              </p>
+              <div className="flex justify-end gap-3">
+                <button type="button" onClick={() => setShowReindexNotice(false)} className="py-2 px-4 rounded-lg border border-white/10 text-[10px] font-sans font-bold uppercase tracking-[1px] text-neutrals-light hover:text-white">
+                  Cancel
+                </button>
+                <button type="button" onClick={() => { setShowReindexNotice(false); handleSave(null, true); }} className="py-2 px-4 rounded-lg bg-amber-500/90 hover:bg-amber-500 text-[10px] font-sans font-bold uppercase tracking-[1px] text-black">
+                  Save and re-index
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Custom Unsaved Changes Confirmation Modal */}
         {showConfirmClose && (
           <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-md">
@@ -3402,6 +2986,11 @@ export default function AdminDrawer({
                   type="button"
                   onClick={() => {
                     setShowConfirmClose(false);
+                    // D31: an embedding change needs the re-index notice first, so the drawer stays open for it.
+                    if (localEmbedModelName !== embedModelName || localEmbedEndpointUrl !== embedEndpointUrl) {
+                      setShowReindexNotice(true);
+                      return;
+                    }
                     handleSave(); // Save changes
                     setTimeout(() => {
                       onClose(); // Close after save complete

@@ -267,19 +267,20 @@ describe("U-CRED: source pins — every server-side credential goes through the 
     }
     assert.ok(!/localStorage\.setItem\("nxs_mlisToken_/.test(page), "the per-URL slot is never seeded");
     assert.match(page, /for \(const key of Object\.keys\(localStorage\)\) \{\s*if \(key\.startsWith\("nxs_mlisToken_"\)\) localStorage\.removeItem\(key\);\s*\}/, "every per-URL slot is purged");
-    assert.match(page, /nxs_migrated_demos_v18/);
+    assert.match(page, /nxs_migrated_demos_v19/);
     assert.ok(!/nxs_migrated_demos_v8/.test(page) && !/nxs_migrated_demos_v7/.test(page), "the old guards are gone");
-    const block = page.slice(page.indexOf('getItem("nxs_migrated_demos_v18")'), page.indexOf('setItem("nxs_migrated_demos_v18"'));
+    const block = page.slice(page.indexOf('getItem("nxs_migrated_demos_v19")'), page.indexOf('setItem("nxs_migrated_demos_v19"'));
     assert.ok(!/eyJ|sk-/.test(block), "the migration block carries no value");
   });
 
-  test("the drawer shows the server's presence beside the six token fields, from /api/health, and nothing else about credentials", () => {
+  test("the drawer shows the server's presence beside the four token fields, from /api/health, and nothing else about credentials", () => {
     const drawer = read("src/components/AdminDrawer.jsx");
     assert.match(drawer, /fetch\("\/api\/health"/);
     assert.match(drawer, /setServerCredentials\(j && j\.credentials \? j\.credentials : null\)/);
     const hints = drawer.match(/serverCredentialHint\("(chat|litellm|embed|rerank)"\)/g) || [];
-    assert.deepStrictEqual(hints.sort(), ['serverCredentialHint("chat")', 'serverCredentialHint("chat")', 'serverCredentialHint("embed")', 'serverCredentialHint("litellm")', 'serverCredentialHint("litellm")', 'serverCredentialHint("rerank")']);
-    for (const local of ["localMlisToken", "localCodeMlisToken", "localLiteLlmToken", "localCodeLiteLlmToken", "localEmbedApiKey", "localRerankApiKey"]) {
+    // D31 (Nexus, 2026-10-30): the chat and code agents are LiteLLM-only, so their two MLIS key fields are gone.
+    assert.deepStrictEqual(hints.sort(), ['serverCredentialHint("embed")', 'serverCredentialHint("litellm")', 'serverCredentialHint("litellm")', 'serverCredentialHint("rerank")']);
+    for (const local of ["localLiteLlmToken", "localCodeLiteLlmToken", "localEmbedApiKey", "localRerankApiKey"]) {
       const at = drawer.indexOf(`value={${local}}`);
       assert.ok(at > 0, local);
       assert.ok(/serverCredentialHint\(/.test(drawer.slice(at, at + 900)), `${local} has the hint under it`);

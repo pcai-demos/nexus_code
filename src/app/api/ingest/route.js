@@ -37,6 +37,7 @@ import ingestionState, {
 import { resolvePublicPath, PathOutsidePublicError } from "@/lib/ingestion/paths";
 // T23 — the embed, store and captioner credentials through the one server-side seam (design D4).
 import { resolveCredential } from "@/lib/credentials";
+import { isLiteLlmUrl, ollamaBackend } from "@/lib/models/litellm_backends";
 
 export const dynamic = "force-dynamic";
 
@@ -146,6 +147,27 @@ export async function POST(req) {
     // token bound to the VLM endpoint's origin (none for the Ollama default).
     const vlmCred = resolveCredential({ url: body.vlmEndpointUrl, requestValue: typeof body.vlmApiKey === "string" ? body.vlmApiKey : "" });
     if (vlmCred.value) vlmOverrides.vlmApiKey = vlmCred.value;
+    // D31 (2026-10-30): the VLM is a LiteLLM model, but the captioner speaks Ollama's own API (keep_alive, the model
+    // digest in its memo key). A LiteLLM model that runs on Ollama captions on THAT Ollama under its underlying name —
+    // the same server and model as before, so docVersion fingerprints and memo keys do not move — and no LiteLLM key
+    // travels there. A model that is not Ollama-backed cannot caption: the ingest is refused with what to change.
+    if (typeof body.vlmEndpointUrl === "string" && isLiteLlmUrl(body.vlmEndpointUrl) && (ragSettings || {}).captionFigures !== false) {
+      const vlmName = vlmOverrides.vlmModelName || "";
+      const backend = await ollamaBackend(vlmName, { token: typeof body.vlmApiKey === "string" ? body.vlmApiKey : "" }).catch(() => null);
+      if (!backend) {
+        return NextResponse.json(
+          {
+            success: false,
+            code: INGEST_CODES.INGEST_CONFIG_MISSING,
+            error: `Figure captioning needs an Ollama-backed vision model, and "${vlmName}" is not one (LiteLLM /model/info). Pick one in the RAG settings, or turn Caption Figures off.`,
+          },
+          { status: 400 }
+        );
+      }
+      vlmOverrides.vlmEndpointUrl = backend.origin;
+      vlmOverrides.vlmModelName = backend.model;
+      delete vlmOverrides.vlmApiKey;
+    }
     const config = { ...(ragSettings || {}), ...vlmOverrides };
 
     if (!filePaths || !Array.isArray(filePaths) || filePaths.length === 0) {
@@ -799,6 +821,7 @@ export async function POST(req) {
           // wins; otherwise ("auto", null) the endpoint rule as before — the
           // GPU-served Ollama hosts get 64 / 5, anything else (a CPU-served
           // MLIS endpoint, a proxy, a port-forward) 16 / 1.
+          // LiteLLM's embedding deployments take the conservative 16 / 1 (F-68's non-Ollama rule).
           const isGpuServed = embedUrl.includes("ollama.svc.cluster.local") || embedUrl.includes("ollama.demo.lon-pcai.twlon.com");
           const positiveInt = (v) => (Number.isInteger(v) && v > 0 ? v : null);
           const batchSize = positiveInt(config.embedBatchSize) ?? (isGpuServed ? 64 : 16);

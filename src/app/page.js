@@ -56,6 +56,10 @@ Your core mission is to answer user queries with absolute precision and clarity,
 // was never closed.
 const INGEST_TERMINAL_STATUSES = ["completed", "partial", "error", "cancelled", "interrupted"];
 
+// D31 (Nexus, 2026-10-30): every model role points at the platform LiteLLM, in-cluster. Features that need Ollama's
+// own API (thinking off, captioning, an Ollama reranker) resolve the Ollama behind a LiteLLM model on the server.
+const LITELLM_API_URL = "http://litellm.litellm.svc.cluster.local:4000/v1";
+
 export default function DashboardPage() {
   const { user } = useUser();
 
@@ -94,6 +98,13 @@ export default function DashboardPage() {
     }
   };
   const [ingestionProgress, setIngestionProgress] = useState(null);
+
+  // D31 (2026-10-30): a save that changed the embedding model or endpoint re-indexes. The clear is destructive, so it
+  // goes through the Standards drawer's typed confirmation (T21 / E38: never a browser dialog, never from this page);
+  // once the collection is cleared, the documents it held are ingested again here with the new model.
+  const [reindexRequest, setReindexRequest] = useState(null);
+  const [pendingReindex, setPendingReindex] = useState(null);
+  const [reindexNote, setReindexNote] = useState(null);
 
   // Ingestion handler proxy with Server-Sent Events progress tracking
   const triggerIngestion = async (newFiles) => {
@@ -210,6 +221,31 @@ export default function DashboardPage() {
       });
     }
   };
+
+  useEffect(() => {
+    if (!pendingReindex) return;
+    const sources = pendingReindex.sources;
+    setPendingReindex(null);
+    (async () => {
+      try {
+        if (!sources.length) {
+          setReindexNote({ status: "done", text: `Re-indexed: the collection is empty and ready for ${embedModelName}.` });
+          await refreshStoreDocuments();
+          return;
+        }
+        const tree = await fetch("/api/files").then((r) => r.json()).catch(() => ({ tree: [] }));
+        const files = [];
+        const walk = (nodes) => (nodes || []).forEach((n) => (n.type === "directory" ? walk(n.children) : files.push(n)));
+        walk(tree.tree);
+        const matched = files.filter((f) => sources.some((src) => f.name === src || String(f.path || "").endsWith(`/${src}`)));
+        const missing = sources.length - matched.length;
+        setReindexNote({ status: "done", text: `Re-indexing ${matched.length} document(s) with ${embedModelName}; progress shows above.${missing ? ` ${missing} were not among the demo files: ingest those again by hand.` : ""}` });
+        await triggerIngestion(matched);
+      } catch (err) {
+        setReindexNote({ status: "error", text: `The re-index did not start: ${err.message}. Ingest the documents again from the file browser.` });
+      }
+    })();
+  }, [pendingReindex]);
   
   // Sheet Visibility
   const [isAdminOpen, setIsAdminOpen] = useState(false);
@@ -233,7 +269,7 @@ export default function DashboardPage() {
   const [traceHistory, setTraceHistory] = useState([]);
 
   // System Configurations (In-Memory Only)
-  const [nimEndpoint, setNimEndpoint] = useState("https://nemotron.project-demos.serving.demo.lon-pcai.twlon.com");
+  const [nimEndpoint, setNimEndpoint] = useState(LITELLM_API_URL);
   const [nimApiKey, setNimApiKey] = useState("");
   const [systemPrompt, setSystemPrompt] = useState(MASTER_SYSTEM_PROMPT);
   const [modelName, setModelName] = useState("nvidia/nemotron-nano-12b-v2-vl");
@@ -244,8 +280,8 @@ export default function DashboardPage() {
   // weaviateSearchStrategy trio (copies of the blob that won precedence over
   // it — F-84), weaviateTimeout (no input, no reader) and the bare
   // embedEndpoint (a second state for embedEndpointUrl — F-21) are gone.
-  const [endpointType, setEndpointType] = useState("ollama");
-  const [mlisUrl, setMlisUrl] = useState("https://nemotron.project-demos.serving.demo.lon-pcai.twlon.com");
+  const [endpointType, setEndpointType] = useState("litellm");
+  const [mlisUrl, setMlisUrl] = useState("");
   // T23 (design D5): NO credential has a committed default any more. The
   // three service-account JWTs and the LiteLLM key that sat here since
   // session 4 live in the cluster's `nexcode-credentials` Secret and reach
@@ -253,43 +289,43 @@ export default function DashboardPage() {
   // field means "use the server's" (the drawer says whether it has one).
   // A key typed here is user-owned and wins for that request (design D4).
   const [mlisToken, setMlisToken] = useState("");
-  const [liteLlmUrl, setLiteLlmUrl] = useState("https://litellm.demo.lon-pcai.twlon.com/v1/");
+  const [liteLlmUrl, setLiteLlmUrl] = useState(LITELLM_API_URL);
   const [liteLlmToken, setLiteLlmToken] = useState("");
-  const [ollamaUrl, setOllamaUrl] = useState("https://ollama.demo.lon-pcai.twlon.com/v1/");
+  const [ollamaUrl, setOllamaUrl] = useState("");
   // E7 (CA-013, 2026-10-06): Ollama takes no key — the two numeric placeholders that sat here (ollamaToken,
   // codeOllamaToken) are empty like every other token field (T23's rule); a key typed in the drawer still wins
   // for that request. The captioner's vlmApiKey is a RAG-phase field and is left as it is.
   const [ollamaToken, setOllamaToken] = useState("");
 
   // T15 (design D8, amended by the owner 2026-09-10): the chat agent's
-  // default is Ollama with qwen3.8:27b — the model every dry run has been
-  // judged on; MLIS nemotron is never the chat default. The code agent's
-  // default is the same model (one resident model for chat and code).
+  // default is qwen3.8:27b — the model every dry run has been judged on. The
+  // code agent's default is the same model (one resident model for chat and
+  // code). D31: both are the LiteLLM model of that name, which runs on the
+  // same Ollama, so thinking off keeps working (resolved on the server).
   const [ollamaModelName, setOllamaModelName] = useState("qwen3.8:27b");
-  const [liteLlmModelName, setLiteLlmModelName] = useState("qwen3-coder:30b");
+  const [liteLlmModelName, setLiteLlmModelName] = useState("qwen3.8:27b");
 
   // Code Agent Model Connection Settings
-  const [codeEndpointType, setCodeEndpointType] = useState("ollama");
-  const [codeMlisUrl, setCodeMlisUrl] = useState("https://nemotron.project-demos.serving.demo.lon-pcai.twlon.com");
+  const [codeEndpointType, setCodeEndpointType] = useState("litellm");
+  const [codeMlisUrl, setCodeMlisUrl] = useState("");
   const [codeMlisToken, setCodeMlisToken] = useState("");
-  const [codeLiteLlmUrl, setCodeLiteLlmUrl] = useState("https://litellm.demo.lon-pcai.twlon.com/v1/");
+  const [codeLiteLlmUrl, setCodeLiteLlmUrl] = useState(LITELLM_API_URL);
   const [codeLiteLlmToken, setCodeLiteLlmToken] = useState("");
-  const [codeOllamaUrl, setCodeOllamaUrl] = useState("https://ollama.demo.lon-pcai.twlon.com/v1/");
+  const [codeOllamaUrl, setCodeOllamaUrl] = useState("");
   const [codeOllamaToken, setCodeOllamaToken] = useState("");
   const [codeOllamaModelName, setCodeOllamaModelName] = useState("qwen3.8:27b");
-  const [codeLiteLlmModelName, setCodeLiteLlmModelName] = useState("qwen3-coder:30b");
+  const [codeLiteLlmModelName, setCodeLiteLlmModelName] = useState("qwen3.8:27b");
 
   // RAG Agent Model Settings — T08 (F-12): the embed defaults must name the
-  // pair the collections are actually built with — qwen3-embedding:8b
-  // (4096-dim) served by Ollama. The previous defaults named a 2560-dim MLIS
-  // model, so every browser without saved admin settings queried the wrong
-  // vector space. The MLIS 2560-dim alternative stays available as an
-  // explicit admin-panel choice, never as a silent default.
-  const [embedModelName, setEmbedModelName] = useState("qwen3-embedding:8b");
-  const [embedEndpointUrl, setEmbedEndpointUrl] = useState("http://ollama.ollama.svc.cluster.local:11434/v1");
+  // pair the collections are actually built with. D31 (2026-10-30): LiteLLM's
+  // "embedding" (Qwen3-Embedding-4B, 2560-dim); LiteLLM does not serve the
+  // former Ollama qwen3-embedding:8b, and the store was empty at the switch.
+  // A later change of model re-indexes the store (the drawer asks first).
+  const [embedModelName, setEmbedModelName] = useState("embedding");
+  const [embedEndpointUrl, setEmbedEndpointUrl] = useState(LITELLM_API_URL);
   const [embedApiKey, setEmbedApiKey] = useState("");
-  const [rerankModelName, setRerankModelName] = useState("Qwen/Qwen3-Reranker-8B");
-  const [rerankEndpointUrl, setRerankEndpointUrl] = useState("https://rerank.project-demos.serving.demo.lon-pcai.twlon.com");
+  const [rerankModelName, setRerankModelName] = useState("Qwen/Qwen3-Reranker-8B:cpu");
+  const [rerankEndpointUrl, setRerankEndpointUrl] = useState(LITELLM_API_URL);
   const [rerankApiKey, setRerankApiKey] = useState("");
   // T37 (design D1, D2): the default captioner is the chat model qwen3.8:27b
   // (T32's arm C). A string LITERAL on purpose — the page-shape runners
@@ -297,8 +333,8 @@ export default function DashboardPage() {
   // regex — pinned equal to vlm_captioner.js's DEFAULT_CAPTION_MODEL by
   // U-SETTINGS. The value is part of every document's version fingerprint.
   const [vlmModelName, setVlmModelName] = useState("qwen3.8:27b");
-  const [vlmEndpointUrl, setVlmEndpointUrl] = useState("https://ollama.demo.lon-pcai.twlon.com/v1/");
-  const [vlmApiKey, setVlmApiKey] = useState("1234567890");
+  const [vlmEndpointUrl, setVlmEndpointUrl] = useState(LITELLM_API_URL);
+  const [vlmApiKey, setVlmApiKey] = useState("");
 
   const [ragSettings, setRagSettings] = useState(() => loadRagSettings(null));
 
@@ -354,12 +390,21 @@ export default function DashboardPage() {
        // T63 (t63-design D7 (a); T17's rule): guard v18 — the settings table gained
        // lookupDocumentRead (whole | ranked); a blob saved under v17 is dropped once
        // and the loader's defaults apply (whole). Nothing else changes.
-       const hasMigratedDemos = localStorage.getItem("nxs_migrated_demos_v18");
+       // D31 (Nexus, 2026-10-30): guard v19 — every model role moved to the
+       // platform LiteLLM (in-cluster); the Ollama and MLIS provider keys are
+       // dropped once, the stored endpoints and models move to LiteLLM's.
+       const hasMigratedDemos = localStorage.getItem("nxs_migrated_demos_v19");
        if (!hasMigratedDemos) {
-         localStorage.setItem("nxs_endpointType", "ollama");
-         localStorage.setItem("nxs_ollamaModelName", "qwen3.8:27b");
-         localStorage.setItem("nxs_codeEndpointType", "ollama");
-         localStorage.setItem("nxs_codeOllamaModelName", "qwen3.8:27b");
+         localStorage.setItem("nxs_endpointType", "litellm");
+         localStorage.setItem("nxs_liteLlmUrl", LITELLM_API_URL);
+         localStorage.setItem("nxs_liteLlmModelName", "qwen3.8:27b");
+         localStorage.setItem("nxs_codeEndpointType", "litellm");
+         localStorage.setItem("nxs_codeLiteLlmUrl", LITELLM_API_URL);
+         localStorage.setItem("nxs_codeLiteLlmModelName", "qwen3.8:27b");
+         for (const key of ["nxs_ollamaUrl", "nxs_ollamaToken", "nxs_ollamaModelName", "nxs_codeOllamaUrl", "nxs_codeOllamaToken", "nxs_codeOllamaModelName", "nxs_mlisUrl", "nxs_codeMlisUrl", "nxs_vlmApiKey", "nxs_nimEndpoint", "nxs_nimApiKey"]) {
+           localStorage.removeItem(key);
+         }
+         localStorage.setItem("nxs_vlmEndpointUrl", LITELLM_API_URL);
          // T37 (design D3): the captioner default, set once; the drawer's Save
          // keeps writing this key, and the read below applies it.
          localStorage.setItem("nxs_vlmModelName", "qwen3.8:27b");
@@ -369,10 +414,10 @@ export default function DashboardPage() {
          localStorage.removeItem("nxs_weaviateSearchStrategy");
          localStorage.removeItem("nxs_weaviateTimeout");
          localStorage.removeItem("nxs_ragSettings");
-         localStorage.setItem("nxs_rerankModelName", "Qwen/Qwen3-Reranker-8B");
-         localStorage.setItem("nxs_rerankEndpointUrl", "https://rerank.project-demos.serving.demo.lon-pcai.twlon.com");
-         localStorage.setItem("nxs_embedModelName", "qwen3-embedding:8b");
-         localStorage.setItem("nxs_embedEndpointUrl", "http://ollama.ollama.svc.cluster.local:11434/v1");
+         localStorage.setItem("nxs_rerankModelName", "Qwen/Qwen3-Reranker-8B:cpu");
+         localStorage.setItem("nxs_rerankEndpointUrl", LITELLM_API_URL);
+         localStorage.setItem("nxs_embedModelName", "embedding");
+         localStorage.setItem("nxs_embedEndpointUrl", LITELLM_API_URL);
          localStorage.removeItem("nxs_embedEndpoint");
          localStorage.removeItem("nxs_weaviateCollection");
          // T23: the credential keys, seeded or saved — removed once.
@@ -385,10 +430,10 @@ export default function DashboardPage() {
          for (const key of Object.keys(localStorage)) {
            if (key.startsWith("nxs_mlisToken_")) localStorage.removeItem(key);
          }
-         localStorage.setItem("nxs_migrated_demos_v18", "true");
+         localStorage.setItem("nxs_migrated_demos_v19", "true");
        }
 
-      const storedEndpointType = localStorage.getItem("nxs_endpointType") || "ollama";
+      const storedEndpointType = localStorage.getItem("nxs_endpointType") || "litellm";
       setEndpointType(storedEndpointType);
       
       const storedOllamaModelName = localStorage.getItem("nxs_ollamaModelName") || "qwen3.8:27b";
@@ -1160,6 +1205,8 @@ export default function DashboardPage() {
       <AnimatePresence>
         {isAdminOpen && (
           <AdminDrawer
+            onEmbeddingChanged={(model) => { setReindexRequest({ model, sources: storeDocuments.map((d) => d.source).filter(Boolean) }); setIsStandardsOpen(true); }}
+            indexedDocumentCount={storeDocuments.length}
             isOpen={isAdminOpen}
             onClose={() => setIsAdminOpen(false)}
             nimEndpoint={nimEndpoint}
@@ -1278,6 +1325,9 @@ export default function DashboardPage() {
             token={mlisToken}
             weaviateCollection={ragSettings?.weaviateCollection || "RAGChunk"}
             schemaVersion={ragSettings?.schemaVersion}
+            reindexRequest={reindexRequest}
+            onReindexCleared={(sources) => { setReindexRequest(null); setPendingReindex({ sources }); }}
+            onReindexCancelled={() => { setReindexRequest(null); setReindexNote({ status: "error", text: "The embedding model changed but the collection was not cleared: document answers compare vectors from two models until you re-index (Standards → Tidy Up, then ingest again)." }); }}
           />
         )}
 
@@ -1293,6 +1343,19 @@ export default function DashboardPage() {
       </AnimatePresence>
 
       {/* Floating Ingestion Progress Toast */}
+      {reindexNote && (
+        <div
+          role="status"
+          className={`fixed bottom-24 right-6 z-50 max-w-sm rounded-xl border px-4 py-3 text-xs font-sans shadow-lg backdrop-blur-md ${
+            reindexNote.status === "error" ? "border-rose-500/30 bg-rose-500/10 text-rose-300" : reindexNote.status === "done" ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-300" : "border-white/10 bg-black/70 text-white"
+          }`}
+        >
+          <div className="flex items-start gap-3">
+            <span className="flex-1">{reindexNote.text}</span>
+            <button type="button" onClick={() => setReindexNote(null)} className="text-neutrals-medium hover:text-white" aria-label="Dismiss">×</button>
+          </div>
+        </div>
+      )}
       {ingestionProgress && (
         <div className="fixed top-6 right-6 z-[999] w-96 p-6 rounded-2xl border border-[#A855F7]/40 bg-[#0F0F10]/98 backdrop-blur-2xl shadow-[0_12px_48px_rgba(0,0,0,0.8)] flex flex-col gap-3.5 transition-all text-white">
           <div className="flex justify-between items-center">

@@ -246,7 +246,9 @@ describe("U-PATHS/Enablers: the page, the drawer, the panel and the dependencies
     assert.match(ide, /nexcode-ide/);
     assert.match(page, /const \[ollamaToken, setOllamaToken\] = useState\(""\)/);
     assert.match(page, /const \[codeOllamaToken, setCodeOllamaToken\] = useState\(""\)/);
-    assert.match(page, /const \[vlmApiKey, setVlmApiKey\] = useState\("1234567890"\)/, "the RAG-phase captioner field is left as it is (the page-shape runners read it)");
+    // D31 (Nexus, 2026-10-30): the captioner is a LiteLLM model whose Ollama the server resolves; no key travels to
+    // Ollama, so the old numeric placeholder is gone too.
+    assert.match(page, /const \[vlmApiKey, setVlmApiKey\] = useState\(""\)/, "the captioner key has no placeholder (D31)");
     assert.match(page, /result\?\.applied\?\.extensionResult\?\.success/, "open-in-the-IDE is claimed only when the bridge said so");
     assert.match(page, /the IDE did not open it \(bridge offline\)/);
   });

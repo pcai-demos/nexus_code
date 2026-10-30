@@ -1028,7 +1028,7 @@ describe("U-FAIL/T36: the generator's outcome is read, disclosed and typed; an e
     const { RAG_SETTINGS_DEFAULTS } = require("../../src/lib/rag/config");
     assert.strictEqual(Object.keys(RAG_SETTINGS_DEFAULTS).length, 33);
     assert.ok(!Object.keys(RAG_SETTINGS_DEFAULTS).some((k) => /^(maxTokens|generation\w*|outputBudget|enumerationBudget)$/i.test(k)), "no settings key for the generator's budget (documentContextBudget / captionPageBudget / detailPasses are other tickets' keys)");
-    assert.match(fs.readFileSync(path.join(REPO_ROOT, "src", "app", "page.js"), "utf-8"), /nxs_migrated_demos_v18/);
+    assert.match(fs.readFileSync(path.join(REPO_ROOT, "src", "app", "page.js"), "utf-8"), /nxs_migrated_demos_v19/);
   });
 });
 
