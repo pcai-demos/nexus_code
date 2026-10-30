@@ -1,13 +1,7 @@
 "use client";
 
 import { createContext, useContext, useState, useEffect } from "react";
-import {
-  saveToken,
-  clearSession,
-  getToken,
-  decodeToken,
-  getUserSession
-} from "../nexus-core/authUtil";
+import { fetchSession, logout as endSession } from "../nexus-core/authUtil";
 
 const UserContext = createContext();
 
@@ -61,26 +55,21 @@ export function UserProvider({ children }) {
     setLoading(false);
   };
 
+  // Session from the Nexus gateway (/api/me). Without one (standalone or development runs),
+  // loadUserWithSite falls back to MOCK_USER.
   useEffect(() => {
-    const timer = setTimeout(() => {
-      const sessionUser = getUserSession();
-      if (sessionUser) {
-        loadUserWithSite(sessionUser);
-      } else {
-        // If no session token is stored, fallback to MOCK_USER
-        setUser(MOCK_USER);
-        setLoading(false);
-      }
-    }, 0);
-    return () => clearTimeout(timer);
+    let cancelled = false;
+    fetchSession().then((sessionUser) => {
+      if (!cancelled) loadUserWithSite(sessionUser);
+    });
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   const logout = () => {
-    clearSession();
     setUser(null);
-    if (typeof window !== "undefined") {
-      window.location.href = "/";
-    }
+    endSession();
   };
 
   return (

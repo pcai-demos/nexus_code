@@ -17,15 +17,15 @@ ezua:
 # which signs users in with Nexus Keycloak and forwards to this app's Service with the
 # identity headers. The gateway's host → Service map must list this release.
 nexusSso:
-  enabled: false
+  enabled: true
   gateway:
     service: gateway
     port: 8080
 # ── Workload ────────────────────────────────────────────────────────────────────────────
 image:
-  repository: registry.demo.lon-pcai.twlon.com/dev/nexcode
+  repository: registry.demo.lon-pcai.twlon.com/nexus/nexcode
   # Pinned tag. Never "latest": PCAI re-imports and rollbacks must be reproducible.
-  tag: "tilt-0d62d9641ebbbd56"
+  tag: "sso-20261030"
   pullPolicy: IfNotPresent
 imagePullSecrets: []
 replicaCount: 1
@@ -56,6 +56,12 @@ env:
     value: https://rerank.project-demos.serving.demo.lon-pcai.twlon.com
   - name: NEXCODE_WEAVIATE_URL
     value: http://weaviate.hpe-weaviate.svc.cluster.local:80
+  - name: NEXUS_OIDC_ISSUER
+    value: https://nexus-sso.demo.lon-pcai.twlon.com/realms/nexus
+  - name: NEXUS_OIDC_JWKS_URL
+    value: http://sso.nexus.svc.cluster.local:8080/realms/nexus/protocol/openid-connect/certs
+  - name: NEXUS_OIDC_AUDIENCE
+    value: gateway
 # Secrets are created outside the chart (EzAppConfig values are stored in plain text).
 # Every key of each listed Secret becomes an environment variable.
 existingSecrets:
@@ -177,7 +183,7 @@ networkPolicy:
   # Any pod in the release namespace (the Nexus apps and the Nexus gateway).
   allowSameNamespace: true
   # The platform ingress gateway, for direct VirtualService routing.
-  allowIngressGateway: true
+  allowIngressGateway: false
   # Extra NetworkPolicyIngressRule entries, e.g. a caller in another namespace.
   extraIngress: []
 nodeSelector: {}

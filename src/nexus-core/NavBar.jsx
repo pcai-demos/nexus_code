@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { RiLogoutBoxRLine, RiArrowLeftSLine, RiArrowRightSLine } from "@remixicon/react";
 import Link from "next/link";
 import { useUser } from "../context/UserContext";
-import { appendTokenToUrl } from "./authUtil";
+import { linkHref } from "./authUtil";
 import staticNavigation from "./navigation";
 import NavWeather from "./NavWeather";
 import "./navbar.css";
@@ -138,7 +138,7 @@ function NavItem({ item, isActive, onEnter, onLeave }) {
   if (item.url) {
     return (
       <a
-        href={appendTokenToUrl(item.url)}
+        href={linkHref(item.url)}
         target="_blank"
         rel="noopener noreferrer"
         className="no-underline outline-none cursor-pointer"
@@ -298,7 +298,7 @@ function SubMenu({ departments }) {
               {i > 0 && <DotSeparator />}
               {url ? (
                 <a
-                  href={appendTokenToUrl(url)}
+                  href={linkHref(url)}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="no-underline outline-none"

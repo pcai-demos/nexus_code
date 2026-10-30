@@ -1,152 +1,130 @@
 /**
- * Nexus Global Industries - Core Authentication Utility
- * Manages JWT storage, extraction from URL parameters, decoding, and session state.
+ * Nexus Global Industries - Core session helpers (browser side).
+ *
+ * The session lives in the Nexus gateway's cookie, which the browser sends to every Nexus app, so
+ * moving between apps never needs another sign-in. The app's own `/api/me` route (server side)
+ * verifies the gateway's token and returns the profile. Nothing is kept in localStorage and no
+ * token ever goes into a URL.
+ *
+ * Transitional (until every app is behind the Nexus gateway): if `/api/me` has no session, the old
+ * `nxs_session` token (localStorage, or `?nxs_token=` from an older app) is still read so mixed
+ * old/new apps keep working. Remove the `legacy*` parts once nexusapi's /auth/login is retired.
  */
+
+const LEGACY_KEY = "nxs_session";
+const LOGOUT_URL = process.env.NEXT_PUBLIC_NEXUS_LOGOUT_URL || "/oauth2/sign_out";
+
+let sessionSource = null; // "gateway" | "legacy" | null
 
 /**
- * Saves the given JWT token to the browser's localStorage.
- * @param {string} token 
+ * Loads the signed-in user's profile.
+ * @returns {Promise<object|null>} profile with `source`, or null when not signed in.
  */
-export function saveToken(token) {
-  if (typeof window !== "undefined") {
-    localStorage.setItem("nxs_session", token);
-  }
-}
-
-/**
- * Removes the JWT token from the browser's localStorage.
- */
-export function clearSession() {
-  if (typeof window !== "undefined") {
-    localStorage.removeItem("nxs_session");
-  }
-}
-
-/**
- * Retrieves the token. First checks for a URL query parameter named `nxs_token`.
- * If found, saves it to localStorage and removes the parameter from the browser URL.
- * Otherwise, retrieves the token from localStorage.
- * @returns {string|null} The active token or null if not found.
- */
-export function getToken() {
-  if (typeof window === "undefined") {
-    return null;
-  }
-
-  const urlParams = new URLSearchParams(window.location.search);
-  const tokenFromUrl = urlParams.get("nxs_token");
-
-  if (tokenFromUrl) {
-    localStorage.setItem("nxs_session", tokenFromUrl);
-    
-    // Remove the nxs_token parameter from the URL bar without reloading
-    urlParams.delete("nxs_token");
-    const newSearch = urlParams.toString();
-    const newPath = window.location.pathname + (newSearch ? "?" + newSearch : "") + window.location.hash;
-    window.history.replaceState({}, document.title, newPath);
-
-    return tokenFromUrl;
-  }
-
-  return localStorage.getItem("nxs_session");
-}
-
-/**
- * Decodes the payload of a JWT token without external libraries.
- * @param {string} token 
- * @returns {object|null} The parsed payload or null if invalid.
- */
-export function decodeToken(token) {
+export async function fetchSession() {
+  if (typeof window === "undefined") return null;
   try {
-    if (!token) return null;
-    const parts = token.split(".");
-    if (parts.length < 2) return null;
-
-    let payload = parts[1];
-    
-    // Convert base64url to base64
-    payload = payload.replace(/-/g, "+").replace(/_/g, "/");
-    
-    // Add base64 padding if necessary
-    const pad = payload.length % 4;
-    if (pad) {
-      payload += "=".repeat(4 - pad);
+    const res = await fetch("/api/me", { cache: "no-store", credentials: "same-origin" });
+    if (res.ok) {
+      sessionSource = "gateway";
+      clearLegacySession();
+      return { ...(await res.json()), source: "gateway" };
     }
+  } catch {
+    // Fall through to the transitional session.
+  }
+  const legacy = legacySession();
+  sessionSource = legacy ? "legacy" : null;
+  return legacy;
+}
 
-    // Decode base64 to string handling escape/unicode characters, then parse as JSON
-    const decoded = decodeURIComponent(escape(atob(payload)));
-    return JSON.parse(decoded);
-  } catch (error) {
+/** Signs out of the gateway session (and Keycloak), or clears the transitional token. */
+export function logout() {
+  if (typeof window === "undefined") return;
+  const wasGateway = sessionSource === "gateway";
+  clearLegacySession();
+  sessionSource = null;
+  window.location.href = wasGateway ? LOGOUT_URL : "/";
+}
+
+/**
+ * Link target for another Nexus app. Gateway sessions travel in the cookie, so the URL is
+ * returned unchanged; only a transitional session appends the old token.
+ * @param {string} url
+ */
+export function linkHref(url) {
+  return sessionSource === "legacy" ? legacyAppendToken(url) : url;
+}
+
+// ── Transitional: pre-SSO token (remove when nexusapi's /auth/login is retired) ──────────
+
+export function clearLegacySession() {
+  if (typeof window !== "undefined") localStorage.removeItem(LEGACY_KEY);
+}
+
+/** Stores a token from an app's own (pre-SSO) login form; `fetchSession()` then reads it. */
+export function saveLegacySession(token) {
+  if (typeof window !== "undefined" && token) localStorage.setItem(LEGACY_KEY, token);
+}
+
+function legacyToken() {
+  const params = new URLSearchParams(window.location.search);
+  const fromUrl = params.get("nxs_token");
+  if (fromUrl) {
+    localStorage.setItem(LEGACY_KEY, fromUrl);
+    params.delete("nxs_token");
+    const search = params.toString();
+    window.history.replaceState({}, document.title,
+      window.location.pathname + (search ? `?${search}` : "") + window.location.hash);
+    return fromUrl;
+  }
+  return localStorage.getItem(LEGACY_KEY);
+}
+
+function decodePayload(token) {
+  try {
+    let payload = token.split(".")[1].replace(/-/g, "+").replace(/_/g, "/");
+    payload += "=".repeat((4 - (payload.length % 4)) % 4);
+    return JSON.parse(decodeURIComponent(escape(atob(payload))));
+  } catch {
     return null;
   }
 }
 
-/**
- * Gets the current user session. Decodes token and validates expiration.
- * Clears session if expired.
- * @returns {object|null} Object containing user fields or null if invalid/expired.
- */
-export function getUserSession() {
-  const token = getToken();
-  if (!token) return null;
-
-  const decoded = decodeToken(token);
-  if (!decoded) return null;
-
-  const currentTime = Date.now() / 1000;
-  if (decoded.exp && currentTime > decoded.exp) {
-    clearSession();
+function legacySession() {
+  const token = legacyToken();
+  const claims = token ? decodePayload(token) : null;
+  if (!claims || (claims.exp && Date.now() / 1000 > claims.exp)) {
+    clearLegacySession();
     return null;
   }
-
   return {
-    username: decoded.sub,
-    given_name: decoded.given_name,
-    full_first_name: decoded.full_first_name,
-    full_surname: decoded.full_surname,
-    email: decoded.email,
-    job_title: decoded.job_title,
-    base_site_id: decoded.base_site_id,
-    base_site: decoded.base_site,
-    avatar_url: decoded.avatar_url,
+    username: claims.sub,
+    user_id: claims.user_id ?? null,
+    given_name: claims.given_name,
+    full_first_name: claims.full_first_name,
+    full_surname: claims.full_surname,
+    email: claims.email,
+    job_title: claims.job_title,
+    base_site_id: claims.base_site_id,
+    base_site: claims.base_site,
+    avatar_url: claims.avatar_url,
+    groups: [],
+    source: "legacy",
   };
 }
 
-/**
- * Appends the current JWT token (if present) to the given URL.
- * Only appends if the URL is absolute and targets a subdomain under our control.
- * @param {string} url The target URL.
- * @returns {string} The modified URL with nxs_token appended if appropriate.
- */
-export function appendTokenToUrl(url) {
-  if (!url || url === "#" || typeof window === "undefined") {
-    return url;
-  }
-  const token = localStorage.getItem("nxs_session");
-  if (!token) return url;
-
+function legacyAppendToken(url) {
+  const token = localStorage.getItem(LEGACY_KEY);
+  if (!url || url === "#" || !token) return url;
   try {
-    const parsedUrl = new URL(url, window.location.href);
-    const currentHost = window.location.hostname;
-    
-    // Check if local development on localhost
-    const isLocal = (h) => h === "localhost" || h === "127.0.0.1";
-    if (isLocal(parsedUrl.hostname) && isLocal(currentHost)) {
-      parsedUrl.searchParams.set("nxs_token", token);
-      return parsedUrl.toString();
+    const target = new URL(url, window.location.href);
+    const parent = window.location.hostname.substring(window.location.hostname.indexOf("."));
+    if (target.hostname === window.location.hostname || target.hostname.endsWith(parent)) {
+      target.searchParams.set("nxs_token", token);
+      return target.toString();
     }
-
-    // Check subdomains
-    const dotIdx = currentHost.indexOf(".");
-    if (dotIdx !== -1) {
-      const parentDomain = currentHost.substring(dotIdx); // e.g. ".demo.lon-pcai.twlon.com"
-      if (parsedUrl.hostname.endsWith(parentDomain) || parsedUrl.hostname === currentHost) {
-        parsedUrl.searchParams.set("nxs_token", token);
-        return parsedUrl.toString();
-      }
-    }
-  } catch (e) {
-    // Return original url if parsing fails
+  } catch {
+    // Leave the URL as it was.
   }
   return url;
 }
