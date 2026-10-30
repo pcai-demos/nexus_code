@@ -70,7 +70,8 @@ import { resolveCredential } from "@/lib/credentials";
 
 const WORKSPACE_ROOT = path.join(process.cwd(), "nexcode-data", "workspace");
 
-// Allow self-signed certs
+// TLS: Node trusts the PCAI CA through NODE_EXTRA_CA_CERTS (set by the chart); no bypass.
+// (One comment line in place of the removed NODE_TLS_REJECT_UNAUTHORIZED line keeps the frozen file's line numbers.)
 
 // Helper: Translate external domains to internal project-demos DNS endpoints
 function translateToInternalUrl(urlText) {
