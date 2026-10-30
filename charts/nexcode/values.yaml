@@ -25,7 +25,7 @@ nexusSso:
 image:
   repository: registry.demo.lon-pcai.twlon.com/nexus/nexcode
   # Pinned tag. Never "latest": PCAI re-imports and rollbacks must be reproducible.
-  tag: "api-20261030"
+  tag: "litellm-20261030"
   pullPolicy: IfNotPresent
 imagePullSecrets: []
 replicaCount: 1
@@ -50,8 +50,10 @@ env:
     value: https://nemotron.project-demos.serving.demo.lon-pcai.twlon.com
   - name: NEXCODE_EMBED_URL
     value: https://embed.project-demos.serving.demo.lon-pcai.twlon.com
+  # D31: every model role uses the platform LiteLLM in-cluster; NEXCODE_LITELLM_TOKEN (the Nexus app key, from the
+  # Secret) is bound to this origin, and the server resolves Ollama-backed models through its /model/info.
   - name: NEXCODE_LITELLM_URL
-    value: https://litellm.demo.lon-pcai.twlon.com
+    value: http://litellm.litellm.svc.cluster.local:4000
   - name: NEXCODE_RERANK_URL
     value: https://rerank.project-demos.serving.demo.lon-pcai.twlon.com
   - name: NEXCODE_WEAVIATE_URL

@@ -14,7 +14,7 @@ import {
   RiFileList3Line
 } from "@remixicon/react";
 
-export default function StandardsDrawer({ isOpen, onClose, loadedFiles, setLoadedFiles, ingestionProgress, weaviateUrl, token, weaviateCollection, schemaVersion, onPreviewDocument = null }) {
+export default function StandardsDrawer({ isOpen, onClose, loadedFiles, setLoadedFiles, ingestionProgress, weaviateUrl, token, reindexRequest = null, onReindexCleared = null, onReindexCancelled = null, weaviateCollection, schemaVersion, onPreviewDocument = null }) {
   const [previewFile, setPreviewFile] = useState(null);
   const [previewContent, setPreviewContent] = useState("");
   const [loadingPreview, setLoadingPreview] = useState(false);
@@ -157,11 +157,19 @@ export default function StandardsDrawer({ isOpen, onClose, loadedFiles, setLoade
     onClose();
   };
 
+  // D31 (2026-10-30): an embedding-model change re-indexes. The page opens this drawer with a reindexRequest; the
+  // SAME typed-confirmation dialog opens (preview first, the name typed by hand), and after the drop the page ingests
+  // the documents again with the new model. Cancelling says the store is left stale.
+  useEffect(() => {
+    if (isOpen && reindexRequest && !tidyUpOpen) handleClearAllFiles();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isOpen, reindexRequest]);
   const closeTidyUp = () => {
     if (tidyUpBusy) return;
     setTidyUpOpen(false);
     setTypedCollection("");
     setTidyUpTarget(null);
+    if (reindexRequest && typeof onReindexCancelled === "function") onReindexCancelled();
   };
 
   // The class the drop will hit, as the read-only preview resolved it from
@@ -224,6 +232,7 @@ export default function StandardsDrawer({ isOpen, onClose, loadedFiles, setLoade
       setTypedCollection("");
       setTidyUpTarget(null);
       console.log(`[Tidy Up] ${data.message}`);
+      if (reindexRequest && typeof onReindexCleared === "function") onReindexCleared(reindexRequest.sources || []);
     } catch (err) {
       setTidyUpError(`Request failed: ${err.message}. Nothing is known to have been dropped.`);
     } finally {
@@ -306,6 +315,13 @@ export default function StandardsDrawer({ isOpen, onClose, loadedFiles, setLoade
               Drop collection &lsquo;{resolvedCollection ?? "…"}&rsquo;?
             </h3>
 
+            {reindexRequest ? (
+              <p className="text-xs font-sans text-amber-300 leading-relaxed">
+                Re-index for the new embedding model <span className="font-mono">{reindexRequest.model}</span>: after the
+                drop, the {(reindexRequest.sources || []).length} document(s) the collection held are ingested again
+                with it. Until then, document answers are unavailable.
+              </p>
+            ) : null}
             <p className="text-xs font-sans text-neutrals-light leading-relaxed">
               This cannot be undone. Tidy Up RAG will:
             </p>

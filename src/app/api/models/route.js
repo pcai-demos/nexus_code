@@ -13,12 +13,20 @@ const DEFAULT_MOCK_MODELS = [
 ];
 
 export async function GET(request) {
+  const { searchParams } = new URL(request.url);
+  return listModels(searchParams.get("endpoint"), searchParams.get("token"));
+}
+
+/** The same list with the key in the body (F-104: a key in the URL ends up in logs and history). */
+export async function POST(request) {
+  const body = (await request.json().catch(() => ({}))) || {};
+  return listModels(body.endpoint, body.token);
+}
+
+async function listModels(endpoint, token) {
   // T23 (design D7): which source served this test's credential — a name, never a value.
   let credentialSource = "none";
   try {
-    const { searchParams } = new URL(request.url);
-    const endpoint = searchParams.get("endpoint");
-    const token = searchParams.get("token");
 
     if (!endpoint) {
       return NextResponse.json({ credentialSource, error: "endpoint parameter is required" }, { status: 400 });

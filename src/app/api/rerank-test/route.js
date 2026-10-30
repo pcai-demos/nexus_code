@@ -2,6 +2,7 @@
 import { NextResponse } from "next/server";
 // T23 (design D7) — the field's value when typed, else the server's credential bound to this endpoint's origin; the response says which.
 import { resolveCredential } from "@/lib/credentials";
+import { isLiteLlmUrl, ollamaBackend } from "@/lib/models/litellm_backends";
 // F-163 — the same fallback helper the retrieve route uses, a budget per attempt.
 import { fetchWithInternalFallback as fetchWithFallback } from "@/lib/rag/fallback_fetch";
 
@@ -230,6 +231,17 @@ export async function POST(req) {
     }
     if (!model) {
       return NextResponse.json({ credentialSource, success: false, error: "Model Name is required." });
+    }
+
+    // D31: a LiteLLM reranker that runs on Ollama is tested on that Ollama's /api/generate, as retrieval scores it
+    // (LiteLLM's /v1/rerank refuses the ollama provider). Any other LiteLLM reranker is tested on /v1/rerank.
+    if (isLiteLlmUrl(endpoint)) {
+      const backend = await ollamaBackend(model, { token: apiKey || "" }).catch(() => null);
+      if (backend) {
+        endpoint = backend.origin;
+        model = backend.model;
+        apiKey = "";
+      }
     }
 
     const headers = {

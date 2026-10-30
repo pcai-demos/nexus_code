@@ -31,6 +31,7 @@ import {
 } from "@/lib/rag/rerank";
 // T23 — every hop's credential through the one server-side seam (design D4).
 import { resolveCredential } from "@/lib/credentials";
+import { isLiteLlmUrl, ollamaBackend } from "@/lib/models/litellm_backends";
 // F-163 — every MLIS hop through one fallback helper with a budget PER ATTEMPT
 // (src/lib/rag/fallback_fetch.js, U-FALLBACK): the external attempt used to
 // inherit the signal the slow internal attempt had already spent.
@@ -457,6 +458,16 @@ async function rerankViaOllama(query, candidates, rerankUrl, modelName, token, r
 // successful search.
 async function rerankCandidates(query, candidates, rerankUrl, modelName, token, rerankProperty = "content", rerankQueryOverride = "", report = {}, stage = {}) {
   const finalQuery = (rerankQueryOverride || "").trim() ? rerankQueryOverride.trim() : query;
+
+  // D31: a LiteLLM reranker that runs on Ollama is scored through that Ollama's own /api/generate (LiteLLM's
+  // /v1/rerank refuses the ollama provider, measured 2026-10-30); any other LiteLLM reranker uses /v1/rerank below.
+  if (isLiteLlmUrl(rerankUrl)) {
+    const backend = await ollamaBackend(modelName, { token }).catch(() => null);
+    if (backend) {
+      console.log(`[Reranker] ${modelName} runs on Ollama (${backend.model}); scoring through its /api/generate.`);
+      return await rerankViaOllama(finalQuery, candidates, backend.origin, backend.model, "", rerankProperty);
+    }
+  }
 
   if (isOllamaEndpoint(rerankUrl)) {
     console.log(`[Reranker] Detected Ollama endpoint. Using /api/generate with Qwen3-Reranker prompt format.`);

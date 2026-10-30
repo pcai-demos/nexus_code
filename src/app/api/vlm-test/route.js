@@ -2,6 +2,7 @@
 import { NextResponse } from "next/server";
 // T23 (design D7) — the field's value when typed, else the server's credential bound to this endpoint's origin; the response says which.
 import { resolveCredential } from "@/lib/credentials";
+import { isLiteLlmUrl, describeModel } from "@/lib/models/litellm_backends";
 
 /**
  * Detect whether an endpoint URL points to an Ollama instance.
@@ -47,6 +48,21 @@ export async function POST(req) {
     }
     if (!model) {
       return NextResponse.json({ credentialSource, success: false, error: "Model Name is required." });
+    }
+
+    // D31: the captioner speaks Ollama's own /api/generate, so a LiteLLM model is tested the way it will caption:
+    // on the Ollama behind it (no LiteLLM key travels there). A model that is not Ollama-backed cannot caption.
+    if (isLiteLlmUrl(endpoint)) {
+      const info = await describeModel(model, { token: apiKey || "" });
+      if (!info.ollamaBacked || !info.backend) {
+        return NextResponse.json({ credentialSource, success: false, error: info.message });
+      }
+      if (!info.features.captioning) {
+        return NextResponse.json({ credentialSource, success: false, error: `${info.message} Pick a model with vision for captioning.` });
+      }
+      endpoint = info.backend.origin;
+      model = info.backend.model;
+      apiKey = "";
     }
 
     const headers = {

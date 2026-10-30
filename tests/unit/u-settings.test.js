@@ -448,7 +448,8 @@ describe("U-SETTINGS: page.js — the literal is gone, the loader runs, the guar
 
   test("the migration guard is v18 (T63 D7: lookupDocumentRead; T48 D4: beyondTheDocuments; T35 D3: ocrNoTextPages; T33 D6: detailPasses; T37 D3: the captioner default, nxs_vlmModelName set once; T31 D9: captionPageBudget; T24 D6: captionFigures; T15 D8/D12: the chat default and lookupScope; T28: three assembly keys; T23 D5: the credential keys purged too) and its block drops the retired keys and the old blob once", () => {
     const src = page();
-    assert.match(src, /nxs_migrated_demos_v18/);
+    assert.match(src, /nxs_migrated_demos_v19/);
+    assert.ok(!/nxs_migrated_demos_v18/.test(src), "v18 is gone");
     assert.ok(!/nxs_migrated_demos_v17/.test(src), "v17 is gone");
     assert.ok(!/nxs_migrated_demos_v16/.test(src), "v16 is gone");
     assert.ok(!/nxs_migrated_demos_v15/.test(src), "v15 is gone");
@@ -457,11 +458,12 @@ describe("U-SETTINGS: page.js — the literal is gone, the loader runs, the guar
     assert.ok(!/nxs_migrated_demos_v12/.test(src), "v12 is gone");
     assert.ok(!/nxs_migrated_demos_v11/.test(src), "v11 is gone");
     assert.ok(!/nxs_migrated_demos_v10/.test(src), "v10 is gone");
-    // T15 (design D8, amended): the chat default is Ollama qwen3.8:27b, and the guard block sets it once.
-    assert.match(src, /const \[endpointType, setEndpointType\] = useState\("ollama"\)/);
-    assert.match(src, /const \[ollamaModelName, setOllamaModelName\] = useState\("qwen3\.8:27b"\)/);
-    assert.match(src, /localStorage\.setItem\("nxs_endpointType", "ollama"\)/);
-    assert.match(src, /localStorage\.setItem\("nxs_ollamaModelName", "qwen3\.8:27b"\)/);
+    // T15 (design D8, amended): the chat default is qwen3.8:27b. D31 (Nexus, 2026-10-30): it is the LiteLLM model of
+    // that name (every role on LiteLLM; thinking off resolves the Ollama behind it), and the v19 block sets it once.
+    assert.match(src, /const \[endpointType, setEndpointType\] = useState\("litellm"\)/);
+    assert.match(src, /const \[liteLlmModelName, setLiteLlmModelName\] = useState\("qwen3\.8:27b"\)/);
+    assert.match(src, /localStorage\.setItem\("nxs_endpointType", "litellm"\)/);
+    assert.match(src, /localStorage\.setItem\("nxs_liteLlmModelName", "qwen3\.8:27b"\)/);
     assert.ok(!/nxs_migrated_demos_v8/.test(src) && !/nxs_migrated_demos_v7/.test(src), "v7 and v8 are gone");
     for (const key of ["nxs_ragSettings", "nxs_weaviateLimit", "nxs_weaviateSimilarityThreshold", "nxs_weaviateSearchStrategy", "nxs_weaviateTimeout", "nxs_embedEndpoint", "nxs_mlisToken", "nxs_codeMlisToken", "nxs_embedApiKey", "nxs_rerankApiKey", "nxs_liteLlmToken", "nxs_codeLiteLlmToken"]) {
       assert.match(src, new RegExp(`localStorage\\.removeItem\\("${key}"\\)`), `${key} is removed by the v9 block`);
@@ -478,8 +480,8 @@ describe("U-SETTINGS: page.js — the literal is gone, the loader runs, the guar
     const m = pg.match(/const \[vlmModelName, set\w+\] = useState\("([^"]*)"\)/);
     assert.ok(m, "page.js keeps a string literal for vlmModelName (the page-shape runners read it by regex)");
     assert.strictEqual(m[1], DEFAULT_CAPTION_MODEL, "the page's literal is the constant");
-    const block = pg.slice(pg.indexOf('localStorage.getItem("nxs_migrated_demos_v18")'), pg.indexOf('localStorage.setItem("nxs_migrated_demos_v18", "true")'));
-    assert.ok(block.length > 0, "the v18 block exists");
+    const block = pg.slice(pg.indexOf('localStorage.getItem("nxs_migrated_demos_v19")'), pg.indexOf('localStorage.setItem("nxs_migrated_demos_v19", "true")'));
+    assert.ok(block.length > 0, "the v19 block exists");
     const set = block.match(/localStorage\.setItem\("nxs_vlmModelName", "([^"]*)"\)/);
     assert.ok(set, "the guard block sets nxs_vlmModelName once (a browser that pressed Save under an older guard moves too)");
     assert.strictEqual(set[1], DEFAULT_CAPTION_MODEL, "the block's value is the constant");

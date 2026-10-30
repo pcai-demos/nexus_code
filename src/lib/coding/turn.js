@@ -83,7 +83,8 @@ import {
 import { parseFileOperations } from "@/lib/coding/file_ops";
 import { codingSystemPrompt, requestInstruction } from "@/lib/coding/persona";
 import { chatText, parseLocations, diffStat, numberLines } from "@/lib/coding/chat_text";
-import { translateToInternalUrl, completionsUrl, ollamaNativeChatUrl, hostOf } from "@/lib/coding/endpoints";
+import { translateToInternalUrl, completionsUrl, hostOf } from "@/lib/coding/endpoints";
+import { ollamaBackend } from "@/lib/models/litellm_backends";
 import { loadScenarios, loadManifest, loadRegulatorIndex, findStep } from "@/lib/coding/scenarios";
 import { regulatorLookups, chooseLookups, pickProvision, REGULATOR_LOOKUP } from "@/lib/coding/regulator_refs";
 import { unitsBlock, unitsOf } from "@/lib/coding/doc_check";
@@ -785,20 +786,25 @@ export async function runCodingTurn({ body, emit = () => {}, signal = null } = {
   // ── 6. The model, streamed ────────────────────────────────────────────────────────────────────────────────────────
   const genStart = Date.now();
   const plan = planGenerationBudget({ intent: "code", requestedMaxTokens: CODING_REQUESTED_MAX_TOKENS });
-  const onOllama = pair.endpointType === "ollama";
+  // D31 (2026-10-30): the code model is a LiteLLM model. Thinking off needs Ollama's own /api/chat (`think: false`),
+  // so it applies only when that model is Ollama-backed (LiteLLM /model/info); the call then goes straight to that
+  // Ollama with the underlying model name, and no LiteLLM key travels to it.
+  const ollama = thinkingRequested === "off" ? await ollamaBackend(pair.model, { token: pair.token }).catch(() => null) : null;
+  const onOllama = Boolean(ollama);
   const thinkingMode = thinkingRequested === "off" && onOllama ? "off" : "on";
   const thinkingNote =
-    thinkingRequested === "off" && !onOllama ? "thinking off needs Ollama's own request form and this code model is not on Ollama, so thinking stayed on" : null;
+    thinkingRequested === "off" && !onOllama ? `thinking off needs an Ollama-backed model and ${pair.model || "this code model"} is not one (LiteLLM /model/info), so thinking stayed on` : null;
   const form = thinkingMode === "off" ? STREAM_FORMS.OLLAMA : STREAM_FORMS.OPENAI;
   const target = completionsUrl(pair.url);
-  const cred = resolveCredential({ url: target, requestValue: pair.token });
-  const internal = translateToInternalUrl(target);
-  const callUrl = form === STREAM_FORMS.OLLAMA ? ollamaNativeChatUrl(internal.url) : internal.url;
+  const cred = form === STREAM_FORMS.OLLAMA ? { value: "", source: "none" } : resolveCredential({ url: target, requestValue: pair.token });
+  const internal = form === STREAM_FORMS.OLLAMA ? { url: `${ollama.origin}/api/chat`, headers: {} } : translateToInternalUrl(target);
+  const callUrl = internal.url;
+  const callModel = form === STREAM_FORMS.OLLAMA ? ollama.model : pair.model;
   const temperature = typeof adminConfig.temperature === "number" ? adminConfig.temperature : 0.1;
   const requestBody =
     form === STREAM_FORMS.OLLAMA
-      ? { model: pair.model, messages, stream: true, think: false, options: { temperature, num_predict: plan.applied } }
-      : { model: pair.model, messages, temperature, max_tokens: plan.applied, stream: true, stream_options: { include_usage: true } };
+      ? { model: callModel, messages, stream: true, think: false, options: { temperature, num_predict: plan.applied } }
+      : { model: callModel, messages, temperature, max_tokens: plan.applied, stream: true, stream_options: { include_usage: true } };
   send({ type: "generation", model: pair.model, thinking: thinkingMode, form });
   const fold = createStreamFold(form);
   let outcome = null;
